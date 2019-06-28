@@ -54,9 +54,13 @@ func interfaceExists(interfaces []net.Interface, name string) bool {
 func getAddressByInterface(iface net.Interface) string {
 	addrs, err := iface.Addrs()
 	handleErr(err)
-	addr := addrs[len(addrs)-1]
-	splAddr := strings.Split(addr.String(), "/")
-	return splAddr[0]
+	for _, addr := range addrs {
+		splAddr := strings.Split(addr.String(), "/")[0]
+		if !strings.ContainsRune(splAddr, ':') {
+			return splAddr
+		}
+	}
+	return ""
 }
 
 func updateAvailableInterfaces(wireguardRespChan chan []byte) {
@@ -84,7 +88,7 @@ func updateAvailableInterfaces(wireguardRespChan chan []byte) {
 			if !isExcluded(ifname) {
 				if _, ok := sendingChannels[ifname]; !ok {
 					ifaddr := getAddressByInterface(iface)
-					if !strings.ContainsRune(ifaddr, ':') {
+					if ifaddr != "" {
 						log.Info("New interface " + ifname + ", adding it")
 						createSendThread(ifname, getAddressByInterface(iface), wireguardRespChan)
 					}
