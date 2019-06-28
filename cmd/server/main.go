@@ -47,7 +47,8 @@ func main() {
 	ClientSocket, err := net.ListenUDP("udp", ClientsListenAddr)
 
 	chanToWireguard := make(chan []byte)
-	go netutils.ChannelToSocket(chanToWireguard, WireguardSocket, &WireguardAddr, "Invio a Wireguard")
+	abortWireguard := make(chan bool)
+	go netutils.ChannelToSocket(chanToWireguard, abortWireguard, WireguardSocket, &WireguardAddr, "Invio a Wireguard")
 
 	chanFromWireguard := make(chan []byte)
 	go netutils.SocketToChannels(WireguardSocket, []chan []byte{chanFromWireguard}, nil, "Ricevo da Wireguard")
@@ -82,7 +83,8 @@ func handleClientMessage(srcAddr *net.UDPAddr, message []byte, socket *net.UDPCo
 	if client == nil {
 		log.Info("Nuovo client, creo quel che serve per lui")
 		channel := make(chan []byte)
-		go netutils.ChannelToSocket(channel, socket, &srcAddr, "Invio al client "+string(srcAddr.IP)+":"+strconv.Itoa(srcAddr.Port))
+		abortChannel := make(chan bool)
+		go netutils.ChannelToSocket(channel, abortChannel, socket, &srcAddr, "Invio al client "+string(srcAddr.IP)+":"+strconv.Itoa(srcAddr.Port))
 
 		client := ConnectedClient{
 			Addr:         srcAddr,

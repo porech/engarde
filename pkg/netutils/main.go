@@ -7,19 +7,26 @@ import (
 )
 
 // ChannelToSocket reads from a channel and writes to a socket
-func ChannelToSocket(channel chan []byte, socket *net.UDPConn, addr **net.UDPAddr, msg string) {
+func ChannelToSocket(channel chan []byte, abortChannel chan bool, socket *net.UDPConn, addr **net.UDPAddr, ifname string) {
 	for {
-		buffer := <-channel
-		log.Info(msg)
-		_, err := socket.WriteToUDP(buffer, *addr)
-		if err != nil {
-			log.Fatal(err)
+		select {
+		case buffer := <-channel:
+			log.Info("Sent to " + ifname)
+			_, err := socket.WriteToUDP(buffer, *addr)
+			if err != nil {
+				log.Error(err)
+			}
+		case stop := <-abortChannel:
+			if stop {
+				log.Info("Stopping send for " + ifname)
+				return
+			}
 		}
 	}
 }
 
 // SocketToChannels reads from a socket and writes to some channels
-func SocketToChannels(socket *net.UDPConn, channels []chan []byte, sourceAddr **net.UDPAddr, msg string) {
+func SocketToChannels(socket *net.UDPConn, channels []chan []byte, sourceAddr **net.UDPAddr, ifname string) {
 	buffer := make([]byte, 1500)
 
 	for {
@@ -29,9 +36,9 @@ func SocketToChannels(socket *net.UDPConn, channels []chan []byte, sourceAddr **
 		}
 
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
 		}
-		log.Info(msg)
+		log.Info("Received from " + ifname)
 		for _, channel := range channels {
 			channel <- buffer[:n]
 		}
