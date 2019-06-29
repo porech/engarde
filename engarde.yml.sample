@@ -1,0 +1,21 @@
+---
+client:
+  listenAddr: "127.0.0.1:59301"
+  dstAddr: "1.2.3.4:59302"
+  excludedInterfaces:
+    - "Connessione alla rete locale (LAN)* 17"
+    - "Connessione alla rete locale (LAN)* 1"
+    - "Connessione alla rete locale (LAN)* 7"
+    - "VMware Network Adapter VMnet1"
+    - "VMware Network Adapter VMnet8"
+    - "Ethernet 6"
+    - "Connessione di rete Bluetooth"
+    - "Loopback Pseudo-Interface 1"
+  dstOverrides:
+    - ifName: "Ethernet 2"
+      dstAddr: "5.6.7.8:59302"
+
+server:
+  listenAddr: "0.0.0.0:59302"
+  dstAddr: "127.0.0.1:59301"
+  clientTimeout: 30

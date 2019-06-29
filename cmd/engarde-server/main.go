@@ -2,12 +2,25 @@ package main
 
 import (
 	"engarde/pkg/netutils"
+	"io/ioutil"
 	"net"
+	"os"
 	"strconv"
 	"time"
 
 	log "github.com/sirupsen/logrus"
+	"gopkg.in/yaml.v2"
 )
+
+type config struct {
+	Server serverConfig `yaml:"server"`
+}
+
+type serverConfig struct {
+	ListenAddr    string `yaml:"listenAddr"`
+	DstAddr       string `yaml:"dstAddr"`
+	ClientTimeout int64  `yaml:"clientTimeout"`
+}
 
 // ConnectedClient contains the information about a client
 type ConnectedClient struct {
@@ -18,10 +31,11 @@ type ConnectedClient struct {
 }
 
 var clients []*ConnectedClient
+var srConfig serverConfig
 
-func handleErr(err error) {
+func handleErr(err error, msg string) {
 	if err != nil {
-		log.Warn(err)
+		log.Fatal(msg+" | ", err)
 	}
 }
 
@@ -35,16 +49,34 @@ func getClientByAddr(addr *net.UDPAddr) *ConnectedClient {
 }
 
 func main() {
-	WireguardAddr, err := net.ResolveUDPAddr("udp4", "127.0.0.1:59301")
-	handleErr(err)
-	WireguardSource, err := net.ResolveUDPAddr("udp4", "127.0.0.1:0")
-	handleErr(err)
-	WireguardSocket, err := net.ListenUDP("udp", WireguardSource)
-	handleErr(err)
+	var genconfig config
+	var configName string
+	if len(os.Args) > 1 {
+		configName = os.Args[1]
+	} else {
+		configName = "engarde.yml"
+	}
+	yamlFile, err := ioutil.ReadFile(configName)
+	handleErr(err, "Reading config file "+configName+" failed")
+	err = yaml.Unmarshal(yamlFile, &genconfig)
+	handleErr(err, "Parsing config file failed")
+	srConfig = genconfig.Server
+	if srConfig.ClientTimeout == 0 {
+		srConfig.ClientTimeout = 30
+	}
 
-	ClientsListenAddr, err := net.ResolveUDPAddr("udp4", "0.0.0.0:59302")
-	handleErr(err)
+	WireguardAddr, err := net.ResolveUDPAddr("udp4", srConfig.DstAddr)
+	handleErr(err, "Cannot resolve destination address")
+	WireguardSource, err := net.ResolveUDPAddr("udp4", "0.0.0.0:0")
+	handleErr(err, "Cannot resolve listen address")
+	WireguardSocket, err := net.ListenUDP("udp", WireguardSource)
+	handleErr(err, "Cannot initialize Wireguard socket")
+
+	ClientsListenAddr, err := net.ResolveUDPAddr("udp4", srConfig.ListenAddr)
+	handleErr(err, "Cannot resolve listen address")
 	ClientSocket, err := net.ListenUDP("udp", ClientsListenAddr)
+	handleErr(err, "Cannot create listen socket")
+	log.Info("Listening on " + srConfig.ListenAddr)
 
 	chanToWireguard := make(chan []byte)
 	abortWireguard := make(chan bool)
@@ -61,7 +93,9 @@ func listenForConnections(socket *net.UDPConn, wgChannel chan []byte) {
 	buffer := make([]byte, 1500)
 	for {
 		n, srcAddr, err := socket.ReadFromUDP(buffer)
-		handleErr(err)
+		if err != nil {
+			continue
+		}
 		handleClientMessage(srcAddr, buffer[:n], socket, wgChannel)
 	}
 }
@@ -70,7 +104,7 @@ func receiveFromWireguard(channel chan []byte) {
 	for {
 		message := <-channel
 		for _, client := range clients {
-			if client.LastReceived > time.Now().Unix()-30 {
+			if client.LastReceived > time.Now().Unix()-srConfig.ClientTimeout {
 				client.Channel <- message
 			}
 		}
@@ -81,7 +115,7 @@ func handleClientMessage(srcAddr *net.UDPAddr, message []byte, socket *net.UDPCo
 	client := getClientByAddr(srcAddr)
 	currentTime := time.Now().Unix()
 	if client == nil {
-		log.Info("Nuovo client, creo quel che serve per lui")
+		log.Info("New client connected: " + srcAddr.IP.String() + ":" + strconv.Itoa(srcAddr.Port))
 		channel := make(chan []byte)
 		abortChannel := make(chan bool)
 		go netutils.ChannelToSocket(channel, abortChannel, socket, &srcAddr, "Invio al client "+string(srcAddr.IP)+":"+strconv.Itoa(srcAddr.Port))

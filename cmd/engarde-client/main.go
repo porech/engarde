@@ -2,12 +2,31 @@ package main
 
 import (
 	"engarde/pkg/netutils"
+	"io/ioutil"
 	"net"
+	"os"
 	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
+	"gopkg.in/yaml.v2"
 )
+
+type config struct {
+	Client clientConfig `yaml:"client"`
+}
+
+type clientConfig struct {
+	ListenAddr         string        `yaml:"listenAddr"`
+	DstAddr            string        `yaml:"dstAddr"`
+	ExcludedInterfaces []string      `yaml:"excludedInterfaces"`
+	DstOverrides       []dstOverride `yaml:"dstOverrides"`
+}
+
+type dstOverride struct {
+	IfName  string `yaml:"ifName"`
+	DstAddr string `yaml:"dstAddr"`
+}
 
 type sendingRoutine struct {
 	TrafficChannel chan []byte
@@ -16,25 +35,16 @@ type sendingRoutine struct {
 }
 
 var sendingChannels map[string]sendingRoutine
+var clConfig clientConfig
 
 func handleErr(err error, msg string) {
 	if err != nil {
-		log.Warn(msg+" | ", err)
+		log.Fatal(msg+" | ", err)
 	}
 }
 
 func isExcluded(name string) bool {
-	excludedInterfaces := []string{
-		"Connessione alla rete locale (LAN)* 17",
-		"Connessione alla rete locale (LAN)* 1",
-		"Connessione alla rete locale (LAN)* 7",
-		"VMware Network Adapter VMnet1",
-		"VMware Network Adapter VMnet8",
-		"Ethernet 6",
-		"Connessione di rete Bluetooth",
-		"Loopback Pseudo-Interface 1",
-	}
-	for _, ifname := range excludedInterfaces {
+	for _, ifname := range clConfig.ExcludedInterfaces {
 		if ifname == name {
 			return true
 		}
@@ -58,6 +68,15 @@ func getAddressByInterface(iface net.Interface) string {
 		splAddr := strings.Split(addr.String(), "/")[0]
 		if !strings.ContainsRune(splAddr, ':') {
 			return splAddr
+		}
+	}
+	return ""
+}
+
+func getDstOverrideByIfname(ifname string) string {
+	for _, override := range clConfig.DstOverrides {
+		if override.IfName == ifname {
+			return override.DstAddr
 		}
 	}
 	return ""
@@ -106,7 +125,11 @@ func updateAvailableInterfaces(wireguardRespChan chan []byte) {
 }
 
 func createSendThread(ifname, sourceAddr string, wireguardRespChan chan []byte) {
-	UDPDstAddr, err := net.ResolveUDPAddr("udp4", "46.101.194.106:59302")
+	dst := getDstOverrideByIfname(ifname)
+	if dst == "" {
+		dst = clConfig.DstAddr
+	}
+	UDPDstAddr, err := net.ResolveUDPAddr("udp4", dst)
 	handleErr(err, "createSendThread 1")
 	UDPSrcAddr, err := net.ResolveUDPAddr("udp4", sourceAddr+":0")
 	handleErr(err, "createSendThread 2")
@@ -142,14 +165,27 @@ func receiveFromWireguard(wgsock *net.UDPConn, sourceAddr **net.UDPAddr) {
 }
 
 func main() {
+	var genconfig config
+	var configName string
+	if len(os.Args) > 1 {
+		configName = os.Args[1]
+	} else {
+		configName = "engarde.yml"
+	}
+	yamlFile, err := ioutil.ReadFile(configName)
+	handleErr(err, "Reading config file "+configName+" failed")
+	err = yaml.Unmarshal(yamlFile, &genconfig)
+	handleErr(err, "Parsing config file failed")
+	clConfig = genconfig.Client
 	var wireguardAddr *net.UDPAddr
 	sendingChannels = make(map[string]sendingRoutine)
 	ptrWireguardAddr := &wireguardAddr
 
-	WireguardListenAddr, err := net.ResolveUDPAddr("udp4", "127.0.0.1:59301")
+	WireguardListenAddr, err := net.ResolveUDPAddr("udp4", clConfig.ListenAddr)
 	handleErr(err, "main 1")
 	WireguardSocket, err := net.ListenUDP("udp", WireguardListenAddr)
 	handleErr(err, "main 2")
+	log.Info("Listening on " + clConfig.ListenAddr)
 	go receiveFromWireguard(WireguardSocket, &wireguardAddr)
 
 	wireguardRespChan := make(chan []byte)
