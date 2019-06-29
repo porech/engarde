@@ -42,7 +42,7 @@ func main() {
 	WireguardSocket, err := net.ListenUDP("udp", WireguardSource)
 	handleErr(err)
 
-	ClientsListenAddr, err := net.ResolveUDPAddr("udp4", "127.0.0.1:59302")
+	ClientsListenAddr, err := net.ResolveUDPAddr("udp4", "0.0.0.0:59302")
 	handleErr(err)
 	ClientSocket, err := net.ListenUDP("udp", ClientsListenAddr)
 
