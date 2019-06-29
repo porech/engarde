@@ -12,10 +12,8 @@ func ChannelToSocket(channel chan []byte, abortChannel chan bool, socket *net.UD
 		select {
 		case buffer := <-channel:
 			// log.Info("Sent to " + ifname)
-			_, err := socket.WriteToUDP(buffer, *addr)
-			if err != nil {
-				log.Error(err)
-			}
+			// We ignore UDP errors here: if an interface becomes unavailable is up to the software to stop sending to it
+			socket.WriteToUDP(buffer, *addr)
 		case stop := <-abortChannel:
 			if stop {
 				// log.Info("Stopping send for " + ifname)

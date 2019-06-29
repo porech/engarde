@@ -17,9 +17,9 @@ type sendingRoutine struct {
 
 var sendingChannels map[string]sendingRoutine
 
-func handleErr(err error) {
+func handleErr(err error, msg string) {
 	if err != nil {
-		log.Warn(err)
+		log.Warn(msg+" | ", err)
 	}
 }
 
@@ -53,7 +53,7 @@ func interfaceExists(interfaces []net.Interface, name string) bool {
 
 func getAddressByInterface(iface net.Interface) string {
 	addrs, err := iface.Addrs()
-	handleErr(err)
+	handleErr(err, "getAddressByInterface 1")
 	for _, addr := range addrs {
 		splAddr := strings.Split(addr.String(), "/")[0]
 		if !strings.ContainsRune(splAddr, ':') {
@@ -66,16 +66,20 @@ func getAddressByInterface(iface net.Interface) string {
 func updateAvailableInterfaces(wireguardRespChan chan []byte) {
 	for {
 		interfaces, err := net.Interfaces()
-		handleErr(err)
+		handleErr(err, "updateAvailableInterfaces 1")
 		// Delete unavailable interfaces
 		for key, value := range sendingChannels {
 			if !interfaceExists(interfaces, key) {
 				log.Info("Interface " + key + " no longer exists, deleting it")
 				value.AbortChannel <- true
 				delete(sendingChannels, key)
+				continue
 			}
 			iface, err := net.InterfaceByName(key)
-			handleErr(err)
+			if err != nil {
+				continue
+			}
+			handleErr(err, "updateAvailableInterfaces 2")
 			ifaddr := getAddressByInterface(*iface)
 			if ifaddr != value.Address {
 				log.Info("Interface " + key + " changed address, re-creating socket")
@@ -85,14 +89,16 @@ func updateAvailableInterfaces(wireguardRespChan chan []byte) {
 		}
 		for _, iface := range interfaces {
 			ifname := iface.Name
-			if !isExcluded(ifname) {
-				if _, ok := sendingChannels[ifname]; !ok {
-					ifaddr := getAddressByInterface(iface)
-					if ifaddr != "" {
-						log.Info("New interface " + ifname + " with IP " + ifaddr + ", adding it")
-						createSendThread(ifname, getAddressByInterface(iface), wireguardRespChan)
-					}
-				}
+			if isExcluded(ifname) {
+				continue
+			}
+			if _, ok := sendingChannels[ifname]; ok {
+				continue
+			}
+			ifaddr := getAddressByInterface(iface)
+			if ifaddr != "" {
+				log.Info("New interface " + ifname + " with IP " + ifaddr + ", adding it")
+				createSendThread(ifname, getAddressByInterface(iface), wireguardRespChan)
 			}
 		}
 		time.Sleep(1 * time.Second)
@@ -101,11 +107,11 @@ func updateAvailableInterfaces(wireguardRespChan chan []byte) {
 
 func createSendThread(ifname, sourceAddr string, wireguardRespChan chan []byte) {
 	UDPDstAddr, err := net.ResolveUDPAddr("udp4", "46.101.194.106:59302")
-	handleErr(err)
+	handleErr(err, "createSendThread 1")
 	UDPSrcAddr, err := net.ResolveUDPAddr("udp4", sourceAddr+":0")
-	handleErr(err)
+	handleErr(err, "createSendThread 2")
 	UDPConn, err := net.ListenUDP("udp", UDPSrcAddr)
-	handleErr(err)
+	handleErr(err, "createSendThread 3")
 	dataChannel := make(chan []byte)
 	abortChannel := make(chan bool)
 	go netutils.ChannelToSocket(dataChannel, abortChannel, UDPConn, &UDPDstAddr, ifname)
@@ -141,9 +147,9 @@ func main() {
 	ptrWireguardAddr := &wireguardAddr
 
 	WireguardListenAddr, err := net.ResolveUDPAddr("udp4", "127.0.0.1:59301")
-	handleErr(err)
+	handleErr(err, "main 1")
 	WireguardSocket, err := net.ListenUDP("udp", WireguardListenAddr)
-	handleErr(err)
+	handleErr(err, "main 2")
 	go receiveFromWireguard(WireguardSocket, &wireguardAddr)
 
 	wireguardRespChan := make(chan []byte)
