@@ -21,7 +21,7 @@ var clients []*ConnectedClient
 
 func handleErr(err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Warn(err)
 	}
 }
 

@@ -19,7 +19,7 @@ var sendingChannels map[string]sendingRoutine
 
 func handleErr(err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Warn(err)
 	}
 }
 
@@ -89,7 +89,7 @@ func updateAvailableInterfaces(wireguardRespChan chan []byte) {
 				if _, ok := sendingChannels[ifname]; !ok {
 					ifaddr := getAddressByInterface(iface)
 					if ifaddr != "" {
-						log.Info("New interface " + ifname + ", adding it")
+						log.Info("New interface " + ifname + " with IP " + ifaddr + ", adding it")
 						createSendThread(ifname, getAddressByInterface(iface), wireguardRespChan)
 					}
 				}
@@ -100,7 +100,7 @@ func updateAvailableInterfaces(wireguardRespChan chan []byte) {
 }
 
 func createSendThread(ifname, sourceAddr string, wireguardRespChan chan []byte) {
-	UDPDstAddr, err := net.ResolveUDPAddr("udp4", "46.101.194.106:12346")
+	UDPDstAddr, err := net.ResolveUDPAddr("udp4", "46.101.194.106:59302")
 	handleErr(err)
 	UDPSrcAddr, err := net.ResolveUDPAddr("udp4", sourceAddr+":0")
 	handleErr(err)
@@ -117,15 +117,18 @@ func createSendThread(ifname, sourceAddr string, wireguardRespChan chan []byte) 
 	}
 }
 
-func receiveFromWireguard(wgsock *net.UDPConn) {
+func receiveFromWireguard(wgsock *net.UDPConn, sourceAddr **net.UDPAddr) {
 	buffer := make([]byte, 1500)
 	for {
-		n, _, err := wgsock.ReadFromUDP(buffer)
+		n, srcAddr, err := wgsock.ReadFromUDP(buffer)
+		if sourceAddr != nil {
+			*sourceAddr = srcAddr
+		}
 
 		if err != nil {
 			log.Error(err)
 		}
-		log.Info("Received from WireGuard")
+		// log.Info("Received from WireGuard")
 		for _, sendingChannel := range sendingChannels {
 			sendingChannel.TrafficChannel <- buffer[:n]
 		}
@@ -141,7 +144,7 @@ func main() {
 	handleErr(err)
 	WireguardSocket, err := net.ListenUDP("udp", WireguardListenAddr)
 	handleErr(err)
-	go receiveFromWireguard(WireguardSocket)
+	go receiveFromWireguard(WireguardSocket, &wireguardAddr)
 
 	wireguardRespChan := make(chan []byte)
 	wireguardAbortChan := make(chan bool)
