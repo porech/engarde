@@ -50,7 +50,7 @@ Take the file and copy it to the client and to the server. You can omit the clie
 
 5. Change the WireGuard configuration on the client: set the peer address to the engarde-client listen address (in this procedure, it will be 127.0.0.1:59401). You don't need to change anything on the server.
 
-Done! engarde should now be overlying your WireGuard tunnel: try to ping the server from the client and, while doing so, disconnect an interface or even physically detach it: the traffic should continue to flow normally, without any delay, until at least one interface is working. If there are no interfaces available at a given moment, the traffic will stop, but will be immediately resumed whenever one of them will be available again.
+Done! engarde is now overlying your WireGuard tunnel: try to ping the server from the client (on the WireGuard IP address 192.168.5.1) and, while doing so, disconnect an interface or even physically detach it: the traffic will continue to flow normally, without any delay, until at least one interface is working. If there are no interfaces available at a given moment, the traffic will stop, but will be immediately resumed whenever one of them will be available again.
 
 ### Scenario 2: multiple connections between two peers
 Here we have a totally different scenario: we are in a data center, and two servers are connected with two Ethernet cables that follow different paths for redundancy.
@@ -71,7 +71,7 @@ server:
   dstAddr: "127.0.0.1:59301"
 ```
 
-That's it: engarde client will use 192.168.1.2 as destination, except for eth1 where 192.168.2.2 is used.
+That's it: engarde client will use 192.168.1.2 as destination, except for eth1 where 192.168.2.2 is used. You will just need to use the WireGuard IPs to communicate between the two servers: the packets will always find their way to the destination.
 
 ### Other scenarios
 There are a lot of other situations where engarde can make the difference: the connection doesn't have to be a point-to-point one, an entire network can be routed through a tunnel. Virtually, engarde can work in every situation where WireGuard can. For now, if you need to connect different clients to a single server you need to run a different instance of engarde-server, with the same dstAddr and different listen ports, and configure each client to talk with a different port.  
