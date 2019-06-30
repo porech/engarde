@@ -82,6 +82,17 @@ func getDstOverrideByIfname(ifname string) string {
 	return ""
 }
 
+func listInterfaces() {
+	interfaces, err := net.Interfaces()
+	handleErr(err, "listInterfaces 1")
+	for _, iface := range interfaces {
+		ifname := iface.Name
+		print("\r\n" + ifname + "\r\n")
+		ifaddr := getAddressByInterface(iface)
+		print("  Address: " + ifaddr + "\r\n")
+	}
+}
+
 func updateAvailableInterfaces(wireguardRespChan chan []byte) {
 	for {
 		interfaces, err := net.Interfaces()
@@ -171,6 +182,10 @@ func main() {
 		configName = os.Args[1]
 	} else {
 		configName = "engarde.yml"
+	}
+	if configName == "list-interfaces" {
+		listInterfaces()
+		return
 	}
 	yamlFile, err := ioutil.ReadFile(configName)
 	handleErr(err, "Reading config file "+configName+" failed")

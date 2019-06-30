@@ -1,21 +1,33 @@
 ---
+# Client configuration
 client:
-  listenAddr: "127.0.0.1:59301"
-  dstAddr: "1.2.3.4:59302"
+  # This is the engarde listen address: WireGuard peer endpoint will need to point here.
+  listenAddr: "127.0.0.1:59401"
+  # This is the address of the engarde server on the other side
+  dstAddr: "1.2.3.4:59402"
+  # By default, engarde sends packets through all the available network interfaces.
+  # You will probably need to exclude some interfaces (Bluetooth or virtual ones, for example).
+  # Lauch "engarde-client list-interfaces" to show all the detected interfaces, and form your own list based on that.
+  # If you don't need to exclude any interface, you can omit this or just write `excludedInterfaces: []`
   excludedInterfaces:
-    - "Connessione alla rete locale (LAN)* 17"
-    - "Connessione alla rete locale (LAN)* 1"
-    - "Connessione alla rete locale (LAN)* 7"
-    - "VMware Network Adapter VMnet1"
-    - "VMware Network Adapter VMnet8"
-    - "Ethernet 6"
-    - "Connessione di rete Bluetooth"
+    - "Local Area Connection 2"
+    - "VirtualBox Host-Only Network"
+    - "Bluetooth Network Connection"
     - "Loopback Pseudo-Interface 1"
+  # Sometimes, over specific network interfaces, it's useful to reach the server through another IP address.
+  # This is the case if there are two totally separated networks between the client and the server, with different IP addresses.
+  # You can specify an array of maps where you specify the network interface name and the destination address to use for this interface.
+  # If you don't need to override anything, you can omit this or just write `dstOverrides: []`
   dstOverrides:
-    - ifName: "Ethernet 2"
+    - ifName: "Local Area Connection 4"
       dstAddr: "5.6.7.8:59302"
 
+# Server configuration
 server:
-  listenAddr: "0.0.0.0:59302"
+  # This is the engarde listen address: the clients will connect here.
+  listenAddr: "0.0.0.0:59402"
+  # The destination address to contact WireGuard on the server
   dstAddr: "127.0.0.1:59301"
+  # Client timeout in seconds. If a client doesn't send any packet for n seconds, engarde stops sending it packets.
+  # You will need to set it to a slightly higher value than the PersistentKeepalive option in WireGuard clients.
   clientTimeout: 30
