@@ -1,4 +1,4 @@
-# engarde - Don't loose that packet!
+# engarde - Don't lose that packet!
 
 ## What is engarde?
 engarde is a network utility specifically designed to create a point-to-point tunnel over multiple network (tipically Internet) connections, ensuring that the tunnel stays up and healty without a single delay or package loss, as long as at least one of the connections is working.
@@ -7,7 +7,7 @@ engarde is a network utility specifically designed to create a point-to-point tu
 engarde relies on the encryption and the de-duplication technology of the underlying WireGuard connection. It takes every UDP packet that is emitted by WireGuard and sends it through every avaliable connection. So, the first package that reaches its destination wins, and the others are silently discarded by WireGuard itself. In the same way, every response packet is sent to all the connected sockets, reaching the origin through all the connections.
 
 ## Doesn't WireGuard already support roaming between different connections?
-It does, it's awesome and it's one of the things engarde relies on. WireGuard, however, sends its UDP packets over the default system interface for a specific route, usually the one used to access the system. If this interface goes down or looses access to the network, it's up to the operating system to detect it and change the routing table accordingly - and it doesn't always do it right.
+It does, it's awesome and it's one of the things engarde relies on. WireGuard, however, sends its UDP packets over the default system interface for a specific route, usually the one used to access the system. If this interface goes down or loses access to the network, it's up to the operating system to detect it and change the routing table accordingly - and it doesn't always do it right.
 
 ## So, is it a failover connection mechanism?
 In some way, engarde is similar to a failover mechanism, but it doesn't switch the connection when a problem occurs: this would inevitably lead to a delay in the transmission. Instead, engarde constantly sends every single packet through all the available connections: if one of the links has problems, the packet will still fastly reach its destination through the other ones, and the user won't even notice it. Moreover, failover technologies often rely on expensive hardware and hard configurations: engarde, on the other side, is totally open source and really simple to configure.
