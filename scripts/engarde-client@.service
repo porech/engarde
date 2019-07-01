@@ -1,0 +1,18 @@
+[Unit]
+Description=Engarde Client - Don't lose that packet! -> conf: %I
+After=network-online.target
+Wants=network.target network-online.target
+
+[Service]
+Type=idle
+ExecStartPre=/usr/bin/engarde-enable /etc/engarde/%i.yml
+ExecStart=/usr/bin/engarde-client /etc/engarde/%i.yml
+
+Restart=on-failure
+RestartSec=5
+StartLimitBurst=3
+StartLimitInterval=60s
+
+[Install]
+WantedBy=multi-user.target
+
