@@ -1,7 +1,6 @@
 package main
 
 import (
-	"engarde/pkg/netutils"
 	"io/ioutil"
 	"net"
 	"os"
@@ -29,12 +28,13 @@ type dstOverride struct {
 }
 
 type sendingRoutine struct {
-	TrafficChannel chan []byte
-	AbortChannel   chan bool
-	Address        string
+	SrcSock   *net.UDPConn
+	SrcAddr   string
+	DstAddr   *net.UDPAddr
+	IsClosing bool
 }
 
-var sendingChannels map[string]sendingRoutine
+var sendingChannels map[string]*sendingRoutine
 var clConfig clientConfig
 
 func handleErr(err error, msg string) {
@@ -93,28 +93,36 @@ func listInterfaces() {
 	}
 }
 
-func updateAvailableInterfaces(wireguardRespChan chan []byte) {
+func updateAvailableInterfaces(wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
 	for {
 		interfaces, err := net.Interfaces()
 		handleErr(err, "updateAvailableInterfaces 1")
 		// Delete unavailable interfaces
-		for key, value := range sendingChannels {
-			if !interfaceExists(interfaces, key) {
-				log.Info("Interface " + key + " no longer exists, deleting it")
-				value.AbortChannel <- true
-				delete(sendingChannels, key)
+		for ifname, routine := range sendingChannels {
+			if !interfaceExists(interfaces, ifname) {
+				log.Info("Interface '" + ifname + "'' no longer exists, deleting it")
+				routine.IsClosing = true
+				addr, err := net.ResolveUDPAddr("udp4", routine.SrcSock.LocalAddr().String())
+				if err == nil {
+					routine.SrcSock.WriteToUDP([]byte("X"), addr)
+				}
+				delete(sendingChannels, ifname)
 				continue
 			}
-			iface, err := net.InterfaceByName(key)
+			iface, err := net.InterfaceByName(ifname)
 			if err != nil {
 				continue
 			}
 			handleErr(err, "updateAvailableInterfaces 2")
 			ifaddr := getAddressByInterface(*iface)
-			if ifaddr != value.Address {
-				log.Info("Interface " + key + " changed address, re-creating socket")
-				value.AbortChannel <- true
-				delete(sendingChannels, key)
+			if ifaddr != routine.SrcAddr {
+				log.Info("Interface " + ifname + " changed address, re-creating socket")
+				routine.IsClosing = true
+				addr, err := net.ResolveUDPAddr("udp4", routine.SrcSock.LocalAddr().String())
+				if err == nil {
+					routine.SrcSock.WriteToUDP([]byte("X"), addr)
+				}
+				delete(sendingChannels, ifname)
 			}
 		}
 		for _, iface := range interfaces {
@@ -128,49 +136,70 @@ func updateAvailableInterfaces(wireguardRespChan chan []byte) {
 			ifaddr := getAddressByInterface(iface)
 			if ifaddr != "" {
 				log.Info("New interface " + ifname + " with IP " + ifaddr + ", adding it")
-				createSendThread(ifname, getAddressByInterface(iface), wireguardRespChan)
+				createSendThread(ifname, getAddressByInterface(iface), wgSock, wgAddr)
 			}
 		}
 		time.Sleep(1 * time.Second)
 	}
 }
 
-func createSendThread(ifname, sourceAddr string, wireguardRespChan chan []byte) {
+func createSendThread(ifname, sourceAddr string, wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
 	dst := getDstOverrideByIfname(ifname)
 	if dst == "" {
 		dst = clConfig.DstAddr
 	}
-	UDPDstAddr, err := net.ResolveUDPAddr("udp4", dst)
-	handleErr(err, "createSendThread 1")
-	UDPSrcAddr, err := net.ResolveUDPAddr("udp4", sourceAddr+":0")
-	handleErr(err, "createSendThread 2")
-	UDPConn, err := net.ListenUDP("udp", UDPSrcAddr)
-	handleErr(err, "createSendThread 3")
-	dataChannel := make(chan []byte)
-	abortChannel := make(chan bool)
-	go netutils.ChannelToSocket(dataChannel, abortChannel, UDPConn, &UDPDstAddr, ifname)
-	go netutils.SocketToChannels(UDPConn, []chan []byte{wireguardRespChan}, nil, ifname)
-	sendingChannels[ifname] = sendingRoutine{
-		TrafficChannel: dataChannel,
-		AbortChannel:   abortChannel,
-		Address:        sourceAddr,
+	dstAddr, err := net.ResolveUDPAddr("udp4", dst)
+	if err != nil {
+		log.Error("Can't resolve destination address '" + dst + "' for interface '" + ifname + "', not using it")
+		return
+	}
+	srcAddr, err := net.ResolveUDPAddr("udp4", sourceAddr+":0")
+	if err != nil {
+		log.Error("Can't resolve source address '" + sourceAddr + "' for interface '" + ifname + "', not using it")
+		return
+	}
+	sock, err := net.ListenUDP("udp", srcAddr)
+	if err != nil {
+		log.Error("Can't create socket for address '" + sourceAddr + "' on interface '" + ifname + "', not using it")
+		return
+	}
+
+	routine := sendingRoutine{
+		SrcSock:   sock,
+		SrcAddr:   sourceAddr,
+		DstAddr:   dstAddr,
+		IsClosing: false,
+	}
+	ptrRoutine := &routine
+
+	go WGWriteBack(ifname, ptrRoutine, wgSock, wgAddr)
+	sendingChannels[ifname] = ptrRoutine
+}
+
+func WGWriteBack(ifname string, routine *sendingRoutine, wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
+	log.Info("Starting WGWriteBack routine for '" + ifname + "'")
+	buffer := make([]byte, 1500)
+	var n int
+	for {
+		n, _, _ = routine.SrcSock.ReadFromUDP(buffer)
+		if routine.IsClosing {
+			log.Info("Stopping WGWriteBack routine for '" + ifname + "'")
+		}
+		wgSock.WriteToUDP(buffer[:n], *wgAddr)
 	}
 }
 
 func receiveFromWireguard(wgsock *net.UDPConn, sourceAddr **net.UDPAddr) {
 	buffer := make([]byte, 1500)
+	var n int
+	var srcAddr *net.UDPAddr
+	var routine *sendingRoutine
 	for {
-		n, srcAddr, err := wgsock.ReadFromUDP(buffer)
-		if sourceAddr != nil {
-			*sourceAddr = srcAddr
-		}
+		n, srcAddr, _ = wgsock.ReadFromUDP(buffer)
+		*sourceAddr = srcAddr
 
-		if err != nil {
-			log.Error(err)
-		}
-		// log.Info("Received from WireGuard")
-		for _, sendingChannel := range sendingChannels {
-			sendingChannel.TrafficChannel <- buffer[:n]
+		for _, routine = range sendingChannels {
+			routine.SrcSock.WriteToUDP(buffer[:n], routine.DstAddr)
 		}
 	}
 }
@@ -193,7 +222,7 @@ func main() {
 	handleErr(err, "Parsing config file failed")
 	clConfig = genconfig.Client
 	var wireguardAddr *net.UDPAddr
-	sendingChannels = make(map[string]sendingRoutine)
+	sendingChannels = make(map[string]*sendingRoutine)
 	ptrWireguardAddr := &wireguardAddr
 
 	WireguardListenAddr, err := net.ResolveUDPAddr("udp4", clConfig.ListenAddr)
@@ -201,10 +230,7 @@ func main() {
 	WireguardSocket, err := net.ListenUDP("udp", WireguardListenAddr)
 	handleErr(err, "main 2")
 	log.Info("Listening on " + clConfig.ListenAddr)
-	go receiveFromWireguard(WireguardSocket, &wireguardAddr)
 
-	wireguardRespChan := make(chan []byte)
-	wireguardAbortChan := make(chan bool)
-	go updateAvailableInterfaces(wireguardRespChan)
-	netutils.ChannelToSocket(wireguardRespChan, wireguardAbortChan, WireguardSocket, ptrWireguardAddr, "Wireguard")
+	go updateAvailableInterfaces(WireguardSocket, ptrWireguardAddr)
+	receiveFromWireguard(WireguardSocket, ptrWireguardAddr)
 }
