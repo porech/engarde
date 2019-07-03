@@ -1,7 +1,6 @@
 package main
 
 import (
-	"engarde/pkg/netutils"
 	"io/ioutil"
 	"net"
 	"os"
@@ -24,13 +23,11 @@ type serverConfig struct {
 
 // ConnectedClient contains the information about a client
 type ConnectedClient struct {
-	Addr         *net.UDPAddr
-	LastReceived int64
-	Channel      chan []byte
-	IsClosing    bool
+	Addr *net.UDPAddr
+	Last int64
 }
 
-var clients []*ConnectedClient
+var clients map[string]*ConnectedClient
 var srConfig serverConfig
 
 func handleErr(err error, msg string) {
@@ -65,6 +62,8 @@ func main() {
 		srConfig.ClientTimeout = 30
 	}
 
+	clients = make(map[string]*ConnectedClient)
+
 	WireguardAddr, err := net.ResolveUDPAddr("udp4", srConfig.DstAddr)
 	handleErr(err, "Cannot resolve destination address")
 	WireguardSource, err := net.ResolveUDPAddr("udp4", "0.0.0.0:0")
@@ -78,57 +77,55 @@ func main() {
 	handleErr(err, "Cannot create listen socket")
 	log.Info("Listening on " + srConfig.ListenAddr)
 
-	chanToWireguard := make(chan []byte)
-	abortWireguard := make(chan bool)
-	go netutils.ChannelToSocket(chanToWireguard, abortWireguard, WireguardSocket, &WireguardAddr, "Invio a Wireguard")
-
-	chanFromWireguard := make(chan []byte)
-	go netutils.SocketToChannels(WireguardSocket, []chan []byte{chanFromWireguard}, nil, "Ricevo da Wireguard")
-	go receiveFromWireguard(chanFromWireguard)
-
-	listenForConnections(ClientSocket, chanToWireguard)
+	go receiveFromWireguard(WireguardSocket, ClientSocket)
+	receiveFromClient(ClientSocket, WireguardSocket, WireguardAddr)
 }
 
-func listenForConnections(socket *net.UDPConn, wgChannel chan []byte) {
+func receiveFromClient(socket, wgSocket *net.UDPConn, wgAddr *net.UDPAddr) {
 	buffer := make([]byte, 1500)
+	var currentTime int64
+	var n int
+	var srcAddr *net.UDPAddr
+	var srcAddrS string
+	var client *ConnectedClient
+	var exists bool
 	for {
-		n, srcAddr, err := socket.ReadFromUDP(buffer)
-		if err != nil {
-			continue
+		n, srcAddr, _ = socket.ReadFromUDP(buffer)
+
+		// Check if client exists
+		currentTime = time.Now().Unix()
+		srcAddrS = srcAddr.IP.String() + ":" + strconv.Itoa(srcAddr.Port)
+		if client, exists = clients[srcAddrS]; exists {
+			log.Info("New client connected: '" + srcAddrS + "'")
+			newClient := ConnectedClient{
+				Addr: srcAddr,
+				Last: currentTime,
+			}
+			clients[srcAddrS] = &newClient
+		} else {
+			client.Last = currentTime
 		}
-		handleClientMessage(srcAddr, buffer[:n], socket, wgChannel)
+
+		wgSocket.WriteToUDP(buffer[:n], wgAddr)
 	}
 }
 
-func receiveFromWireguard(channel chan []byte) {
+func receiveFromWireguard(wgSocket, socket *net.UDPConn) {
+	buffer := make([]byte, 1500)
+	var n int
+	var client *ConnectedClient
+	var currentTime int64
+	var clientAddr string
 	for {
-		message := <-channel
-		for _, client := range clients {
-			if client.LastReceived > time.Now().Unix()-srConfig.ClientTimeout {
-				client.Channel <- message
+		n, _, _ = wgSocket.ReadFromUDP(buffer)
+		currentTime = time.Now().Unix()
+		for clientAddr, client = range clients {
+			if client.Last > currentTime-srConfig.ClientTimeout {
+				socket.WriteToUDP(buffer[:n], client.Addr)
+			} else {
+				log.Info("Client '" + clientAddr + "' timed out")
+				delete(clients, clientAddr)
 			}
 		}
 	}
-}
-
-func handleClientMessage(srcAddr *net.UDPAddr, message []byte, socket *net.UDPConn, wgChannel chan []byte) {
-	client := getClientByAddr(srcAddr)
-	currentTime := time.Now().Unix()
-	if client == nil {
-		log.Info("New client connected: " + srcAddr.IP.String() + ":" + strconv.Itoa(srcAddr.Port))
-		channel := make(chan []byte)
-		abortChannel := make(chan bool)
-		go netutils.ChannelToSocket(channel, abortChannel, socket, &srcAddr, "Invio al client "+string(srcAddr.IP)+":"+strconv.Itoa(srcAddr.Port))
-
-		client := ConnectedClient{
-			Addr:         srcAddr,
-			LastReceived: currentTime,
-			Channel:      channel,
-			IsClosing:    false,
-		}
-		clients = append(clients, &client)
-	} else {
-		client.LastReceived = currentTime
-	}
-	wgChannel <- message
 }
