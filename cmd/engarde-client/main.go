@@ -61,12 +61,31 @@ func interfaceExists(interfaces []net.Interface, name string) bool {
 	return false
 }
 
+func isAddressAllowed(addr string) bool {
+	// TODO: IPv6 support
+	if strings.ContainsRune(addr, ':') {
+		return false
+	}
+	ip := net.ParseIP(addr)
+	disallowedNetworks := []string{
+		"169.254.0.0/16",
+		"127.0.0.0/8",
+	}
+	for _, disallowedNetwork := range disallowedNetworks {
+		_, subnet, _ := net.ParseCIDR(disallowedNetwork)
+		if subnet.Contains(ip) {
+			return false
+		}
+	}
+	return true
+}
+
 func getAddressByInterface(iface net.Interface) string {
 	addrs, err := iface.Addrs()
 	handleErr(err, "getAddressByInterface 1")
 	for _, addr := range addrs {
 		splAddr := strings.Split(addr.String(), "/")[0]
-		if !strings.ContainsRune(splAddr, ':') {
+		if isAddressAllowed(splAddr) {
 			return splAddr
 		}
 	}
