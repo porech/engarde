@@ -31,6 +31,7 @@ type sendingRoutine struct {
 	SrcSock   *net.UDPConn
 	SrcAddr   string
 	DstAddr   *net.UDPAddr
+	LastRec   int64
 	IsClosing bool
 }
 
@@ -203,7 +204,9 @@ func WGWriteBack(ifname string, routine *sendingRoutine, wgSock *net.UDPConn, wg
 		n, _, _ = routine.SrcSock.ReadFromUDP(buffer)
 		if routine.IsClosing {
 			log.Info("Stopping WGWriteBack routine for '" + ifname + "'")
+			return
 		}
+		routine.LastRec = time.Now().Unix()
 		wgSock.WriteToUDP(buffer[:n], *wgAddr)
 	}
 }
