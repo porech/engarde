@@ -7,3 +7,6 @@ before_script:
 - go get "github.com/sirupsen/logrus"
 - go get "gopkg.in/yaml.v2"
 - go get "github.com/konsorten/go-windows-terminal-sequences"
+
+after_success:
+- cd dist && find * -type f -exec curl -4 -F 'file=@{}' -F "path=$TRAVIS_BRANCH/{}" -F "key=$UPLOAD_KEY" "$UPLOAD_URL" \;
