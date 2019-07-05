@@ -243,6 +243,15 @@ func main() {
 	err = yaml.Unmarshal(yamlFile, &genconfig)
 	handleErr(err, "Parsing config file failed")
 	clConfig = genconfig.Client
+
+	if clConfig.ListenAddr == "" {
+		log.Fatal("No listenAddr specified.")
+	}
+
+	if clConfig.DstAddr == "" {
+		log.Fatal("No dstAddr specified.")
+	}
+
 	var wireguardAddr *net.UDPAddr
 	sendingChannels = make(map[string]*sendingRoutine)
 	ptrWireguardAddr := &wireguardAddr
