@@ -16,20 +16,23 @@ In some way, engarde is similar to a failover mechanism, but it doesn't switch t
 Absolutely yes. The used bandwidth is the one you would normally use multiplied by the number of the connections you have. But hey, imagine you are transmitting real time audio to a national radio station: would you really prefer that a connection failure causes some moments of silence to the listeners, or would you happily waste your bandwidth to avoid it?
 
 ## How do I get it?
-You can find the latest builds here (thanks to linuxzogno.org for hosting them):
+You can find the latest builds here: (thanks to linuxzogno.org for hosting them):
 
-### Linux
-- Server: [i386](http://www.linuxzogno.org/engarde/master/linux/i386/engarde-server) [amd64](http://www.linuxzogno.org/engarde/master/linux/amd64/engarde-server)
-- Client: [i386](http://www.linuxzogno.org/engarde/master/linux/i386/engarde-client) [amd64](http://www.linuxzogno.org/engarde/master/linux/amd64/engarde-client)
+### Server
+|                   | i386     | amd64    | 
+| ----------------- | -------- | -------- |
+| *Linux*           | [Download](http://www.linuxzogno.org/engarde/master/linux/i386/engarde-server) | [Download](http://www.linuxzogno.org/engarde/master/linux/amd64/engarde-server) |
+| *Windows*         | [Download](http://www.linuxzogno.org/engarde/master/windows/i386/engarde-server.exe) | [Download](http://www.linuxzogno.org/engarde/master/windows/amd64/engarde-server.exe) |
+| *Darwin (Mac OS)* | [Download](http://www.linuxzogno.org/engarde/master/darwin/i386/engarde-server) | [Download](http://www.linuxzogno.org/engarde/master/darwin/amd64/engarde-server) |
 
-### Windows
-- Server: [i386](http://www.linuxzogno.org/engarde/master/windows/i386/engarde-server.exe) [amd64](http://www.linuxzogno.org/engarde/master/windows/amd64/engarde-server.exe)
-- Client: [i386](http://www.linuxzogno.org/engarde/master/windows/i386/engarde-client.exe) [amd64](http://www.linuxzogno.org/engarde/master/windows/amd64/engarde-client.exe)
+### Client
+|                   | i386     | amd64    | 
+| ----------------- | -------- | -------- |
+| *Linux*           | [Download](http://www.linuxzogno.org/engarde/master/linux/i386/engarde-client) | [Download](http://www.linuxzogno.org/engarde/master/linux/amd64/engarde-client) |
+| *Windows*         | [Download](http://www.linuxzogno.org/engarde/master/windows/i386/engarde-client.exe) | [Download](http://www.linuxzogno.org/engarde/master/windows/amd64/engarde-client.exe) |
+| *Darwin (Mac OS)* | [Download](http://www.linuxzogno.org/engarde/master/darwin/i386/engarde-client) | [Download](http://www.linuxzogno.org/engarde/master/darwin/amd64/engarde-client) |
 
-### Darwin (Mac OS)
-- Server: [i386](http://www.linuxzogno.org/engarde/master/darwin/i386/engarde-server) [amd64](http://www.linuxzogno.org/engarde/master/darwin/amd64/engarde-server)
-- Client: [i386](http://www.linuxzogno.org/engarde/master/darwin/i386/engarde-client) [amd64](http://www.linuxzogno.org/engarde/master/darwin/amd64/engarde-client)
-
+If you prefer, or if you need another architecture, you can always compile from source. Some more documentation about this will be available soon, but it shouldn't be too hard if you know a little about Golang.
 
 ## How do I use it?
 
