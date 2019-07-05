@@ -18,17 +18,27 @@ Absolutely yes. The used bandwidth is the one you would normally use multiplied 
 ## How do I get it?
 You can find the latest builds here (thanks to linuxzogno.org for hosting them):
 
-### Linux
-- Server: [i386](http://www.linuxzogno.org/engarde/master/linux/i386/engarde-server) [amd64](http://www.linuxzogno.org/engarde/master/linux/amd64/engarde-server)
-- Client: [i386](http://www.linuxzogno.org/engarde/master/linux/i386/engarde-client) [amd64](http://www.linuxzogno.org/engarde/master/linux/amd64/engarde-client)
-
-### Windows
-- Server: [i386](http://www.linuxzogno.org/engarde/master/windows/i386/engarde-server.exe) [amd64](http://www.linuxzogno.org/engarde/master/windows/amd64/engarde-server.exe)
-- Client: [i386](http://www.linuxzogno.org/engarde/master/windows/i386/engarde-client.exe) [amd64](http://www.linuxzogno.org/engarde/master/windows/amd64/engarde-client.exe)
-
-### Darwin (Mac OS)
-- Server: [i386](http://www.linuxzogno.org/engarde/master/darwin/i386/engarde-server) [amd64](http://www.linuxzogno.org/engarde/master/darwin/amd64/engarde-server)
-- Client: [i386](http://www.linuxzogno.org/engarde/master/darwin/i386/engarde-client) [amd64](http://www.linuxzogno.org/engarde/master/darwin/amd64/engarde-client)
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Server**                                                                                                                                                                                     |
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                 | *i386*                                                                               | *amd64*                                                                               |
++-----------------+--------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Linux           | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/i386/engarde-server)       | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/amd64/engarde-server)       |
++-----------------+--------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Windows         | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/i386/engarde-server.exe) | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/amd64/engarde-server.exe) |
++-----------------+--------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Darwin (Mac OS) | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/i386/engarde-server)      | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/amd64/engarde-server)      |
++-----------------+--------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| **Client**                                                                                                                                                                                     |
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                 | *i386*                                                                               | *amd64*                                                                               |
++-----------------+--------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Linux           | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/i386/engarde-client)       | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/amd64/engarde-client)       |
++-----------------+--------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Windows         | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/i386/engarde-client.exe) | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/amd64/engarde-client.exe) |
++-----------------+--------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Darwin (Mac OS) | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/i386/engarde-client)      | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/amd64/engarde-client)      |
++-----------------+--------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
 
 
 ## How do I use it?
