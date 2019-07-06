@@ -19,16 +19,16 @@ Absolutely yes. The used bandwidth is the one you would normally use multiplied 
 You can find the latest builds here: (thanks to linuxzogno.org for hosting them):
 
 ### Server
-|                   | i386     | amd64    | armhf    |
+|                   | i386     | amd64    | arm    |
 | ----------------- | -------- | -------- | -------- |
-| *Linux*           | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/i386/engarde-server) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/amd64/engarde-server) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/armhf/engarde-server) |
+| *Linux*           | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/i386/engarde-server) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/amd64/engarde-server) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/arm/engarde-server) |
 | *Windows*         | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/i386/engarde-server.exe) | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/amd64/engarde-server.exe) |  |
 | *Darwin (Mac OS)* | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/i386/engarde-server) | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/amd64/engarde-server) |  |
 
 ### Client
-|                   | i386     | amd64    | armhf    |
+|                   | i386     | amd64    | arm    |
 | ----------------- | -------- | -------- | -------- |
-| *Linux*           | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/i386/engarde-client) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/amd64/engarde-client) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/armhf/engarde-client) |
+| *Linux*           | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/i386/engarde-client) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/amd64/engarde-client) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/arm/engarde-client) |
 | *Windows*         | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/i386/engarde-client.exe) | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/amd64/engarde-client.exe) |  |
 | *Darwin (Mac OS)* | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/i386/engarde-client) | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/amd64/engarde-client) |  |
 
