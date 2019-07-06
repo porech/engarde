@@ -4,21 +4,31 @@ if [ $(whoami) != "root" ]; then
 	echo "Please run me as root."
 	exit 0;
 fi
+
 CONF=$1
+
 if [ "$CONF" != "" ]; then
-	ENGARDE_PORT=`cat $CONF |grep -A 2 client |grep listenAddr |cut -d ':' -f3 |cut -d '"' -f1`
-	ENGARDE_SERVER=`cat $CONF |grep -A 3 client |grep dstAddr |cut -d ':' -f2 |cut -d '"' -f2`
-	CHECK_ENABLED=`wg show all endpoints |grep 127.0.0.1:$ENGARDE_PORT`
-	if [ "$CHECK_ENABLED" == "" ]; then
-		
-		PEER=`wg show all endpoints |grep $ENGARDE_SERVER |awk '{ print $2 }'`
-		if [ "$PEER" != "" ]; then
-   			wg set wg0 peer $PEER endpoint 127.0.0.1:$ENGARDE_PORT
-		fi
+
+	CHECK_AUTO_CHANGE=`cat $CONF |grep autoChangeWgEndpoint |sed 's/autoChangeWgEndpoint://g' |sed 's/\ //g'`
+
+	if [ "$CHECK_AUTO_CHANGE" != "" ] && [[ $CHECK_AUTO_CHANGE == wg* ]]; then
+			INTERFACE=$CHECK_AUTO_CHANGE;
+			ENGARDE_PORT=`cat $CONF |grep -A 2 client |grep listenAddr |cut -d ':' -f3 |cut -d '"' -f1`
+			ENGARDE_SERVER=`cat $CONF |grep -A 3 client |grep dstAddr |cut -d ':' -f2 |cut -d '"' -f2`
+			CHECK_ENABLED=`wg show all endpoints |grep 127.0.0.1:$ENGARDE_PORT`
+			if [ "$CHECK_ENABLED" == "" ]; then
+				
+				PEER=`wg show all endpoints |grep $ENGARDE_SERVER |awk '{ print $2 }'`
+				if [ "$PEER" != "" ]; then
+					wg set $INTERFACE peer $PEER endpoint 127.0.0.1:$ENGARDE_PORT
+				fi
+			fi
+		else 
+			echo "autoChangeWgEndpoint not enabled, skipping."
+			exit 0;
 	fi
 else
-	echo "No configuration file specified. Exiting."
-	exit 0;
+		echo "No configuration file specified. Exiting."
+		exit 0;
 fi
-
 
