@@ -192,11 +192,11 @@ func createSendThread(ifname, sourceAddr string, wgSock *net.UDPConn, wgAddr **n
 	}
 	ptrRoutine := &routine
 
-	go WGWriteBack(ifname, ptrRoutine, wgSock, wgAddr)
+	go wgWriteBack(ifname, ptrRoutine, wgSock, wgAddr)
 	sendingChannels[ifname] = ptrRoutine
 }
 
-func WGWriteBack(ifname string, routine *sendingRoutine, wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
+func wgWriteBack(ifname string, routine *sendingRoutine, wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
 	log.Info("Starting WGWriteBack routine for '" + ifname + "'")
 	buffer := make([]byte, 1500)
 	var n int
