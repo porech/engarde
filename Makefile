@@ -3,25 +3,25 @@ all: client server
 
 # Client build commands
 client-linux-i386:
-	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	if [ "$$TRAVIS_COMMIT" != "" ]; then version="$$TRAVIS_COMMIT ($$TRAVIS_BRANCH)"; fi; \
 	GOOS=linux GOARCH=386 go build -ldflags "-X main.Version=$$version" -o dist/linux/i386/engarde-client ./cmd/engarde-client
 client-linux-amd64:
-	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	if [ "$$TRAVIS_COMMIT" != "" ]; then version="$$TRAVIS_COMMIT ($$TRAVIS_BRANCH)"; fi; \
 	GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=$$version" -o dist/linux/amd64/engarde-client ./cmd/engarde-client
 client-linux-arm:
-	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	if [ "$$TRAVIS_COMMIT" != "" ]; then version="$$TRAVIS_COMMIT ($$TRAVIS_BRANCH)"; fi; \
 	GOOS=linux GOARCH=arm go build -ldflags "-X main.Version=$$version" -o dist/linux/arm/engarde-client ./cmd/engarde-client
 client-windows-i386:
-	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	if [ "$$TRAVIS_COMMIT" != "" ]; then version="$$TRAVIS_COMMIT ($$TRAVIS_BRANCH)"; fi; \
 	GOOS=windows GOARCH=386 go build -ldflags "-X main.Version=$$version" -o dist/windows/i386/engarde-client.exe ./cmd/engarde-client
 client-windows-amd64:
-	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	if [ "$$TRAVIS_COMMIT" != "" ]; then version="$$TRAVIS_COMMIT ($$TRAVIS_BRANCH)"; fi; \
 	GOOS=windows GOARCH=amd64 go build -ldflags "-X main.Version=$$version" -o dist/windows/amd64/engarde-client.exe ./cmd/engarde-client
 client-darwin-i386:
-	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	if [ "$$TRAVIS_COMMIT" != "" ]; then version="$$TRAVIS_COMMIT ($$TRAVIS_BRANCH)"; fi; \
 	GOOS=darwin GOARCH=386 go build -ldflags "-X main.Version=$$version" -o dist/darwin/i386/engarde-client ./cmd/engarde-client
 client-darwin-amd64:
-	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	if [ "$$TRAVIS_COMMIT" != "" ]; then version="$$TRAVIS_COMMIT ($$TRAVIS_BRANCH)"; fi; \
 	GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.Version=$$version" -o dist/darwin/amd64/engarde-client ./cmd/engarde-client
 
 # Server build commands
