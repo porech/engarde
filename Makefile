@@ -2,20 +2,27 @@
 all: client server
 
 # Client build commands
-client-linux-i386: ./cmd/engarde-client/
-	GOOS=linux GOARCH=386 go build -o dist/linux/i386/engarde-client ./cmd/engarde-client
-client-linux-amd64: ./cmd/engarde-client/
-	GOOS=linux GOARCH=amd64 go build -o dist/linux/amd64/engarde-client ./cmd/engarde-client
+client-linux-i386:
+	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	GOOS=linux GOARCH=386 go build -ldflags "-X main.Version=$$version" -o dist/linux/i386/engarde-client ./cmd/engarde-client
+client-linux-amd64:
+	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=$$version" -o dist/linux/amd64/engarde-client ./cmd/engarde-client
 client-linux-arm:
-	GOOS=linux GOARCH=arm go build -o dist/linux/arm/engarde-client ./cmd/engarde-client
-client-windows-i386: ./cmd/engarde-client/
-	GOOS=windows GOARCH=386 go build -o dist/windows/i386/engarde-client.exe ./cmd/engarde-client
-client-windows-amd64: ./cmd/engarde-client/
-	GOOS=windows GOARCH=amd64 go build -o dist/windows/amd64/engarde-client.exe ./cmd/engarde-client
-client-darwin-i386: ./cmd/engarde-client/
-	GOOS=darwin GOARCH=386 go build -o dist/darwin/i386/engarde-client ./cmd/engarde-client
-client-darwin-amd64: ./cmd/engarde-client/
-	GOOS=darwin GOARCH=amd64 go build -o dist/darwin/amd64/engarde-client ./cmd/engarde-client
+	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	GOOS=linux GOARCH=arm go build -ldflags "-X main.Version=$$version" -o dist/linux/arm/engarde-client ./cmd/engarde-client
+client-windows-i386:
+	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	GOOS=windows GOARCH=386 go build -ldflags "-X main.Version=$$version" -o dist/windows/i386/engarde-client.exe ./cmd/engarde-client
+client-windows-amd64:
+	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	GOOS=windows GOARCH=amd64 go build -ldflags "-X main.Version=$$version" -o dist/windows/amd64/engarde-client.exe ./cmd/engarde-client
+client-darwin-i386:
+	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	GOOS=darwin GOARCH=386 go build -ldflags "-X main.Version=$$version" -o dist/darwin/i386/engarde-client ./cmd/engarde-client
+client-darwin-amd64:
+	if [ $$GIT_COMMIT != "" ]; then version="$$GIT_COMMIT ($$GIT_BRANCH)"; fi; \
+	GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.Version=$$version" -o dist/darwin/amd64/engarde-client ./cmd/engarde-client
 
 # Server build commands
 server-linux-i386: ./cmd/engarde-server/

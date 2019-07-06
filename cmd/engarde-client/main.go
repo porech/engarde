@@ -38,6 +38,9 @@ type sendingRoutine struct {
 var sendingChannels map[string]*sendingRoutine
 var clConfig clientConfig
 
+// Version is passed by the compiler
+var Version string
+
 func handleErr(err error, msg string) {
 	if err != nil {
 		log.Fatal(msg+" | ", err)
@@ -226,6 +229,12 @@ func receiveFromWireguard(wgsock *net.UDPConn, sourceAddr **net.UDPAddr) {
 	}
 }
 
+func printVersion() {
+	if Version != "" {
+		print("engarde-client ver. " + Version + "\r\n")
+	}
+}
+
 func main() {
 	var genconfig config
 	var configName string
@@ -234,6 +243,14 @@ func main() {
 	} else {
 		configName = "engarde.yml"
 	}
+
+	printVersion()
+
+	// If flag is -v, exit after printing version
+	if configName == "-v" {
+		return
+	}
+
 	if configName == "list-interfaces" {
 		listInterfaces()
 		return
