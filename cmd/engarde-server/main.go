@@ -58,6 +58,14 @@ func main() {
 	err = yaml.Unmarshal(yamlFile, &genconfig)
 	handleErr(err, "Parsing config file failed")
 	srConfig = genconfig.Server
+
+	if srConfig.ListenAddr == "" {
+		log.Fatal("No listenAddr specified.")
+	}
+
+	if srConfig.DstAddr == "" {
+		log.Fatal("No dstAddr specified.")
+	}
 	if srConfig.ClientTimeout == 0 {
 		srConfig.ClientTimeout = 30
 	}
