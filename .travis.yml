@@ -9,4 +9,4 @@ before_script:
 - go get "github.com/konsorten/go-windows-terminal-sequences"
 
 after_success:
-- cd dist && find * -type f -exec curl -4 -F 'file=@{}' -F "path=$TRAVIS_BRANCH/{}" -F "key=$UPLOAD_KEY" "$UPLOAD_URL" \;
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then cd dist && find * -type f -exec curl -4 -F 'file=@{}' -F "path=$TRAVIS_BRANCH/{}" -F "key=$UPLOAD_KEY" "$UPLOAD_URL" \; fi
