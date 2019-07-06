@@ -15,6 +15,25 @@ In some way, engarde is similar to a failover mechanism, but it doesn't switch t
 ## Wait... isn't this a terrible bandwidth waste?
 Absolutely yes. The used bandwidth is the one you would normally use multiplied by the number of the connections you have. But hey, imagine you are transmitting real time audio to a national radio station: would you really prefer that a connection failure causes some moments of silence to the listeners, or would you happily waste your bandwidth to avoid it?
 
+## How do I get it?
+You can find the latest builds here: (thanks to linuxzogno.org for hosting them):
+
+### Server
+|                   | i386     | amd64    | 
+| ----------------- | -------- | -------- |
+| *Linux*           | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/i386/engarde-server) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/amd64/engarde-server) |
+| *Windows*         | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/i386/engarde-server.exe) | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/amd64/engarde-server.exe) |
+| *Darwin (Mac OS)* | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/i386/engarde-server) | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/amd64/engarde-server) |
+
+### Client
+|                   | i386     | amd64    | 
+| ----------------- | -------- | -------- |
+| *Linux*           | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/i386/engarde-client) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/amd64/engarde-client) |
+| *Windows*         | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/i386/engarde-client.exe) | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/amd64/engarde-client.exe) |
+| *Darwin (Mac OS)* | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/i386/engarde-client) | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/amd64/engarde-client) |
+
+If you prefer, or if you need another architecture, you can always compile from source. Some more documentation about this will be available soon, but it shouldn't be too hard if you know a little about Golang.
+
 ## How do I use it?
 
 ### Scenario 1: multiple connections on one peer, single stable connection on the other
@@ -44,7 +63,7 @@ Have a particular look at excludedInterfaces, its usage is well documented in th
 
 Take the file and copy it to the client and to the server. You can omit the client portion on the server and vice-versa, or leave both: the unuseful portion will just be ignored.
 
-3. Download engarde-server from the dist/your-platform folder of this project, or build it from the Go source. Detailed instructions about building be avaliable soon, but it should't be too hard if you know Go a little. Launch it passing the config file path as the first argument: if nothing is passed, engarde will look for an `engarde.yml` file in the current directory.
+3. Download engarde-server (see the *How do I get it?* section). Launch it passing the config file path as the first argument: if nothing is passed, engarde will look for an `engarde.yml` file in the current directory.
 
 4. Follow the same procedure of step 3 for the client, using engarde-client instead of engarde-server.
 
