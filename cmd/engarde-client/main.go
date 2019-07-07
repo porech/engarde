@@ -120,12 +120,9 @@ func updateAvailableInterfaces(wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
 		// Delete unavailable interfaces
 		for ifname, routine := range sendingChannels {
 			if !interfaceExists(interfaces, ifname) {
-				log.Info("Interface '" + ifname + "'' no longer exists, deleting it")
+				log.Info("Interface '" + ifname + "' no longer exists, deleting it")
 				routine.IsClosing = true
-				addr, err := net.ResolveUDPAddr("udp4", routine.SrcSock.LocalAddr().String())
-				if err == nil {
-					routine.SrcSock.WriteToUDP([]byte("X"), addr)
-				}
+				routine.SrcSock.Close()
 				delete(sendingChannels, ifname)
 				continue
 			}
@@ -136,12 +133,9 @@ func updateAvailableInterfaces(wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
 			handleErr(err, "updateAvailableInterfaces 2")
 			ifaddr := getAddressByInterface(*iface)
 			if ifaddr != routine.SrcAddr {
-				log.Info("Interface " + ifname + " changed address, re-creating socket")
+				log.Info("Interface '" + ifname + "' changed address, re-creating socket")
 				routine.IsClosing = true
-				addr, err := net.ResolveUDPAddr("udp4", routine.SrcSock.LocalAddr().String())
-				if err == nil {
-					routine.SrcSock.WriteToUDP([]byte("X"), addr)
-				}
+				routine.SrcSock.Close()
 				delete(sendingChannels, ifname)
 			}
 		}
@@ -155,7 +149,7 @@ func updateAvailableInterfaces(wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
 			}
 			ifaddr := getAddressByInterface(iface)
 			if ifaddr != "" {
-				log.Info("New interface " + ifname + " with IP " + ifaddr + ", adding it")
+				log.Info("New interface '" + ifname + "' with IP '" + ifaddr + "', adding it")
 				createSendThread(ifname, getAddressByInterface(iface), wgSock, wgAddr)
 			}
 		}
@@ -197,13 +191,11 @@ func createSendThread(ifname, sourceAddr string, wgSock *net.UDPConn, wgAddr **n
 }
 
 func wgWriteBack(ifname string, routine *sendingRoutine, wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
-	log.Info("Starting WGWriteBack routine for '" + ifname + "'")
 	buffer := make([]byte, 1500)
 	var n int
 	for {
 		n, _, _ = routine.SrcSock.ReadFromUDP(buffer)
 		if routine.IsClosing {
-			log.Info("Stopping WGWriteBack routine for '" + ifname + "'")
 			return
 		}
 		routine.LastRec = time.Now().Unix()
