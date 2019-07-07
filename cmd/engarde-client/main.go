@@ -178,7 +178,7 @@ func createSendThread(ifname, sourceAddr string, wgSock *net.UDPConn, wgAddr **n
 		log.Error("Can't resolve source address '" + sourceAddr + "' for interface '" + ifname + "', not using it")
 		return
 	}
-	sock, err := net.ListenUDP("udp", srcAddr)
+	sock, err := udpConn(srcAddr, ifname)
 	if err != nil {
 		log.Error("Can't create socket for address '" + sourceAddr + "' on interface '" + ifname + "', not using it")
 		return
