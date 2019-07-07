@@ -37,6 +37,7 @@ type sendingRoutine struct {
 
 var sendingChannels map[string]*sendingRoutine
 var clConfig clientConfig
+var exclusionSwaps []string
 
 // Version is passed by the compiler
 var Version string
@@ -47,13 +48,22 @@ func handleErr(err error, msg string) {
 	}
 }
 
-func isExcluded(name string) bool {
-	for _, ifname := range clConfig.ExcludedInterfaces {
+func isSwapped(name string) bool {
+	for _, ifname := range exclusionSwaps {
 		if ifname == name {
 			return true
 		}
 	}
 	return false
+}
+
+func isExcluded(name string) bool {
+	for _, ifname := range clConfig.ExcludedInterfaces {
+		if ifname == name {
+			return !isSwapped(name)
+		}
+	}
+	return isSwapped(name)
 }
 
 func interfaceExists(interfaces []net.Interface, name string) bool {
@@ -86,7 +96,9 @@ func isAddressAllowed(addr string) bool {
 
 func getAddressByInterface(iface net.Interface) string {
 	addrs, err := iface.Addrs()
-	handleErr(err, "getAddressByInterface 1")
+	if err != nil {
+		return ""
+	}
 	for _, addr := range addrs {
 		splAddr := strings.Split(addr.String(), "/")[0]
 		if isAddressAllowed(splAddr) {
@@ -116,30 +128,40 @@ func listInterfaces() {
 	}
 }
 
+func terminateRoutine(routine *sendingRoutine, ifname string) {
+	routine.IsClosing = true
+	routine.SrcSock.Close()
+	delete(sendingChannels, ifname)
+}
+
 func updateAvailableInterfaces(wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
 	for {
 		interfaces, err := net.Interfaces()
-		handleErr(err, "updateAvailableInterfaces 1")
+		if err != nil {
+			time.Sleep(1 * time.Second)
+			continue
+		}
 		// Delete unavailable interfaces
 		for ifname, routine := range sendingChannels {
 			if !interfaceExists(interfaces, ifname) {
 				log.Info("Interface '" + ifname + "' no longer exists, deleting it")
-				routine.IsClosing = true
-				routine.SrcSock.Close()
-				delete(sendingChannels, ifname)
+				terminateRoutine(routine, ifname)
+				continue
+			}
+			if isExcluded(ifname) {
+				log.Info("Interface '" + ifname + "' is now excluded, deleting it")
+				terminateRoutine(routine, ifname)
 				continue
 			}
 			iface, err := net.InterfaceByName(ifname)
 			if err != nil {
 				continue
 			}
-			handleErr(err, "updateAvailableInterfaces 2")
 			ifaddr := getAddressByInterface(*iface)
 			if ifaddr != routine.SrcAddr {
 				log.Info("Interface '" + ifname + "' changed address, re-creating socket")
-				routine.IsClosing = true
-				routine.SrcSock.Close()
-				delete(sendingChannels, ifname)
+				terminateRoutine(routine, ifname)
+				continue
 			}
 		}
 		for _, iface := range interfaces {
@@ -260,6 +282,7 @@ func main() {
 	if clConfig.DstAddr == "" {
 		log.Fatal("No dstAddr specified.")
 	}
+	exclusionSwaps = []string{}
 
 	var wireguardAddr *net.UDPAddr
 	sendingChannels = make(map[string]*sendingRoutine)
