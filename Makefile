@@ -2,36 +2,50 @@
 all: client server
 
 # Client build commands
-client-linux-i386: ./cmd/engarde-client/
-	GOOS=linux GOARCH=386 go build -o dist/linux/i386/engarde-client ./cmd/engarde-client
-client-linux-amd64: ./cmd/engarde-client/
-	GOOS=linux GOARCH=amd64 go build -o dist/linux/amd64/engarde-client ./cmd/engarde-client
+client-linux-i386:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=linux GOARCH=386 go build -ldflags "-X 'main.Version=$$version'" -o dist/linux/i386/engarde-client ./cmd/engarde-client
+client-linux-amd64:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=linux GOARCH=amd64 go build -ldflags "-X 'main.Version=$$version'" -o dist/linux/amd64/engarde-client ./cmd/engarde-client
 client-linux-arm:
-	GOOS=linux GOARCH=arm go build -o dist/linux/arm/engarde-client ./cmd/engarde-client
-client-windows-i386: ./cmd/engarde-client/
-	GOOS=windows GOARCH=386 go build -o dist/windows/i386/engarde-client.exe ./cmd/engarde-client
-client-windows-amd64: ./cmd/engarde-client/
-	GOOS=windows GOARCH=amd64 go build -o dist/windows/amd64/engarde-client.exe ./cmd/engarde-client
-client-darwin-i386: ./cmd/engarde-client/
-	GOOS=darwin GOARCH=386 go build -o dist/darwin/i386/engarde-client ./cmd/engarde-client
-client-darwin-amd64: ./cmd/engarde-client/
-	GOOS=darwin GOARCH=amd64 go build -o dist/darwin/amd64/engarde-client ./cmd/engarde-client
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=linux GOARCH=arm go build -ldflags "-X 'main.Version=$$version'" -o dist/linux/arm/engarde-client ./cmd/engarde-client
+client-windows-i386:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=windows GOARCH=386 go build -ldflags "-X 'main.Version=$$version'" -o dist/windows/i386/engarde-client.exe ./cmd/engarde-client
+client-windows-amd64:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=windows GOARCH=amd64 go build -ldflags "-X 'main.Version=$$version'" -o dist/windows/amd64/engarde-client.exe ./cmd/engarde-client
+client-darwin-i386:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=darwin GOARCH=386 go build -ldflags "-X 'main.Version=$$version'" -o dist/darwin/i386/engarde-client ./cmd/engarde-client
+client-darwin-amd64:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=darwin GOARCH=amd64 go build -ldflags "-X 'main.Version=$$version'" -o dist/darwin/amd64/engarde-client ./cmd/engarde-client
 
 # Server build commands
-server-linux-i386: ./cmd/engarde-server/
-	GOOS=linux GOARCH=386 go build -o dist/linux/i386/engarde-server ./cmd/engarde-server
-server-linux-amd64: ./cmd/engarde-server/
-	GOOS=linux GOARCH=amd64 go build -o dist/linux/amd64/engarde-server ./cmd/engarde-server
-server-linux-arm: ./cmd/engarde-server/
-	GOOS=linux GOARCH=arm go build -o dist/linux/arm/engarde-server ./cmd/engarde-server
-server-windows-i386: ./cmd/engarde-server/
-	GOOS=windows GOARCH=386 go build -o dist/windows/i386/engarde-server.exe ./cmd/engarde-server
-server-windows-amd64: ./cmd/engarde-server/
-	GOOS=windows GOARCH=amd64 go build -o dist/windows/amd64/engarde-server.exe ./cmd/engarde-server
-server-darwin-i386: ./cmd/engarde-server/
-	GOOS=darwin GOARCH=386 go build -o dist/darwin/i386/engarde-server ./cmd/engarde-server
-server-darwin-amd64: ./cmd/engarde-server/
-	GOOS=darwin GOARCH=amd64 go build -o dist/darwin/amd64/engarde-server ./cmd/engarde-server
+server-linux-i386:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=linux GOARCH=386 go build -ldflags "-X 'main.Version=$$version'" -o dist/linux/i386/engarde-server ./cmd/engarde-server
+server-linux-amd64:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=linux GOARCH=amd64 go build -ldflags "-X 'main.Version=$$version'" -o dist/linux/amd64/engarde-server ./cmd/engarde-server
+server-linux-arm:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=linux GOARCH=arm go build -ldflags "-X 'main.Version=$$version'" -o dist/linux/arm/engarde-server ./cmd/engarde-server
+server-windows-i386:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=windows GOARCH=386 go build -ldflags "-X 'main.Version=$$version'" -o dist/windows/i386/engarde-server.exe ./cmd/engarde-server
+server-windows-amd64:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=windows GOARCH=amd64 go build -ldflags "-X 'main.Version=$$version'" -o dist/windows/amd64/engarde-server.exe ./cmd/engarde-server
+server-darwin-i386:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=darwin GOARCH=386 go build -ldflags "-X 'main.Version=$$version'" -o dist/darwin/i386/engarde-server ./cmd/engarde-server
+server-darwin-amd64:
+	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
+	GOOS=darwin GOARCH=amd64 go build -ldflags "-X 'main.Version=$$version'" -o dist/darwin/amd64/engarde-server ./cmd/engarde-server
 
 # Platform-specific builds
 linux-i386: client-linux-i386 server-linux-i386

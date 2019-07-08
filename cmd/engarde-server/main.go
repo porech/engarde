@@ -30,6 +30,9 @@ type ConnectedClient struct {
 var clients map[string]*ConnectedClient
 var srConfig serverConfig
 
+// Version is passed by the compiler
+var Version string
+
 func handleErr(err error, msg string) {
 	if err != nil {
 		log.Fatal(msg+" | ", err)
@@ -45,6 +48,12 @@ func getClientByAddr(addr *net.UDPAddr) *ConnectedClient {
 	return nil
 }
 
+func printVersion() {
+	if Version != "" {
+		print("engarde-server ver. " + Version + "\r\n")
+	}
+}
+
 func main() {
 	var genconfig config
 	var configName string
@@ -53,6 +62,14 @@ func main() {
 	} else {
 		configName = "engarde.yml"
 	}
+
+	printVersion()
+
+	// If flag is -v, exit after printing version
+	if configName == "-v" {
+		return
+	}
+
 	yamlFile, err := ioutil.ReadFile(configName)
 	handleErr(err, "Reading config file "+configName+" failed")
 	err = yaml.Unmarshal(yamlFile, &genconfig)
