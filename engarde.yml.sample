@@ -21,6 +21,14 @@ client:
   dstOverrides:
     - ifName: "Local Area Connection 4"
       dstAddr: "5.6.7.8:59302"
+  # You can control engarde-client by accessing the web management interface. Here you can specify its parameters.
+  # If you don't want a management interface, you can omit this section.
+  webManager:
+    # The address to listen to. Leave it empty to disable the management webserver.
+    listenAddr: "0.0.0.0:59502"
+    # The credentials to access the management interface. Leave them empty for no authentication.
+    username: "engarde"
+    password: "engarde"
 
 # Server configuration
 server:
@@ -31,3 +39,11 @@ server:
   # Client timeout in seconds. If a client doesn't send any packet for n seconds, engarde stops sending it packets.
   # You will need to set it to a slightly higher value than the PersistentKeepalive option in WireGuard clients.
   clientTimeout: 30
+  # You can control engarde-server by accessing the web management interface. Here you can specify its parameters.
+  # If you don't want a management interface, you can omit this section.
+  webManager:
+    # The address to listen to. Leave it empty to disable the management webserver.
+    listenAddr: "0.0.0.0:59502"
+    # The credentials to access the management interface. Leave them empty for no authentication.
+    username: "engarde"
+    password: "engarde"

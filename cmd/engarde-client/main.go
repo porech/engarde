@@ -20,6 +20,11 @@ type clientConfig struct {
 	DstAddr            string        `yaml:"dstAddr"`
 	ExcludedInterfaces []string      `yaml:"excludedInterfaces"`
 	DstOverrides       []dstOverride `yaml:"dstOverrides"`
+	WebManager         struct {
+		ListenAddr string `yaml:"listenAddr"`
+		Username   string `yaml:"username"`
+		Password   string `yaml:"password"`
+	} `yaml:"webManager"`
 }
 
 type dstOverride struct {
@@ -37,7 +42,7 @@ type sendingRoutine struct {
 
 var sendingChannels map[string]*sendingRoutine
 var clConfig clientConfig
-var exclusionSwaps []string
+var exclusionSwaps map[string]bool
 
 // Version is passed by the compiler
 var Version string
@@ -49,10 +54,8 @@ func handleErr(err error, msg string) {
 }
 
 func isSwapped(name string) bool {
-	for _, ifname := range exclusionSwaps {
-		if ifname == name {
-			return true
-		}
+	if _, ok := exclusionSwaps[name]; ok {
+		return true
 	}
 	return false
 }
@@ -64,6 +67,14 @@ func isExcluded(name string) bool {
 		}
 	}
 	return isSwapped(name)
+}
+
+func swapExclusion(ifname string) {
+	if isSwapped(ifname) {
+		delete(exclusionSwaps, ifname)
+	} else {
+		exclusionSwaps[ifname] = true
+	}
 }
 
 func interfaceExists(interfaces []net.Interface, name string) bool {
@@ -282,7 +293,7 @@ func main() {
 	if clConfig.DstAddr == "" {
 		log.Fatal("No dstAddr specified.")
 	}
-	exclusionSwaps = []string{}
+	exclusionSwaps = make(map[string]bool)
 
 	var wireguardAddr *net.UDPAddr
 	sendingChannels = make(map[string]*sendingRoutine)
@@ -294,6 +305,9 @@ func main() {
 	handleErr(err, "main 2")
 	log.Info("Listening on " + clConfig.ListenAddr)
 
+	if clConfig.WebManager.ListenAddr != "" {
+		go webserver(clConfig.WebManager.ListenAddr, clConfig.WebManager.Username, clConfig.WebManager.Password)
+	}
 	go updateAvailableInterfaces(WireguardSocket, ptrWireguardAddr)
 	receiveFromWireguard(WireguardSocket, ptrWireguardAddr)
 }

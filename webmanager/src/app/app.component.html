@@ -1,0 +1,59 @@
+<div *ngIf="type">
+    <h1>engarde-{{ type }}</h1>
+
+    <div *ngIf="type == 'client'">
+        <h2>Active interfaces</h2>
+        <em>Active interfaces are the ones currently transmitting data.</em>
+        <table border="1">
+            <tr>
+                <td><strong>Name</strong></td>
+                <td><strong>Address</strong></td>
+                <td><strong>Last received packet</strong></td>
+                <td><strong>Actions</strong></td>
+            </tr>
+            <tr *ngFor="let item of ifaces | callback: filterActive">
+                <td>{{ item.name }}</td>
+                <td>{{ item.address }}</td>
+                <td><span [ngClass]="{alert: item.last >= 10}" *ngIf="item.last !== null">{{ item.last }} seconds ago</span></td>
+                <td><button (click)="toggleExclude(item.name)">Exclude</button></td>
+            </tr>
+        </table>
+
+        <h2>Idle interfaces</h2>
+        <em>Idle interfaces are not transmitting data, but they can become active as soon as they receive an IP address.</em>
+        <table border="1">
+            <tr>
+                <td><strong>Name</strong></td>
+                <td><strong>Address</strong></td>
+                <td><strong>Actions</strong></td>
+            </tr>
+            <tr *ngFor="let item of ifaces | callback: filterIdle">
+                <td>{{ item.name }}</td>
+                <td>{{ item.address }}</td>
+                <td><button (click)="toggleExclude(item.name)">Exclude</button></td>
+            </tr>
+        </table>
+
+        <h2>Excluded interfaces</h2>
+        <em>Excluded interfaces will not be considered.</em>
+        <table border="1">
+            <tr>
+                <td><strong>Name</strong></td>
+                <td><strong>Address</strong></td>
+                <td><strong>Actions</strong></td>
+            </tr>
+            <tr *ngFor="let item of ifaces | callback: filterExcluded">
+                <td>{{ item.name }}</td>
+                <td>{{ item.address }}</td>
+                <td><button (click)="toggleExclude(item.name)">Include</button></td>
+            </tr>
+        </table>
+        <p><button (click)="resetExcludes()">Reset all exclusions</button></p>
+    </div>
+
+    <div *ngIf="type == 'Server'">
+        To be implemented
+    </div>
+</div>
+
+<router-outlet></router-outlet>
