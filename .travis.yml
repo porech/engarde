@@ -22,7 +22,6 @@ before_script:
 
 script:
 - cd $HOME/go/src/engarde/webmanager && npm install && npm run-script build-prod
-- ls $HOME/go/src/engarde/webmanager/dist/webmanager
 - cd $HOME/go/src/engarde && make
 
 after_success:
