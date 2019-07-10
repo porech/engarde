@@ -21,16 +21,16 @@ You can find the latest builds here: (thanks to linuxzogno.org for hosting them)
 ### Server
 |                   | i386     | amd64    | arm    |
 | ----------------- | -------- | -------- | -------- |
-| *Linux*           | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/i386/engarde-server) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/amd64/engarde-server) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/arm/engarde-server) |
-| *Windows*         | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/i386/engarde-server.exe) | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/amd64/engarde-server.exe) |  |
-| *Darwin (Mac OS)* | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/i386/engarde-server) | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/amd64/engarde-server) |  |
+| *Linux*           | [Download](https://engarde.linuxzogno.org/builds/master/linux/i386/engarde-server) | [Download](https://engarde.linuxzogno.org/builds/master/linux/amd64/engarde-server) | [Download](https://engarde.linuxzogno.org/builds/master/linux/arm/engarde-server) |
+| *Windows*         | [Download](https://engarde.linuxzogno.org/builds/master/windows/i386/engarde-server.exe) | [Download](https://engarde.linuxzogno.org/builds/master/windows/amd64/engarde-server.exe) |  |
+| *Darwin (Mac OS)* | [Download](https://engarde.linuxzogno.org/builds/master/darwin/i386/engarde-server) | [Download](https://engarde.linuxzogno.org/builds/master/darwin/amd64/engarde-server) |  |
 
 ### Client
 |                   | i386     | amd64    | arm    |
 | ----------------- | -------- | -------- | -------- |
-| *Linux*           | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/i386/engarde-client) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/amd64/engarde-client) | [Download](http://www.linuxzogno.org/engarde/builds/master/linux/arm/engarde-client) |
-| *Windows*         | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/i386/engarde-client.exe) | [Download](http://www.linuxzogno.org/engarde/builds/master/windows/amd64/engarde-client.exe) |  |
-| *Darwin (Mac OS)* | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/i386/engarde-client) | [Download](http://www.linuxzogno.org/engarde/builds/master/darwin/amd64/engarde-client) |  |
+| *Linux*           | [Download](https://engarde.linuxzogno.org/builds/master/linux/i386/engarde-client) | [Download](https://engarde.linuxzogno.org/builds/master/linux/amd64/engarde-client) | [Download](https://engarde.linuxzogno.org/builds/master/linux/arm/engarde-client) |
+| *Windows*         | [Download](https://engarde.linuxzogno.org/builds/master/windows/i386/engarde-client.exe) | [Download](https://engarde.linuxzogno.org/builds/master/windows/amd64/engarde-client.exe) |  |
+| *Darwin (Mac OS)* | [Download](https://engarde.linuxzogno.org/builds/master/darwin/i386/engarde-client) | [Download](https://engarde.linuxzogno.org/builds/master/darwin/amd64/engarde-client) |  |
 
 If you prefer, or if you need another architecture, you can always compile from source. Some more documentation about this will be available soon, but it shouldn't be too hard if you know a little about Golang.
 
