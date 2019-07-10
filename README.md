@@ -99,5 +99,10 @@ We're looking into the possibility of making engarde inspect WireGuard handshake
 ## It's useless! It's a bad copy of {some-other-software}
 Honestly, we are quite lazy people, and before coding something we always look for an existing solution that would suit our needings. This time, we really couldn't find one. If you know something similar, please, PLEASE open an issue with title "engarde is a bad copy of ...", we'd love to know that!
 
+## Does it require root?
+engarde can be run without any administrative privileges, but many users reported that engarde-client doesn't create any socket on Linux if executed as a non-root user.  
+To solve that, you need to move the executable file in a folder that is not mounted with the `nosuid` option (so, don't keep it in your home but move it, for example, to /usr/bin). Then, run as root `setcap cap_net_raw+ep /path/to/engarde-client`.  
+After doing this, you'll be able to run engarde-client as a normal user.
+
 ## Can I ask for help?
 Of course! Feel free to open an issue for any necessity ;)

@@ -156,7 +156,11 @@ func webSwapExclusion(w http.ResponseWriter, r *http.Request) {
 
 func webserver(listenAddr, username, password string) {
 	realm := "engarde"
+<<<<<<< HEAD
 	box := packr.NewBox("../../webmanager/dist/webmanager")
+=======
+	box := packr.New("webmanager", "../../webmanager/dist/webmanager")
+>>>>>>> d90c2f66e426b32f2c36a5a51f0accb2bc1b57e5
 	http.HandleFunc("/", webBasicAuth(webHandleFileServer(box, "/"), username, password, realm))
 	http.HandleFunc("/get-list", webBasicAuth(webGetList, username, password, realm))
 	http.HandleFunc("/swap-exclusion", webBasicAuth(webSwapExclusion, username, password, realm))

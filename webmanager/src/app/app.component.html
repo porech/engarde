@@ -51,8 +51,19 @@
         <p><button (click)="resetExcludes()">Reset all exclusions</button></p>
     </div>
 
-    <div *ngIf="type == 'Server'">
-        To be implemented
+    <div *ngIf="type == 'server'">
+        <h2>Active sockets</h2>
+        <em>Data is being currently transmitted to these addresses.</em>
+        <table border="1">
+            <tr>
+                <td><strong>Address</strong></td>
+                <td><strong>Last received packet</strong></td>
+            </tr>
+            <tr *ngFor="let item of sockets">
+                <td>{{ item.address }}</td>
+                <td><span [ngClass]="{alert: item.last >= 10}" *ngIf="item.last !== null">{{ item.last }} seconds ago</span></td>
+            </tr>
+        </table>
     </div>
 </div>
 

@@ -1,5 +1,5 @@
 # All
-all: client server
+all: packr client server packr-clean
 
 # Client build commands
 client-linux-i386:
@@ -46,6 +46,19 @@ server-darwin-i386:
 server-darwin-amd64:
 	if [ "$$TRAVIS_COMMIT" != "" ]; then commit=$$(echo $$TRAVIS_COMMIT | head -c 7); version="$$commit ($$TRAVIS_BRANCH)"; fi; \
 	GOOS=darwin GOARCH=amd64 packr build -ldflags "-X 'main.Version=$$version'" -o dist/darwin/amd64/engarde-server ./cmd/engarde-server
+
+# Packr
+packr-client:
+	cd cmd/engarde-client && packr2
+packr-server:
+	cd cmd/engarde-server && packr2
+packr-clean-client:
+	cd cmd/engarde-client && packr2 clean
+packr-clean-server:
+	cd cmd/engarde-server && packr2 clean
+
+packr: packr-client packr-server
+packr-clean: packr-clean-client packr-clean-server
 
 # Platform-specific builds
 linux-i386: client-linux-i386 server-linux-i386
