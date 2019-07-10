@@ -55,7 +55,7 @@ func webGetList(w http.ResponseWriter, r *http.Request) {
 		rspSocket := webSocket{
 			Address: address,
 		}
-		if last > 0 {
+		if client.Last > 0 {
 			rspSocket.Last = &last
 		}
 		rspSockets = append(rspSockets, rspSocket)
