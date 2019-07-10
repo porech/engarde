@@ -1,6 +1,7 @@
 export interface IfaceModel {
     "name": string,
     "status": string,
-    "address": string,
+    "senderAddress": string,
+    "dstAddress": string,
     "last": number,
 }

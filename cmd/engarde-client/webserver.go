@@ -13,10 +13,11 @@ import (
 )
 
 type webInterface struct {
-	Name    string `json:"name"`
-	Status  string `json:"status"`
-	Address string `json:"address"`
-	Last    *int64 `json:"last"`
+	Name          string `json:"name"`
+	Status        string `json:"status"`
+	SenderAddress string `json:"senderAddress"`
+	DstAddress    string `json:"dstAddress"`
+	Last          *int64 `json:"last"`
 }
 
 func webBasicAuth(handler http.HandlerFunc, username, password, realm string) http.HandlerFunc {
@@ -66,9 +67,9 @@ func webGetList(w http.ResponseWriter, r *http.Request) {
 		address := getAddressByInterface(iface)
 		if isExcluded(ifname) {
 			rspIface := webInterface{
-				Name:    ifname,
-				Status:  "excluded",
-				Address: address,
+				Name:          ifname,
+				Status:        "excluded",
+				SenderAddress: address,
 			}
 			rspInterfaces = append(rspInterfaces, rspIface)
 			continue
@@ -77,9 +78,10 @@ func webGetList(w http.ResponseWriter, r *http.Request) {
 		if routine, ok := sendingChannels[ifname]; ok {
 			respLast := time.Now().Unix() - routine.LastRec
 			rspIface := webInterface{
-				Name:    ifname,
-				Status:  "active",
-				Address: address,
+				Name:          ifname,
+				Status:        "active",
+				SenderAddress: address,
+				DstAddress:    getDstByIfname(ifname),
 			}
 			if routine.LastRec > 0 {
 				rspIface.Last = &respLast
@@ -88,18 +90,21 @@ func webGetList(w http.ResponseWriter, r *http.Request) {
 			continue
 		} else {
 			rspIface := webInterface{
-				Name:    ifname,
-				Status:  "idle",
-				Address: address,
+				Name:          ifname,
+				Status:        "idle",
+				SenderAddress: address,
+				DstAddress:    getDstByIfname(ifname),
 			}
 			rspInterfaces = append(rspInterfaces, rspIface)
 			continue
 		}
 	}
 	rspObject := struct {
-		Type       string         `json:"type"`
-		Interfaces []webInterface `json:"interfaces"`
-	}{"client", rspInterfaces}
+		Type          string         `json:"type"`
+		Version       string         `json:"version"`
+		ListenAddress string         `json:"listenAddress"`
+		Interfaces    []webInterface `json:"interfaces"`
+	}{"client", Version, clConfig.ListenAddr, rspInterfaces}
 	rspJSON, err := json.Marshal(rspObject)
 	if err != nil {
 		w.WriteHeader(500)

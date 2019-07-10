@@ -119,13 +119,13 @@ func getAddressByInterface(iface net.Interface) string {
 	return ""
 }
 
-func getDstOverrideByIfname(ifname string) string {
+func getDstByIfname(ifname string) string {
 	for _, override := range clConfig.DstOverrides {
 		if override.IfName == ifname {
 			return override.DstAddr
 		}
 	}
-	return ""
+	return clConfig.DstAddr
 }
 
 func listInterfaces() {
@@ -194,10 +194,7 @@ func updateAvailableInterfaces(wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
 }
 
 func createSendThread(ifname, sourceAddr string, wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
-	dst := getDstOverrideByIfname(ifname)
-	if dst == "" {
-		dst = clConfig.DstAddr
-	}
+	dst := getDstByIfname(ifname)
 	dstAddr, err := net.ResolveUDPAddr("udp4", dst)
 	if err != nil {
 		log.Error("Can't resolve destination address '" + dst + "' for interface '" + ifname + "', not using it")

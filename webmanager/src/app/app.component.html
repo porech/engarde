@@ -1,5 +1,5 @@
 <div *ngIf="type">
-    <h1>engarde-{{ type }}</h1>
+    <h1>engarde-{{ type }} ver. {{ version }}</h1>
 
     <div *ngIf="type == 'client'">
         <h2>Active interfaces</h2>
@@ -7,13 +7,15 @@
         <table border="1">
             <tr>
                 <td><strong>Name</strong></td>
-                <td><strong>Address</strong></td>
+                <td><strong>Sender address</strong></td>
+                <td><strong>Destination address</strong></td>
                 <td><strong>Last received packet</strong></td>
                 <td><strong>Actions</strong></td>
             </tr>
             <tr *ngFor="let item of ifaces | callback: filterActive">
                 <td>{{ item.name }}</td>
-                <td>{{ item.address }}</td>
+                <td>{{ item.senderAddress }}</td>
+                <td>{{ item.dstAddress }}</td>
                 <td><span [ngClass]="{alert: item.last >= 10}" *ngIf="item.last !== null">{{ item.last }} seconds ago</span></td>
                 <td><button (click)="toggleExclude(item.name)">Exclude</button></td>
             </tr>
@@ -24,12 +26,14 @@
         <table border="1">
             <tr>
                 <td><strong>Name</strong></td>
-                <td><strong>Address</strong></td>
+                <td><strong>Sender address</strong></td>
+                <td><strong>Destination address</strong></td>
                 <td><strong>Actions</strong></td>
             </tr>
             <tr *ngFor="let item of ifaces | callback: filterIdle">
                 <td>{{ item.name }}</td>
-                <td>{{ item.address }}</td>
+                <td>{{ item.senderAddress }}</td>
+                <td>{{ item.dstAddress }}</td>
                 <td><button (click)="toggleExclude(item.name)">Exclude</button></td>
             </tr>
         </table>
@@ -39,12 +43,12 @@
         <table border="1">
             <tr>
                 <td><strong>Name</strong></td>
-                <td><strong>Address</strong></td>
+                <td><strong>Sender address</strong></td>
                 <td><strong>Actions</strong></td>
             </tr>
             <tr *ngFor="let item of ifaces | callback: filterExcluded">
                 <td>{{ item.name }}</td>
-                <td>{{ item.address }}</td>
+                <td>{{ item.senderAddress }}</td>
                 <td><button (click)="toggleExclude(item.name)">Include</button></td>
             </tr>
         </table>

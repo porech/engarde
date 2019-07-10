@@ -12,6 +12,8 @@ import { SocketModel } from './models/socket.model';
 export class AppComponent {
 
   public type: string
+  public version: string
+  public listenAddress: string
   public ifaces: IfaceModel[]
   public sockets: SocketModel[]
 
@@ -20,6 +22,8 @@ export class AppComponent {
   getList() {
     this.api.getList().then(resp => {
       this.type = resp.type
+      this.version = resp.version
+      this.listenAddress = resp.listenAddress
       if(this.type == 'client') {
         this.ifaces = resp.interfaces
       } else {
