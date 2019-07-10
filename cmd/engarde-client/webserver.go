@@ -43,6 +43,7 @@ func webHandleFileServer(box *packr.Box, prefix string) http.HandlerFunc {
 			index, err := box.Find("index.html")
 			if err != nil {
 				http.NotFound(w, req)
+				return
 			}
 			w.WriteHeader(200)
 			w.Write(index)
@@ -155,7 +156,7 @@ func webSwapExclusion(w http.ResponseWriter, r *http.Request) {
 
 func webserver(listenAddr, username, password string) {
 	realm := "engarde"
-	box := packr.New("webmanager", "webmanager/dist/webmanager")
+	box := packr.NewBox("../../webmanager/dist/webmanager")
 	http.HandleFunc("/", webBasicAuth(webHandleFileServer(box, "/"), username, password, realm))
 	http.HandleFunc("/get-list", webBasicAuth(webGetList, username, password, realm))
 	http.HandleFunc("/swap-exclusion", webBasicAuth(webSwapExclusion, username, password, realm))
