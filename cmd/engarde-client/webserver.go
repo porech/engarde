@@ -102,9 +102,10 @@ func webGetList(w http.ResponseWriter, r *http.Request) {
 	rspObject := struct {
 		Type          string         `json:"type"`
 		Version       string         `json:"version"`
+		Description   string         `json:"description"`
 		ListenAddress string         `json:"listenAddress"`
 		Interfaces    []webInterface `json:"interfaces"`
-	}{"client", Version, clConfig.ListenAddr, rspInterfaces}
+	}{"client", Version, clConfig.Description, clConfig.ListenAddr, rspInterfaces}
 	rspJSON, err := json.Marshal(rspObject)
 	if err != nil {
 		w.WriteHeader(500)

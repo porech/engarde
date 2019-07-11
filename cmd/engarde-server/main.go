@@ -16,6 +16,7 @@ type config struct {
 }
 
 type serverConfig struct {
+	Description   string `yaml:"description"`
 	ListenAddr    string `yaml:"listenAddr"`
 	DstAddr       string `yaml:"dstAddr"`
 	ClientTimeout int64  `yaml:"clientTimeout"`
@@ -80,6 +81,9 @@ func main() {
 	err = yaml.Unmarshal(yamlFile, &genconfig)
 	handleErr(err, "Parsing config file failed")
 	srConfig = genconfig.Server
+	if srConfig.Description != "" {
+		log.Info(srConfig.Description)
+	}
 
 	if srConfig.ListenAddr == "" {
 		log.Fatal("No listenAddr specified.")
