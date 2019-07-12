@@ -21,7 +21,7 @@ export class APICallerService {
   constructor(public http : HttpClient) { }
 
   public getList() {
-    return this.http.get(this.apiPrefix + "/get-list")
+    return this.http.get(this.apiPrefix + "/api/v1/get-list")
     .toPromise()
     .then(res => {
       return res as RespModel
@@ -29,7 +29,7 @@ export class APICallerService {
   }
 
   public toggleOverride(iface: string) {
-    return this.http.post(this.apiPrefix + "/swap-exclusion", {"interface" : iface})
+    return this.http.post(this.apiPrefix + "/api/v1/swap-exclusion", {"interface" : iface})
     .toPromise()
     .then(res => {
       return res['status'];
@@ -37,7 +37,7 @@ export class APICallerService {
   }
 
   public clearOverrides() {
-    return this.http.get(this.apiPrefix + "/reset-exclusions")
+    return this.http.get(this.apiPrefix + "/api/v1/reset-exclusions")
     .toPromise()
     .then(res => {
       return res['status'];

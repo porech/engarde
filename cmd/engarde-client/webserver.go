@@ -164,9 +164,9 @@ func webserver(listenAddr, username, password string) {
 	realm := "engarde"
 	box := packr.New("webmanager", "../../webmanager/dist/webmanager")
 	http.HandleFunc("/", webBasicAuth(webHandleFileServer(box, "/"), username, password, realm))
-	http.HandleFunc("/get-list", webBasicAuth(webGetList, username, password, realm))
-	http.HandleFunc("/swap-exclusion", webBasicAuth(webSwapExclusion, username, password, realm))
-	http.HandleFunc("/reset-exclusions", webBasicAuth(webResetExclusions, username, password, realm))
+	http.HandleFunc("/api/v1/get-list", webBasicAuth(webGetList, username, password, realm))
+	http.HandleFunc("/api/v1/swap-exclusion", webBasicAuth(webSwapExclusion, username, password, realm))
+	http.HandleFunc("/api/v1/reset-exclusions", webBasicAuth(webResetExclusions, username, password, realm))
 	log.Info("Management webserver listening on " + listenAddr)
 	if err := http.ListenAndServe(listenAddr, nil); err != nil {
 		log.Error(err)
