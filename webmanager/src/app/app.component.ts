@@ -21,18 +21,22 @@ export class AppComponent {
   public listenAddress: string
   public ifaces: IfaceModel[]
   public sockets: SocketModel[]
-  public errorMessage = "";
+  public errorMessage;
   public loaded : boolean = false;
+  public snackBarConfig;
   dataconfig: DataTableConfig = {
     mobileHeaderColor: "#FFC107"
   }
 
 
-  constructor(public api: APICallerService, public snackBar: MatSnackBar) {}
+  constructor(public api: APICallerService, public snackBar: MatSnackBar) {
+    this.snackBarConfig = new MatSnackBarConfig();
+    this.snackBarConfig.panelClass = ['snackbar']  
+    this.snackBarConfig.duration = 1000;
+  }
   
   getList() {
     this.api.getList().then(resp => {
-      this.errorMessage = "";
       this.loaded = true;
       this.type = resp.type
       this.version = resp.version
@@ -46,10 +50,8 @@ export class AppComponent {
     .catch(err => {
       this.loaded = true;
         this.errorMessage = err.status == 0 || err.status == 404 ? "Check engarde service" : err.statusText;
-        let conf = new MatSnackBarConfig();
-        conf.panelClass = ['snackbar']  
-        conf.duration = 1000;
-        this.snackBar.open(`ERR: ${err.statusText}`, null, conf);
+        this.snackBar.open(`ERR: ${err.statusText}`, null, this.snackBarConfig);
+  
     })
   }
 
@@ -80,10 +82,15 @@ export class AppComponent {
   }
 
   startPolling() {
+    this.errorMessage = null;
     let interval = window.setInterval(()=>{
-      this.getList();
-      if (this.errorMessage !== "") {
+      if (this.errorMessage) {
         window.clearInterval(interval);
+          setTimeout(() => {
+            this.startPolling();
+        }, 10000)
+      } else {
+        this.getList()
       }
     
     }, 1000)

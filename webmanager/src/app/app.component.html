@@ -88,8 +88,8 @@
 <ng-template #errScreen>
     <app-actionbar [title]="'ENGARDE'" [color]="'#03A9F4'" [textColor]="'white'"><div class="subtitle"> WEBUI</div></app-actionbar>
     <div *ngIf="loaded == true" class="main-text">
-        ERROR: {{errorMessage}}
-        <br>
+        <div class="title">ERROR: {{errorMessage}}</div>
+        <div class="subtitle">Will check every 10 seconds</div>
         <button mat-raised-button color="accent" style="margin: 2vh; color: white;"(click)="startPolling()">Retry</button>
 
     </div>
