@@ -1,10 +1,12 @@
-<div *ngIf="type">
-    <h1>engarde-{{ type }} ver. {{ version }}</h1>
-
-    <div *ngIf="type == 'client'">
-        <h2>Active interfaces</h2>
-        <em>Active interfaces are the ones currently transmitting data.</em>
-        <table border="1">
+<div *ngIf="type; else errScreen">
+    <app-actionbar [title]="'ENGARDE-'+type.toUpperCase()" [color]="'#03A9F4'" [textColor]="'white'"><div class="subtitle">  ver. {{ version }}</div></app-actionbar>
+    <div *ngIf="type == 'client'" [@scaleIn]>
+        <p class="subtitle main-text">Active interfaces</p>
+        <p class="subtitle secondary-text">Active interfaces are the ones currently transmitting data.</p>
+        <div class="datatable-container">
+            <my-datatable [dataSource]="datasource" [config]="dataconfig"></my-datatable>
+        </div>
+       <!--  <table border="1">
             <tr>
                 <td><strong>Name</strong></td>
                 <td><strong>Sender address</strong></td>
@@ -19,7 +21,7 @@
                 <td><span [ngClass]="{alert: item.last >= 10}" *ngIf="item.last !== null">{{ item.last }} seconds ago</span></td>
                 <td><button (click)="toggleExclude(item.name)">Exclude</button></td>
             </tr>
-        </table>
+        </table> -->
 
         <h2>Idle interfaces</h2>
         <em>Idle interfaces are not transmitting data, but they can become active as soon as they receive an IP address.</em>
@@ -70,5 +72,14 @@
         </table>
     </div>
 </div>
+
+<ng-template #errScreen>
+    <app-actionbar [title]="'ENGARDE'" [color]="'#03A9F4'" [textColor]="'white'"><div class="subtitle"> WEBUI</div></app-actionbar>
+    <div class="main-text">
+        ERROR: {{errorMessage}}
+    </div>
+    <button mat-raised-button color="accent" style="margin: 2vh; color: white;"(click)="startPolling()">Retry</button>
+
+</ng-template>
 
 <router-outlet></router-outlet>

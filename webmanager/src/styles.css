@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/pink-bluegrey.css';
+@import '~roboto-fontface/css/roboto/roboto-fontface.css';
+
+body {
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }

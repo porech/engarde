@@ -3,11 +3,15 @@ import { APICallerService } from './services/apicaller.service';
 import { RespModel } from './models/resp.model';
 import { IfaceModel } from './models/iface.model';
 import { SocketModel } from './models/socket.model';
+import { getScaleInAnimation } from './animations/scalein.animation';
+import { DataSourceModel } from './components/mydatatable/models/mydatatable/datasource.model';
+import { DataTableConfig } from './components/mydatatable/models/mydatatable/datatableconfig.model';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  animations: [getScaleInAnimation()]
 })
 export class AppComponent {
 
@@ -16,6 +20,11 @@ export class AppComponent {
   public listenAddress: string
   public ifaces: IfaceModel[]
   public sockets: SocketModel[]
+  public errorMessage = "";
+  dataconfig: DataTableConfig = {
+    mobileHeaderColor: "#FFC107"
+  }
+
 
   constructor(public api: APICallerService) {}
   
@@ -29,6 +38,9 @@ export class AppComponent {
       } else {
         this.sockets = resp.sockets
       }
+    })
+    .catch(err => {
+        this.errorMessage = err.status == 0 ? "Check engarde service" : err.statusText;
     })
   }
 
@@ -54,6 +66,17 @@ export class AppComponent {
   
   ngOnInit() {
     this.getList()
-    window.setInterval(()=>{this.getList()}, 1000)
+    this.startPolling();
+    
+  }
+
+  startPolling() {
+    let interval = window.setInterval(()=>{
+      this.getList();
+      if (this.errorMessage !== "") {
+        window.clearInterval(interval);
+      }
+    
+    }, 1000)
   }
 }
