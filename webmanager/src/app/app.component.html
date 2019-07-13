@@ -1,5 +1,5 @@
 <div *ngIf="type && !errorMessage; else errScreen">
-    <app-actionbar [title]="'ENGARDE-'+type.toUpperCase()" [color]="'#03A9F4'" [textColor]="'white'"><div class="subtitle">  {{ version ? 'ver. '+ version : '' }} {{ description ? ' - '+description : '' }}</div></app-actionbar>
+    <app-actionbar [logo]="'../assets/engarde-detail.png'" [title]="'ENGARDE-'+type.toUpperCase()" [color]="'#03A9F4'" [textColor]="'white'"><div class="subtitle">  {{ version ? 'ver. '+ version : '' }} {{ description ? ' - '+description : '' }}</div></app-actionbar>
     <div *ngIf="type == 'client'" [@scaleIn]>
 
         <!-- ACTIVE INTERFACES -->

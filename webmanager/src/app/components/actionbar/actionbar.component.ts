@@ -10,6 +10,7 @@ export class ActionbarComponent implements OnInit {
   @Input() title : string = "";
   @Input() color : string;
   @Input() textColor: string;
+  @Input() logo: string;
   public mButtons = [];
   @ViewChild("titlecontainer") backgroundRef : ElementRef;
   constructor(public actionBarService : ActionbarService ) { 

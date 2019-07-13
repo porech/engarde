@@ -1,14 +1,34 @@
 .actionbar-container {
     display: flex;
     flex-flow: row;
-    padding: 2vh;
+    padding: 1vh;
     z-index: 10;
+}
+.left-anchored {
+    display: block;
+    position: absolute;
+    float: left;
+    left: 5px;
+    top: 3px;
+    margin-right: 1vw;
+}
+.logo {
+    transform: translateY(-20px)
+}
+.right-anchored {
+    display: block;
+    position: absolute;
+    float: right;
+    right: 5px;
+    top: 3px;
+    margin-left: 1vw;
 }
 
 .rounded{
     border-radius: 100px;
 }
 
-.title-container {
-
+.title {
+    margin-left: 2vw;
+    margin-top: 1vh;
 }
