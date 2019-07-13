@@ -16,7 +16,7 @@ export class APICallerService {
 
   // For development purposes you can set an API prefix here.
   // ONLY COMMIT WITH THIS VARIABLE EMPTY!!!
-  private apiPrefix = "http://127.0.0.1:42490"
+  private apiPrefix = ""
 
   constructor(public http : HttpClient) { }
 

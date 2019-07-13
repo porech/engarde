@@ -4,15 +4,11 @@
     padding: 2vh;
     z-index: 10;
 }
-.title-container {
-    /*  border-bottom: 1px solid #c2c2c2;*/
-/*     background-color: #FFFFFF;
- */
+
+.rounded{
+    border-radius: 100px;
 }
 
-/* .title {
-    padding: 2vh;
-    font-size: 20px;
-    font-weight: 500;
-    user-select: none;
-} */
+.title-container {
+
+}
