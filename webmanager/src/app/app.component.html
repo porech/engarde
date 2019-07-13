@@ -1,5 +1,5 @@
 <div *ngIf="type && !errorMessage; else errScreen">
-    <app-actionbar [title]="'ENGARDE-'+type.toUpperCase()" [color]="'#03A9F4'" [textColor]="'white'"><div class="subtitle">  {{ version ? 'ver. '+ version : '' }}</div></app-actionbar>
+    <app-actionbar [title]="'ENGARDE-'+type.toUpperCase()" [color]="'#03A9F4'" [textColor]="'white'"><div class="subtitle">  {{ version ? 'ver. '+ version : '' }} {{ description ? ' - '+description : '' }}</div></app-actionbar>
     <div *ngIf="type == 'client'" [@scaleIn]>
 
         <!-- ACTIVE INTERFACES -->
@@ -20,7 +20,7 @@
 
                     </mat-card-content>
                     <mat-card-actions>
-                        <button mat-button (click)="toggleExclude(iface.name)">Exclude</button>
+                        <button mat-button class="card-action" (click)="toggleExclude(iface.name)">Exclude</button>
                     </mat-card-actions>
                 </mat-card>
         </div>
@@ -40,7 +40,7 @@
                        <div class="text"><strong>Destination address: </strong>{{ iface.dstAddress }} </div>
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-button (click)="toggleExclude(iface.name)">Exclude</button>
+                    <button mat-button class="card-action" (click)="toggleExclude(iface.name)">Exclude</button>
                 </mat-card-actions>
                 </mat-card>
         </div>
@@ -58,7 +58,7 @@
                        <div class="text"><strong>Sender address: </strong>{{iface.senderAddress}}</div>
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-button (click)="toggleExclude(iface.name)">Include</button>
+                    <button mat-button class="card-action" (click)="toggleExclude(iface.name)">Include</button>
                 </mat-card-actions>
                 </mat-card>
         </div>

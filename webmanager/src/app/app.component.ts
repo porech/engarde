@@ -19,6 +19,7 @@ export class AppComponent {
   public type: string
   public version: string
   public listenAddress: string
+  public description: string
   public ifaces: IfaceModel[]
   public sockets: SocketModel[]
   public errorMessage;
@@ -40,6 +41,7 @@ export class AppComponent {
       this.loaded = true;
       this.type = resp.type
       this.version = resp.version
+      this.description = resp.description
       this.listenAddress = resp.listenAddress
       if(this.type == 'client') {
         this.ifaces = resp.interfaces
@@ -48,6 +50,7 @@ export class AppComponent {
       }
     })
     .catch(err => {
+      this.type = null;
       this.loaded = true;
         this.errorMessage = err.status == 0 || err.status == 404 ? "Check engarde service" : err.statusText;
         this.snackBar.open(`ERR: ${err.statusText}`, null, this.snackBarConfig);

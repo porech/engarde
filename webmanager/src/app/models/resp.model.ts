@@ -8,4 +8,5 @@ export interface RespModel {
     dstAddress?: string,
     interfaces?: IfaceModel[],
     sockets?: SocketModel[],
+    description?: string
 }

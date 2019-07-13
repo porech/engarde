@@ -3,6 +3,9 @@
 .card {
     margin: 1vw;
 }
+.card-action {
+    float: right;
+}
 .card-active {
     border: .5px solid #00bfa5;
 }
