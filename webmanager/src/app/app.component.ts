@@ -29,6 +29,7 @@ export class AppComponent {
   public hintAnimationActive : boolean = false;
   public hintAnimationIdle : boolean = false;
   public hintAnimationExcluded : boolean = false;
+  private getListErrors: number = 0;
   dataconfig: DataTableConfig = {
     mobileHeaderColor: "#FFC107"
   }
@@ -52,13 +53,21 @@ export class AppComponent {
       } else {
         this.sockets = resp.sockets
       }
+      this.getListErrors = 0;
+      this.errorMessage = null;
+      window.setTimeout(() => { this.getList() }, 800)
     })
     .catch(err => {
-      this.type = null;
-      this.loaded = true;
+      this.getListErrors += 1;
+      if(this.getListErrors > 2) {
+        this.type = null;
+        this.loaded = true;
         this.errorMessage = err.status == 0 || err.status == 404 ? "Check engarde service" : err.statusText;
         this.snackBar.open(`ERR: ${err.statusText}`, null, this.snackBarConfig);
-  
+        window.setTimeout(() => { this.getList() }, 10000);
+      } else {
+        window.setTimeout(() => { this.getList() }, 800)
+      }
     })
   }
 
@@ -83,23 +92,6 @@ export class AppComponent {
   }
   
   ngOnInit() {
-    this.getList()
-    this.startPolling();
-    
-  }
-
-  startPolling() {
-    this.errorMessage = null;
-    let interval = window.setInterval(()=>{
-      if (this.errorMessage) {
-        window.clearInterval(interval);
-          setTimeout(() => {
-            this.startPolling();
-        }, 10000)
-      } else {
-        this.getList()
-      }
-    
-    }, 1000)
+    this.getList();
   }
 }

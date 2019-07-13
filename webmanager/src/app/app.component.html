@@ -13,7 +13,7 @@
                     </mat-card-title>
                     <mat-card-content>
                         <div class="text"><strong>Last received packet: </strong>
-                                <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} seconds ago</span>
+                                <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} second{{ iface.last == 1 ? '' : 's' }} ago</span>
                         </div>
                         <div class="text"><strong>Sender address: </strong>{{iface.senderAddress}}</div>
                         <div class="text"><strong>Destination address: </strong>{{ iface.dstAddress }} </div>
@@ -75,7 +75,7 @@
                         </mat-card-title>
                         <mat-card-content>
                             <div class="text"><strong>Last received packet: </strong>
-                                <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} seconds ago</span> 
+                                <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} second{{ iface.last == 1 ? '' : 's' }} ago</span>
                             </div>
                            <div class="text"><strong>Address: </strong>{{iface.address}}</div>
                         </mat-card-content>
