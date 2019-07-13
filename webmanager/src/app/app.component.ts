@@ -7,12 +7,13 @@ import { getScaleInAnimation } from './animations/scalein.animation';
 import { DataSourceModel } from './components/mydatatable/models/mydatatable/datasource.model';
 import { DataTableConfig } from './components/mydatatable/models/mydatatable/datatableconfig.model';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { getSlideOutAnimation } from './animations/slideout.animation';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  animations: [getScaleInAnimation()]
+  animations: [getScaleInAnimation(), getSlideOutAnimation()]
 })
 export class AppComponent {
 
@@ -25,6 +26,9 @@ export class AppComponent {
   public errorMessage;
   public loaded : boolean = false;
   public snackBarConfig;
+  public hintAnimationActive : boolean = false;
+  public hintAnimationIdle : boolean = false;
+  public hintAnimationExcluded : boolean = false;
   dataconfig: DataTableConfig = {
     mobileHeaderColor: "#FFC107"
   }
