@@ -11,11 +11,13 @@ import { ActionbarService } from './services/actionbar.service';
 import { ActionbarComponent } from './components/actionbar/actionbar.component';
 import { MaterialModule } from './modules/material/material.module';
 import { MydatatableComponent } from './components/mydatatable/component/mydatatable.component';
+import { SortByPipe } from './pipes/sortby.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     CallbackPipe,
+    SortByPipe,
     ActionbarComponent,
     MydatatableComponent
   ],

@@ -1,0 +1,72 @@
+<mat-card [ngStyle]="cardStyles" >
+<table id="mydatatable" [ngStyle]="{'color': ( config && config['textColor'] ) ? config['textColor'] : ''}" class="table lol" *ngIf="dataSource">
+  <thead>
+  <tr *ngIf="!isMobileView;">
+          <th class="header" *ngFor="let head of dataSource.header.cells"><p class="text-header">{{head.data}}</p></th>
+
+  </tr>
+
+  </thead>
+  <tbody>
+ <ng-template #beforeDataHook>
+<mat-divider *ngIf="!isMobileView"></mat-divider></ng-template>
+
+    <div *ngIf="isMobileView; else noMobile">
+      <tr *ngFor="let row of dataSource.content.rows; let r = index;">
+          <div>
+          <th align="center" class="header" [ngStyle]="{'background-color': ( config && config['mobileHeaderColor'] ) ? config['mobileHeaderColor'] : ''}"><p class="text-header">{{row.cells[findCellIndex(row.cells, dataSource.keyItem)].data}}</p></th>
+          <tr></tr>
+          </div>
+          <mat-divider></mat-divider>
+        <div *ngFor="let cell of row.cells; let c = index;">
+                  <td><b>{{dataSource.header.cells[c].data}}</b><span></span>
+
+                      <p class="table-cell" *ngIf="cell.options && cell.options.isIcon; else notIcon">
+                        <mat-icon>{{cell.data}}</mat-icon>
+                      </p>
+                  
+                                  <ng-template #notIcon>
+                                    <p [ngClass]="(cell.options && cell.options.customClasses) ? cell.options.customClasses : ''">{{cell.data }}</p>
+                                  </ng-template>
+
+                                          <div #customElementsMobile *ngIf="cell.options && cell.options.customElements">
+                                          </div>
+                                          
+        </div>
+        </tr>
+
+
+    </div>
+
+    <ng-template #noMobile>
+      <tr class="handle" *ngFor="let row of dataSource.content.rows; let r = index;">
+      <td  *ngFor="let cell of row.cells; let c = index;">
+<!--         <div *ngIf="cell.options">isIcon : {{cell.options && cell.options.isIcon == true}}</div>-->
+          <mat-icon class="table-cell icon" *ngIf="cell.options && cell.options.isIcon == true; else notIcon" >{{cell.data}}</mat-icon>
+          <ng-template #notIcon>
+                  <p [ngClass]="(cell.options && cell.options.customClasses) ? cell.options.customClasses : ''">{{cell.data }}</p>
+            
+          </ng-template>
+                    <div #customElements *ngIf="cell.options && cell.options.customElements">
+                    </div>
+    
+      
+        </td>
+                                      <mat-divider></mat-divider>
+
+      </tr>
+      <mat-divider></mat-divider>
+      
+    </ng-template>
+  <tr class="rows">
+    
+    <ng-template #afterDataHook>
+      <br>
+      <br>
+      <mat-divider *ngIf="!isMobileView"></mat-divider>
+    </ng-template>
+    
+  </tr>
+  </tbody>
+</table>
+</mat-card>

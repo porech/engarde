@@ -7,7 +7,7 @@
         <p class="subtitle main-text">Active interfaces</p>
         <p class="subtitle secondary-text">Active interfaces are the ones currently transmitting data.</p>
         <div class="card-container">
-                <mat-card class="card card-active" *ngFor="let iface of ifaces | callback: filterActive">
+                <mat-card class="card card-active" *ngFor="let iface of ifaces | callback: filterActive |sortBy: 'name'">
                     <mat-card-title class="title">
                         {{iface.name}} 
                     </mat-card-title>
