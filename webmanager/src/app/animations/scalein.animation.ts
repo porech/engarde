@@ -4,7 +4,7 @@ export function getScaleInAnimation() {
     return scaleInAnimation();
 }
 
-function scaleInAnimation() {
+export function scaleInAnimation() {
     return trigger('scaleIn',
             [
 

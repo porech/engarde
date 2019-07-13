@@ -69,7 +69,7 @@
             <p class="subtitle main-text">Active sockets</p>
             <p class="subtitle secondary-text">Data is being currently transmitted to these addresses.</p>
             <div class="card-container">
-                    <mat-card class="card card-server" *ngFor="let iface of sockets">
+                    <mat-card class="card card-server" *ngFor="let iface of sockets |sortBy: 'name'">
                         <mat-card-title class="title">
                             {{iface.name}} 
                         </mat-card-title>
