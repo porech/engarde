@@ -1,10 +1,22 @@
 <div *ngIf="type; else errScreen">
-    <app-actionbar [title]="'ENGARDE-'+type.toUpperCase()" [color]="'#03A9F4'" [textColor]="'white'"><div class="subtitle">  ver. {{ version }}</div></app-actionbar>
+    <app-actionbar [title]="'ENGARDE-'+type.toUpperCase()" [color]="'#03A9F4'" [textColor]="'white'"><div class="subtitle">  {{ version ? 'ver. '+ version : '' }}</div></app-actionbar>
     <div *ngIf="type == 'client'" [@scaleIn]>
         <p class="subtitle main-text">Active interfaces</p>
         <p class="subtitle secondary-text">Active interfaces are the ones currently transmitting data.</p>
-        <div class="datatable-container">
-            <my-datatable [dataSource]="datasource" [config]="dataconfig"></my-datatable>
+        <div class="card-container">
+                <mat-card class="card active" *ngFor="let iface of ifaces | callback: filterActive">
+                    <mat-card-title class="title">
+                        {{iface.name}} 
+                    </mat-card-title>
+                  <mat-card-content>
+                       <div class="text"><strong>Sender address: </strong>{{iface.senderAddress}}</div>
+                       <div class="text"><strong>Destination address: </strong>{{ iface.dstAddress }} </div>
+                        <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} seconds ago</span> <br>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-button (click)="toggleExclude(iface.name)">Exclude</button>
+                </mat-card-actions>
+                </mat-card>
         </div>
        <!--  <table border="1">
             <tr>
@@ -22,10 +34,9 @@
                 <td><button (click)="toggleExclude(item.name)">Exclude</button></td>
             </tr>
         </table> -->
-
-        <h2>Idle interfaces</h2>
-        <em>Idle interfaces are not transmitting data, but they can become active as soon as they receive an IP address.</em>
-        <table border="1">
+        <p class="subtitle main-text">Idle interfaces</p>
+        <p class="subtitle secondary-text">Idle interfaces are not transmitting data, but they can become active as soon as they receive an IP address.</p>
+        <!-- <table border="1">
             <tr>
                 <td><strong>Name</strong></td>
                 <td><strong>Sender address</strong></td>
@@ -38,11 +49,40 @@
                 <td>{{ item.dstAddress }}</td>
                 <td><button (click)="toggleExclude(item.name)">Exclude</button></td>
             </tr>
-        </table>
-
-        <h2>Excluded interfaces</h2>
-        <em>Excluded interfaces will not be considered.</em>
-        <table border="1">
+        </table> -->
+        <div class="card-container">
+                <mat-card class="card idle" *ngFor="let iface of ifaces | callback: filterIdle">
+                    <mat-card-title class="title">
+                        {{iface.name}} 
+                    </mat-card-title>
+                  <mat-card-content>
+                       <div class="text"><strong>Sender address: </strong>{{iface.senderAddress}}</div>
+                       <div class="text"><strong>Destination address: </strong>{{ iface.dstAddress }} </div>
+                        <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} seconds ago</span> <br>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-button>Exclude</button>
+                </mat-card-actions>
+                </mat-card>
+        </div>
+        <p class="subtitle main-text">Excluded interfaces</p>
+        <p class="subtitle secondary-text">Excluded interfaces will not be considered.</p>
+        <div class="card-container">
+                <mat-card class="card excluded" *ngFor="let iface of ifaces | callback: filterExcluded">
+                    <mat-card-title class="title">
+                        {{iface.name}} 
+                    </mat-card-title>
+                  <mat-card-content>
+                       <div class="text"><strong>Sender address: </strong>{{iface.senderAddress}}</div>
+                       <div class="text"><strong>Destination address: </strong>{{ iface.dstAddress }} </div>
+                        <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} seconds ago</span> <br>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-button>Exclude</button>
+                </mat-card-actions>
+                </mat-card>
+        </div>
+<!--         <table border="1">
             <tr>
                 <td><strong>Name</strong></td>
                 <td><strong>Sender address</strong></td>
@@ -54,7 +94,7 @@
                 <td><button (click)="toggleExclude(item.name)">Include</button></td>
             </tr>
         </table>
-        <p><button (click)="resetExcludes()">Reset all exclusions</button></p>
+        <p><button (click)="resetExcludes()">Reset all exclusions</button></p> -->
     </div>
 
     <div *ngIf="type == 'server'">

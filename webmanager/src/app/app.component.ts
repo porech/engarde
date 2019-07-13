@@ -6,6 +6,7 @@ import { SocketModel } from './models/socket.model';
 import { getScaleInAnimation } from './animations/scalein.animation';
 import { DataSourceModel } from './components/mydatatable/models/mydatatable/datasource.model';
 import { DataTableConfig } from './components/mydatatable/models/mydatatable/datatableconfig.model';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,7 @@ export class AppComponent {
   }
 
 
-  constructor(public api: APICallerService) {}
+  constructor(public api: APICallerService, public snackBar: MatSnackBar) {}
   
   getList() {
     this.api.getList().then(resp => {
@@ -40,7 +41,11 @@ export class AppComponent {
       }
     })
     .catch(err => {
-        this.errorMessage = err.status == 0 ? "Check engarde service" : err.statusText;
+        this.errorMessage = err.status == 0 || err.status == 404 ? "Check engarde service" : err.statusText;
+        let conf = new MatSnackBarConfig();
+        conf.panelClass = ['snackbar']  
+        conf.duration = 1000;
+        this.snackBar.open(`ERR: ${err.statusText}`, null, conf);
     })
   }
 

@@ -1,7 +1,16 @@
-
+.active {
+    border: .5px solid #00bfa5;
+}
 
 .datatable-container {
     margin: 1vh;
+}
+.excluded {
+    border: .5px solid #F44336;
+
+}
+.idle {
+    border: .5px solid #FFC107;
 }
 
 .main-text {
@@ -13,6 +22,19 @@ span.alert {
     color: red;
 }
 
+.card-container {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.card {
+    margin: 1vw;
+}
+
+::ng-deep .snackbar {
+    color: white;
+    font-weight: 600;
+}
 
 .secondary-text {
     font-size: .9em;
@@ -21,5 +43,13 @@ span.alert {
     font-weight: 300;
     margin-left: 1vw;
     font-style: italic; 
+}
+.text {
+    margin-top: 1vh;
+}
+.title {
+    font-size: 1.5em;
+    font-weight: 300; 
+    margin-bottom: 1vh;
 }
 
