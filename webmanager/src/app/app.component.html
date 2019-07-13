@@ -12,12 +12,11 @@
                         {{iface.name}} 
                     </mat-card-title>
                     <mat-card-content>
-                        <div class="text"><strong>Sender address: </strong>{{iface.senderAddress}}</div>
-                        <div class="text"><strong>Destination address: </strong>{{ iface.dstAddress }} </div>
                         <div class="text"><strong>Last received packet: </strong>
                                 <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last">{{ iface.last }} seconds ago</span>
                         </div>
-
+                        <div class="text"><strong>Sender address: </strong>{{iface.senderAddress}}</div>
+                        <div class="text"><strong>Destination address: </strong>{{ iface.dstAddress }} </div>
                     </mat-card-content>
                     <mat-card-actions>
                         <button mat-button class="card-action" (click)="toggleExclude(iface.name)">Exclude</button>
@@ -75,10 +74,10 @@
                             {{iface.name}} 
                         </mat-card-title>
                         <mat-card-content>
-                           <div class="text"><strong>Address: </strong>{{iface.address}}</div>
-                           <div class="text"><strong>Last received packet: </strong>
+                            <div class="text"><strong>Last received packet: </strong>
                                 <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} seconds ago</span> 
-                           </div>
+                            </div>
+                           <div class="text"><strong>Address: </strong>{{iface.address}}</div>
                         </mat-card-content>
                     </mat-card>
             </div>
