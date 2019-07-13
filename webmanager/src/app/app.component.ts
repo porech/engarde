@@ -22,6 +22,7 @@ export class AppComponent {
   public ifaces: IfaceModel[]
   public sockets: SocketModel[]
   public errorMessage = "";
+  public loaded : boolean = false;
   dataconfig: DataTableConfig = {
     mobileHeaderColor: "#FFC107"
   }
@@ -31,6 +32,8 @@ export class AppComponent {
   
   getList() {
     this.api.getList().then(resp => {
+      this.errorMessage = "";
+      this.loaded = true;
       this.type = resp.type
       this.version = resp.version
       this.listenAddress = resp.listenAddress
@@ -41,6 +44,7 @@ export class AppComponent {
       }
     })
     .catch(err => {
+      this.loaded = true;
         this.errorMessage = err.status == 0 || err.status == 404 ? "Check engarde service" : err.statusText;
         let conf = new MatSnackBarConfig();
         conf.panelClass = ['snackbar']  

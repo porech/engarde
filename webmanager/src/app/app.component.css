@@ -1,17 +1,41 @@
-.active {
+
+
+.card {
+    margin: 1vw;
+}
+.card-active {
     border: .5px solid #00bfa5;
+}
+.card-container {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.card-excluded {
+    border: .5px solid #F44336;
+
+}
+
+.card-idle {
+    border: .5px solid #FFC107;
+}
+.card-server {
+    border: .5px solid #03A9F4;
+
 }
 
 .datatable-container {
     margin: 1vh;
 }
-.excluded {
-    border: .5px solid #F44336;
+::ng-deep .snackbar {
+    color: white;
+    font-weight: 600;
+}
 
+.secondary-text {
+    font-size: .9em;
 }
-.idle {
-    border: .5px solid #FFC107;
-}
+
 
 .main-text {
     font-weight: 500;
@@ -20,24 +44,6 @@
 }
 span.alert {
     color: red;
-}
-
-.card-container {
-    display: flex;
-    flex-flow: row wrap;
-}
-
-.card {
-    margin: 1vw;
-}
-
-::ng-deep .snackbar {
-    color: white;
-    font-weight: 600;
-}
-
-.secondary-text {
-    font-size: .9em;
 }
 .subtitle {
     font-weight: 300;
@@ -51,5 +57,14 @@ span.alert {
     font-size: 1.5em;
     font-weight: 300; 
     margin-bottom: 1vh;
+}
+
+@media(max-width: 600px) {
+    .card {
+        margin: 40px;
+    }
+    body {
+        margin: 5px;
+    }
 }
 
