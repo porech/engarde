@@ -87,18 +87,19 @@
         </div>
     
         <div *ngIf="type == 'server'">
-            <p class="subtitle main-text">Active sockets</p>
-            <p class="subtitle secondary-text">Data is being currently transmitted to these addresses.</p>
+            <p class="subtitle main-text">Active sockets
+                <button mat-button (mouseenter)="hintAnimationActive = true" (mouseleave)="hintAnimationActive = false">?</button>
+            </p>
+            <p *ngIf="hintAnimationActive" [@slideOut]="hintAnimationActive" class="subtitle secondary-text">Data is being currently transmitted to these addresses.</p>
             <div class="card-container">
                 <mat-card class="card card-server" *ngFor="let iface of sockets |sortBy: 'name'">
                     <mat-card-title class="title">
-                        {{iface.name}}
+                        {{iface.address}}
                     </mat-card-title>
                     <mat-card-content>
                         <div class="text last-received"><strong>Last received packet: </strong>
                             <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} second{{ iface.last == 1 ? '' : 's' }} ago</span>
                         </div>
-                        <div class="text"><strong>Address: </strong>{{iface.address}}</div>
                     </mat-card-content>
                 </mat-card>
             </div>
