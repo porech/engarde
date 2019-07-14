@@ -29,6 +29,12 @@
 }
 
 .title {
-    margin-left: 2vw;
-    margin-top: 1vh;
+    margin-left: 20px;
+    line-height: 50px;
+    min-width: 130px;
+}
+
+.title span {
+    display: inline-block;
+    line-height: 20px;
 }

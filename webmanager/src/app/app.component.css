@@ -45,14 +45,30 @@
     margin: 1vh; 
     margin-top: 3vh;
 }
-span.alert {
+.alert {
     color: red;
 }
+
 .subtitle {
     font-weight: 300;
-    margin-left: 1vw;
+    margin-left: 30px;
+    line-height: 50px;
+    font-style: italic;
+}
+
+.subtitle span {
+    display: inline-block;
+    line-height: 20px;
+}
+
+.version {
+    font-weight: 300;
+    font-size: .7em;
+    margin-left: 30px;
+    line-height: 50px;
     font-style: italic; 
 }
+
 .text {
     margin-top: 1vh;
 }
@@ -60,6 +76,23 @@ span.alert {
     font-size: 1.5em;
     font-weight: 300; 
     margin-bottom: 1vh;
+}
+
+.filler {
+    flex: 1 1 auto;
+}
+
+.last-received {
+    margin-bottom: 20px;
+}
+
+.other-infos {
+    display: block;
+    font-weight: 300;
+}
+
+.no-results {
+    margin-left: 30px;
 }
 
 @media(max-width: 600px) {
@@ -71,3 +104,8 @@ span.alert {
     }
 }
 
+@media(max-width: 800px) {
+    .version {
+        display: none;
+    }
+}
