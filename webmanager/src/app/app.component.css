@@ -82,6 +82,10 @@
     flex: 1 1 auto;
 }
 
+.port {
+    color: #bbb;
+}
+
 .last-received {
     margin-bottom: 20px;
 }
