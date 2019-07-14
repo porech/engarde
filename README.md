@@ -96,6 +96,14 @@ That's it: engarde client will use 192.168.1.2 as destination, except for eth1 w
 There are a lot of other situations where engarde can make the difference: the connection doesn't have to be a point-to-point one, an entire network can be routed through a tunnel. Virtually, engarde can work in every situation where WireGuard can. For now, if you need to connect different clients to a single server you need to run a different instance of engarde-server, with the same dstAddr and different listen ports, and configure each client to talk with a different port.  
 We're looking into the possibility of making engarde inspect WireGuard handshakes to differentiate the clients, but it's still a work in progress.
 
+## How can I check if everything is working?
+There is an Angular web interface embedded in both the client and the server. Please have a look to the comments in the [example config file](https://github.com/porech/engarde/blob/master/engarde.yml.sample) for more information about how to enable it.
+
+In the client, it shows the interfaces that are currently sending data and, for each of them, the last time a packet was received from the server on it. If an interface isn't receiving data from the server, while the other are, it's probably faulty. If all of them are not receiving data, it's probably because there's no traffic on the tunnel.  
+You can also exclude an interface on-the-go, but keep in mind that those changes are temporary and they're lost when the client is restarted. To make them permanent, you need to edit the configuration file.
+
+The server interface is pretty much the same, but instead of the interfaces it shows the addresses it's currently sending data on.
+
 ## It's useless! It's a bad copy of {some-other-software}
 Honestly, we are quite lazy people, and before coding something we always look for an existing solution that would suit our needings. This time, we really couldn't find one. If you know something similar, please, PLEASE open an issue with title "engarde is a bad copy of ...", we'd love to know that!
 
