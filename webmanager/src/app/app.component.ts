@@ -42,6 +42,7 @@ export class AppComponent {
   }
   
   getList() {
+    let startTime = new Date().getTime()
     this.api.getList().then(resp => {
       this.loaded = true;
       this.type = resp.type
@@ -55,7 +56,8 @@ export class AppComponent {
       }
       this.getListErrors = 0;
       this.errorMessage = null;
-      window.setTimeout(() => { this.getList() }, 800)
+      let callDuration = new Date().getTime() - startTime
+      window.setTimeout(() => { this.getList() }, 1000 - callDuration)
     })
     .catch(err => {
       this.getListErrors += 1;
@@ -66,7 +68,8 @@ export class AppComponent {
         this.snackBar.open(`ERR: ${err.statusText}`, null, this.snackBarConfig);
         window.setTimeout(() => { this.getList() }, 10000);
       } else {
-        window.setTimeout(() => { this.getList() }, 800)
+        let callDuration = new Date().getTime() - startTime
+        window.setTimeout(() => { this.getList() }, 1000 - callDuration)
       }
     })
   }
