@@ -92,7 +92,7 @@
             </p>
             <p *ngIf="hintAnimationActive" [@slideOut]="hintAnimationActive" class="subtitle secondary-text">Data is being currently transmitted to these addresses.</p>
             <div class="card-container">
-                <mat-card class="card card-server" *ngFor="let iface of sockets |sortBy: 'name'">
+                <mat-card class="card card-server" *ngFor="let iface of sockets |sortBy: 'address'">
                     <mat-card-title class="title">
                         {{iface.address}}
                     </mat-card-title>
