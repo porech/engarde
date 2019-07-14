@@ -57,7 +57,7 @@ export class AppComponent {
       this.getListErrors = 0;
       this.errorMessage = null;
       let callDuration = new Date().getTime() - startTime
-      window.setTimeout(() => { this.getList() }, 1000 - callDuration)
+      window.setTimeout(() => { this.getList() }, Math.max(1000 - callDuration, 0))
     })
     .catch(err => {
       this.getListErrors += 1;
@@ -69,7 +69,7 @@ export class AppComponent {
         window.setTimeout(() => { this.getList() }, 10000);
       } else {
         let callDuration = new Date().getTime() - startTime
-        window.setTimeout(() => { this.getList() }, 1000 - callDuration)
+        window.setTimeout(() => { this.getList() }, 1000 - Math.max(1000 - callDuration, 0))
       }
     })
   }
