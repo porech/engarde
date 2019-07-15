@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
+import { timeout, catchError } from 'rxjs/operators';
 import { RespModel } from '../models/resp.model';
 
 /**
@@ -22,6 +23,12 @@ export class APICallerService {
 
   public getList() {
     return this.http.get(this.apiPrefix + "/api/v1/get-list")
+    .pipe(
+      timeout(1000),
+      catchError(e => {
+        throw e
+      })
+    )
     .toPromise()
     .then(res => {
       return res as RespModel

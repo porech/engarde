@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { APICallerService } from './services/apicaller.service';
-import { RespModel } from './models/resp.model';
 import { IfaceModel } from './models/iface.model';
 import { SocketModel } from './models/socket.model';
 import { getScaleInAnimation } from './animations/scalein.animation';
-import { DataSourceModel } from './components/mydatatable/models/mydatatable/datasource.model';
 import { DataTableConfig } from './components/mydatatable/models/mydatatable/datatableconfig.model';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { getSlideOutAnimation } from './animations/slideout.animation';
@@ -30,6 +28,7 @@ export class AppComponent {
   public hintAnimationIdle : boolean = false;
   public hintAnimationExcluded : boolean = false;
   private getListErrors: number = 0;
+  private listTimeout: number = null;
   dataconfig: DataTableConfig = {
     mobileHeaderColor: "#FFC107"
   }
@@ -42,6 +41,7 @@ export class AppComponent {
   }
   
   getList() {
+    window.clearTimeout(this.listTimeout)
     let startTime = new Date().getTime()
     this.api.getList().then(resp => {
       this.loaded = true;
@@ -57,19 +57,19 @@ export class AppComponent {
       this.getListErrors = 0;
       this.errorMessage = null;
       let callDuration = new Date().getTime() - startTime
-      window.setTimeout(() => { this.getList() }, Math.max(1000 - callDuration, 0))
+      this.listTimeout = window.setTimeout(() => { this.getList() }, Math.max(1000 - callDuration, 0))
     })
     .catch(err => {
       this.getListErrors += 1;
       if(this.getListErrors > 2) {
         this.type = null;
         this.loaded = true;
-        this.errorMessage = err.status == 0 || err.status == 404 ? "Check engarde service" : err.statusText;
-        this.snackBar.open(`ERR: ${err.statusText}`, null, this.snackBarConfig);
-        window.setTimeout(() => { this.getList() }, 10000);
+        this.errorMessage = err.toString();
+        this.snackBar.open(`ERR: ${err.toString()}`, null, this.snackBarConfig);
+        this.listTimeout = window.setTimeout(() => { this.getList() }, 10000);
       } else {
         let callDuration = new Date().getTime() - startTime
-        window.setTimeout(() => { this.getList() }, 1000 - Math.max(1000 - callDuration, 0))
+        this.listTimeout = window.setTimeout(() => { this.getList() }, Math.max(1000 - callDuration, 0))
       }
     })
   }
