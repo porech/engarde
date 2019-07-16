@@ -20,7 +20,7 @@ else
 fi
 
 dstArch="$GOARCH"
-if [ "dstArch" = "386" ]; then
+if [ "$dstArch" = "386" ]; then
     dstArch="i386"
 fi
 
