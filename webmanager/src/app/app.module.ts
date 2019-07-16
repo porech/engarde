@@ -15,6 +15,7 @@ import { SortByPipe } from './pipes/sortby.pipe';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { StringToObjectFilterPipe } from './pipes/string2objectfilter.pipe';
 import { FormsModule } from '@angular/forms';
+import {Nl2BrPipeModule} from 'nl2br-pipe';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { FormsModule } from '@angular/forms';
     AppRoutingModule,
     HttpClientModule,
     MaterialModule,
-    FormsModule
+    FormsModule,
+    Nl2BrPipeModule
   ],
   providers: [APICallerService, HttpClient, ActionbarService],
   bootstrap: [AppComponent],
