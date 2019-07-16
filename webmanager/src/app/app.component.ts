@@ -88,7 +88,7 @@ export class AppComponent {
   }
 
   toggleExclude(ifname: string) {
-    if (this.ifaces.filter(i => i.status == "active").length == 1) {
+    if (this.ifaces.filter(i => i.status == "active" && i.name === ifname).length == 1) {
    
         this.dialog.open(DialogComponent, { data:{
           title: "OCIO! WARNING!",
