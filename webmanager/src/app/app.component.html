@@ -2,7 +2,7 @@
         <app-actionbar [logo]="'../assets/engarde-detail.png'" [title]="'ENGARDE-'+type.toUpperCase()" [color]="'#03A9F4'" [textColor]="'white'">
             <div class="subtitle"><span>{{ description }}</span></div>
             <div class="filler"></div>
-            <div class="version">ver. {{ version }}</div>
+            <div *ngIf="version" class="version">ver. {{ version }}</div>
         </app-actionbar>
         <div *ngIf="type == 'client'" [@scaleIn]>
     
