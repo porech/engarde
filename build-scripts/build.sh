@@ -24,5 +24,10 @@ if [ "$dstArch" = "386" ]; then
     dstArch="i386"
 fi
 
+dstName="engarde-$type"
+if [ "$GOOS" = "windows" ]; then
+    dstName="$dstName.exe"
+fi
+
 echo "Building $type for $GOOS $dstArch - ver. $version"
-go build -ldflags "-X 'main.Version=$version'" -o dist/$GOOS/$dstArch/engarde-$type ./cmd/engarde-$type
+go build -ldflags "-X 'main.Version=$version'" -o dist/$GOOS/$dstArch/$dstName ./cmd/engarde-$type
