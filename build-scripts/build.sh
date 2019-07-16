@@ -19,5 +19,10 @@ else
    version="UNOFFICIAL BUILD"
 fi
 
-echo "Building $type for $GOOS $GOARCH - ver. $version"
-go build -ldflags "-X 'main.Version=$version'" -o dist/$GOOS/$GOARCH/engarde-$type ./cmd/engarde-$type
+dstArch="$GOARCH"
+if [ "dstArch" = "386" ]; then
+    dstArch="i386"
+fi
+
+echo "Building $type for $GOOS $dstArch - ver. $version"
+go build -ldflags "-X 'main.Version=$version'" -o dist/$GOOS/$dstArch/engarde-$type ./cmd/engarde-$type
