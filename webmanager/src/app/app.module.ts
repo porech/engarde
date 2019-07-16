@@ -14,7 +14,6 @@ import { MydatatableComponent } from './components/mydatatable/component/mydatat
 import { SortByPipe } from './pipes/sortby.pipe';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { StringToObjectFilterPipe } from './pipes/string2objectfilter.pipe';
-import { Nl2BrPipe, Nl2BrPipeModule } from 'nl2br-pipe';
 import { FormsModule } from '@angular/forms';
 
 
@@ -34,8 +33,7 @@ import { FormsModule } from '@angular/forms';
     AppRoutingModule,
     HttpClientModule,
     MaterialModule,
-    FormsModule,
-    Nl2BrPipeModule
+    FormsModule
   ],
   providers: [APICallerService, HttpClient, ActionbarService],
   bootstrap: [AppComponent],
