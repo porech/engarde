@@ -111,7 +111,7 @@
             <div class="subtitle"> WEBUI</div>
         </app-actionbar>
         <div *ngIf="loaded == true" class="main-text">
-            <div class="title">ERROR: {{errorMessage}}</div>
+            <div class="title">ERROR: {{errorMessage.statusText || errorMessage}}</div>
             <div class="subtitle">Will check every 10 seconds</div>
             <button mat-raised-button color="accent" style="margin: 2vh; color: white;" (click)="getList()">Retry</button>
         </div>
