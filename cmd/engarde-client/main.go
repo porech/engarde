@@ -46,7 +46,7 @@ var clConfig clientConfig
 var exclusionSwaps map[string]bool
 
 // Version is passed by the compiler
-var Version string
+var Version string = "(unofficial build)"
 
 func handleErr(err error, msg string) {
 	if err != nil {
