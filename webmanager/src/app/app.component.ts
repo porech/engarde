@@ -88,8 +88,8 @@ export class AppComponent {
   }
 
   toggleExclude(ifname: string) {
-    if (this.ifaces.filter(i => i.status == "active" && i.name === ifname).length == 1) {
-   
+    let activeIfaces = this.ifaces.filter(i => i.status == "active");
+    if (activeIfaces.length == 1  && activeIfaces[0].name === ifname) {
         this.dialog.open(DialogComponent, { data:{
           title: "OCIO! WARNING!",
           content: `Ehi, wait a second. You're going to exclude the only active interface. 
