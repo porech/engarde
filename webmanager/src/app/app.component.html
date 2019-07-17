@@ -112,7 +112,7 @@
         <div *ngIf="loaded == true" class="main-text">
             <div class="title">ERROR: {{errorMessage.statusText || errorMessage}}</div>
             <div class="subtitle">Will check every 10 seconds</div>
-            <button mat-raised-button color="accent" style="margin: 2vh; color: white;" (click)="getList()">Retry</button>
+            <button mat-raised-button color="accent" style="margin: 2vh; color: white;" (click)="manualGetList()">Retry</button>
         </div>
     
     </ng-template>

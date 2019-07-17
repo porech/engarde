@@ -29,10 +29,6 @@ export class APICallerService {
         throw e
       })
     )
-    .toPromise()
-    .then(res => {
-      return res as RespModel
-    })
   }
 
   public toggleOverride(iface: string) {
