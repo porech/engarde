@@ -13,7 +13,7 @@
             </p>
             <p *ngIf="hintAnimationActive" [@slideOut]="hintAnimationActive" class="subtitle secondary-text">Active interfaces are the ones currently transmitting data.</p>
             <div class="card-container">
-                <mat-card class="card card-active" *ngFor="let iface of ifaces | callback: filterActive |sortBy: 'name'">
+                <mat-card class="card card-active" *ngFor="let iface of ifaces | callback: filterActive |sortBy: 'name'; trackBy: ifacesTrackBy">
                     <mat-card-title class="title">
                         {{iface.name}}
                     </mat-card-title>
@@ -41,7 +41,7 @@
             <p *ngIf="hintAnimationIdle" [@slideOut]="hintAnimationIdle" class="subtitle secondary-text">Idle interfaces are not transmitting data, but they can become active as soon as they receive an IP address.</p>
     
             <div class="card-container">
-                <mat-card class="card card-idle" *ngFor="let iface of ifaces | callback: filterIdle |sortBy: 'name'">
+                <mat-card class="card card-idle" *ngFor="let iface of ifaces | callback: filterIdle |sortBy: 'name'; ; trackBy: ifacesTrackBy">
                     <mat-card-title class="title">
                         {{iface.name}}
                     </mat-card-title>
@@ -65,7 +65,7 @@
             </p>
             <p *ngIf="hintAnimationExcluded" [@slideOut]="hintAnimationExcluded" class="subtitle secondary-text">Excluded interfaces will not be considered.</p>
             <div class="card-container">
-                <mat-card class="card card-excluded" *ngFor="let iface of ifaces | callback: filterExcluded |sortBy: 'name'">
+                <mat-card class="card card-excluded" *ngFor="let iface of ifaces | callback: filterExcluded |sortBy: 'name'; ; trackBy: ifacesTrackBy">
                     <mat-card-title class="title">
                         {{iface.name}}
                     </mat-card-title>
