@@ -24,15 +24,11 @@ export class APICallerService {
   public getList() {
     return this.http.get(this.apiPrefix + "/api/v1/get-list")
     .pipe(
-      timeout(1000),
+      timeout(1500),
       catchError(e => {
         throw e
       })
     )
-    .toPromise()
-    .then(res => {
-      return res as RespModel
-    })
   }
 
   public toggleOverride(iface: string) {

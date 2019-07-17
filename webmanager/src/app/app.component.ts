@@ -7,6 +7,7 @@ import { DataTableConfig } from './components/mydatatable/models/mydatatable/dat
 import { MatSnackBar, MatSnackBarConfig, MatDialog, MatDialogRef } from '@angular/material';
 import { getSlideOutAnimation } from './animations/slideout.animation';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { RespModel } from './models/resp.model';
 
 @Component({
   selector: 'app-root',
@@ -41,10 +42,17 @@ export class AppComponent {
     this.snackBarConfig.duration = 1000;
   }
   
+  manualGetList() {
+    if(this.listTimeout) {
+      clearTimeout(this.listTimeout)
+    }
+    this.getList()
+  }
+
   getList() {
-    window.clearTimeout(this.listTimeout)
+    this.listTimeout = null;
     let startTime = new Date().getTime()
-    this.api.getList().then(resp => {
+    this.api.getList().subscribe((resp: RespModel) => {
       this.loaded = true;
       this.type = resp.type
       this.version = resp.version
@@ -58,18 +66,26 @@ export class AppComponent {
       this.getListErrors = 0;
       this.errorMessage = null;
       let callDuration = new Date().getTime() - startTime
+      if(this.listTimeout) {
+        clearTimeout(this.listTimeout)
+      }
       this.listTimeout = window.setTimeout(() => { this.getList() }, Math.max(1000 - callDuration, 0))
-    })
-    .catch(err => {
+    }, err => {
       this.getListErrors += 1;
-      if(this.getListErrors > 2) {
+      if(this.getListErrors >= 2) {
         this.type = null;
         this.loaded = true;
-        this.errorMessage = err.statusText || JSON.stringify(err) ;
+        this.errorMessage = err.statusText || err.message ;
         this.snackBar.open(`ERR: ${this.errorMessage}`, null, this.snackBarConfig);
+        if(this.listTimeout) {
+          clearTimeout(this.listTimeout)
+        }
         this.listTimeout = window.setTimeout(() => { this.getList() }, 10000);
       } else {
         let callDuration = new Date().getTime() - startTime
+        if(this.listTimeout) {
+          clearTimeout(this.listTimeout)
+        }
         this.listTimeout = window.setTimeout(() => { this.getList() }, Math.max(1000 - callDuration, 0))
       }
     })

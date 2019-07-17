@@ -46,7 +46,7 @@ var clConfig clientConfig
 var exclusionSwaps map[string]bool
 
 // Version is passed by the compiler
-var Version string = "UNOFFICIAL BUILD"
+var Version = "UNOFFICIAL BUILD"
 
 func handleErr(err error, msg string) {
 	if err != nil {
@@ -227,13 +227,22 @@ func createSendThread(ifname, sourceAddr string, wgSock *net.UDPConn, wgAddr **n
 func wgWriteBack(ifname string, routine *sendingRoutine, wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
 	buffer := make([]byte, 1500)
 	var n int
+	var err error
 	for {
-		n, _, _ = routine.SrcSock.ReadFromUDP(buffer)
+		n, _, err = routine.SrcSock.ReadFromUDP(buffer)
 		if routine.IsClosing {
 			return
 		}
+		if err != nil {
+			log.Warn("Error reading from '" + ifname + "', re-creating socket")
+			terminateRoutine(routine, ifname)
+			return
+		}
 		routine.LastRec = time.Now().Unix()
-		wgSock.WriteToUDP(buffer[:n], *wgAddr)
+		_, err = wgSock.WriteToUDP(buffer[:n], *wgAddr)
+		if err != nil {
+			log.Warn("Error writing to WireGuard")
+		}
 	}
 }
 
@@ -242,12 +251,22 @@ func receiveFromWireguard(wgsock *net.UDPConn, sourceAddr **net.UDPAddr) {
 	var n int
 	var srcAddr *net.UDPAddr
 	var routine *sendingRoutine
+	var err error
+	var ifname string
 	for {
-		n, srcAddr, _ = wgsock.ReadFromUDP(buffer)
+		n, srcAddr, err = wgsock.ReadFromUDP(buffer)
+		if err != nil {
+			log.Warn("Error reading from Wireguard")
+			continue
+		}
 		*sourceAddr = srcAddr
 
-		for _, routine = range sendingChannels {
-			routine.SrcSock.WriteToUDP(buffer[:n], routine.DstAddr)
+		for ifname, routine = range sendingChannels {
+			_, err = routine.SrcSock.WriteToUDP(buffer[:n], routine.DstAddr)
+			if err != nil {
+				log.Warn("Error writing to '" + ifname + "', re-creating socket")
+				terminateRoutine(routine, ifname)
+			}
 		}
 	}
 }

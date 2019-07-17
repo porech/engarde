@@ -37,7 +37,7 @@ var clients map[string]*ConnectedClient
 var srConfig serverConfig
 
 // Version is passed by the compiler
-var Version string = "UNOFFICIAL BUILD"
+var Version = "UNOFFICIAL BUILD"
 
 func handleErr(err error, msg string) {
 	if err != nil {
@@ -126,8 +126,13 @@ func receiveFromClient(socket, wgSocket *net.UDPConn, wgAddr *net.UDPAddr) {
 	var srcAddrS string
 	var client *ConnectedClient
 	var exists bool
+	var err error
 	for {
-		n, srcAddr, _ = socket.ReadFromUDP(buffer)
+		n, srcAddr, err = socket.ReadFromUDP(buffer)
+		if err != nil {
+			log.Warn("Error reading from client")
+			continue
+		}
 
 		// Check if client exists
 		currentTime = time.Now().Unix()
@@ -143,7 +148,10 @@ func receiveFromClient(socket, wgSocket *net.UDPConn, wgAddr *net.UDPAddr) {
 			clients[srcAddrS] = &newClient
 		}
 
-		wgSocket.WriteToUDP(buffer[:n], wgAddr)
+		_, err = wgSocket.WriteToUDP(buffer[:n], wgAddr)
+		if err != nil {
+			log.Warn("Error writing to WireGuard")
+		}
 	}
 }
 
@@ -153,12 +161,20 @@ func receiveFromWireguard(wgSocket, socket *net.UDPConn) {
 	var client *ConnectedClient
 	var currentTime int64
 	var clientAddr string
+	var err error
 	for {
-		n, _, _ = wgSocket.ReadFromUDP(buffer)
+		n, _, err = wgSocket.ReadFromUDP(buffer)
+		if err != nil {
+			log.Warn("Error reading from WireGuard")
+			continue
+		}
 		currentTime = time.Now().Unix()
 		for clientAddr, client = range clients {
 			if client.Last > currentTime-srConfig.ClientTimeout {
-				socket.WriteToUDP(buffer[:n], client.Addr)
+				_, err = socket.WriteToUDP(buffer[:n], client.Addr)
+				if err != nil {
+					log.Warn("Error writing to client '" + clientAddr + "', terminating it")
+				}
 			} else {
 				log.Info("Client '" + clientAddr + "' timed out")
 				delete(clients, clientAddr)
