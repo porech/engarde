@@ -87,6 +87,15 @@ export class AppComponent {
     return iface.status == 'excluded'
   }
 
+
+  trackByName(index, iface) {
+    return iface.name;
+  }
+
+  trackByAddress(index, iface) {
+    return iface.address;
+  }
+  
   toggleExclude(ifname: string) {
     let activeIfaces = this.ifaces.filter(i => i.status == "active");
     if (activeIfaces.length == 1  && activeIfaces[0].name === ifname) {

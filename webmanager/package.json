@@ -24,6 +24,7 @@
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
     "core-js": "^2.5.4",
+    "lodash": "^4.17.14",
     "nl2br-pipe": "^1.2.3",
     "roboto-fontface": "^0.10.0",
     "rxjs": "~6.3.3",
