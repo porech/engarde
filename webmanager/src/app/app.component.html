@@ -13,7 +13,7 @@
             </p>
             <p *ngIf="hintAnimationActive" [@slideOut]="hintAnimationActive" class="subtitle secondary-text">Active interfaces are the ones currently transmitting data.</p>
             <div class="card-container">
-                <mat-card class="card card-active" *ngFor="let iface of ifaces | callback: filterActive |sortBy: 'name'; trackBy: ifacesTrackBy">
+                <mat-card class="card card-active" *ngFor="let iface of ifaces | callback: filterActive |sortBy: 'name'; trackBy: trackByName">
                     <mat-card-title class="title">
                         {{iface.name}}
                     </mat-card-title>
@@ -66,7 +66,7 @@
             </p>
             <p *ngIf="hintAnimationExcluded" [@slideOut]="hintAnimationExcluded" class="subtitle secondary-text">Excluded interfaces will not be considered.</p>
             <div class="card-container">
-                <mat-card class="card card-excluded" *ngFor="let iface of ifaces | callback: filterExcluded |sortBy: 'name'; ; trackBy: ifacesTrackBy">
+                <mat-card class="card card-excluded" *ngFor="let iface of ifaces | callback: filterExcluded |sortBy: 'name'; trackBy: trackByName">
                     <mat-card-title class="title">
                         {{iface.name}}
                     </mat-card-title>
@@ -93,7 +93,7 @@
             </p>
             <p *ngIf="hintAnimationActive" [@slideOut]="hintAnimationActive" class="subtitle secondary-text">Data is being currently transmitted to these addresses.</p>
             <div class="card-container">
-                <mat-card class="card card-server" *ngFor="let iface of sockets |sortBy: 'address'">
+                <mat-card class="card card-server" *ngFor="let iface of sockets |sortBy: 'address'; trackBy: trackByAddress">
                     <mat-card-title class="title">
                         {{ iface.address.split(":").slice(0, -1).join(":") }}<span class="port">:{{ iface.address.split(":").slice(-1) }}</span>
                     </mat-card-title>

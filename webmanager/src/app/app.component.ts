@@ -87,8 +87,13 @@ export class AppComponent {
     return iface.status == 'excluded'
   }
 
-  ifacesTrackBy(index, iface) {
+
+  TrackByName(index, iface) {
     return iface.name;
+  }
+
+  TrackByAddress(index, iface) {
+    return iface.address;
   }
   
   toggleExclude(ifname: string) {
