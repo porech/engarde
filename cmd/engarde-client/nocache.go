@@ -50,6 +50,6 @@ func NoCache(h http.HandlerFunc) http.HandlerFunc {
 			w.Header().Set(k, v)
 		}
 
-		handler(w, r)
+		h(w, r)
 	}
 }
