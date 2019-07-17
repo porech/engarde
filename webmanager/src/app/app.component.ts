@@ -72,7 +72,7 @@ export class AppComponent {
       this.listTimeout = window.setTimeout(() => { this.getList() }, Math.max(1000 - callDuration, 0))
     }, err => {
       this.getListErrors += 1;
-      if(this.getListErrors > 2) {
+      if(this.getListErrors >= 2) {
         this.type = null;
         this.loaded = true;
         this.errorMessage = err.statusText || err.message ;
