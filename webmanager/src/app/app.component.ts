@@ -88,11 +88,11 @@ export class AppComponent {
   }
 
 
-  TrackByName(index, iface) {
+  trackByName(index, iface) {
     return iface.name;
   }
 
-  TrackByAddress(index, iface) {
+  trackByAddress(index, iface) {
     return iface.address;
   }
   
