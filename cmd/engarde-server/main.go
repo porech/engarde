@@ -37,7 +37,7 @@ var clients map[string]*ConnectedClient
 var srConfig serverConfig
 
 // Version is passed by the compiler
-var Version string
+var Version string = "UNOFFICIAL BUILD"
 
 func handleErr(err error, msg string) {
 	if err != nil {

@@ -4,7 +4,7 @@ node_js:
 - "9"
 
 before_script:
-- wget https://dl.google.com/go/go1.12.7.linux-amd64.tar.gz
+- wget -q https://dl.google.com/go/go1.12.7.linux-amd64.tar.gz
 - sudo tar -xf go1.12.7.linux-amd64.tar.gz
 - sudo mv go /usr/local
 - export GOPATH=$HOME/go
