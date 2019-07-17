@@ -42,6 +42,7 @@
     
             <div class="card-container">
                 <mat-card class="card card-idle" *ngFor="let iface of ifaces | callback: filterIdle |sortBy: 'name'; trackBy: ifacesTrackBy">
+
                     <mat-card-title class="title">
                         {{iface.name}}
                     </mat-card-title>
