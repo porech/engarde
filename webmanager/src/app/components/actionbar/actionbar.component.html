@@ -1,0 +1,9 @@
+<div class="actionbar-container title-container mat-elevation-z6" #titlecontainer>
+<img class="rounded" *ngIf="logo" height="50px" width="50px" [src]="logo">
+  <div class="title"><span>{{title}}</span></div>
+  <button mat-button routerLink="button.route" *ngFor="let button of this.mButtons">
+    <mat-icon *ngIf="button.icon">{{button?.text}}</mat-icon>
+    {{!button.icon ? button?.text: ''}}
+  </button>
+  <ng-content></ng-content>
+</div>

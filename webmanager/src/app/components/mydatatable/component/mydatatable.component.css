@@ -1,0 +1,120 @@
+
+::ng-deep .edit-mode {
+    margin-right: 2vw;
+    width: var(--input-width);
+    width: 8vw;
+}
+mat-card {
+    margin: 1vh;
+    padding: 0;
+}
+.icon {
+    transform: translateX(-10px);
+    cursor: pointer;
+}
+
+.table {
+    width: 100%;
+}
+td {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+table td {
+/*     border-left: .2px solid rgba(255, 255, 255, .2);
+ */    border-right: .2px solid rgba(255, 255, 255, .8);
+}
+
+table td:first-child {
+    border-left: none;
+}
+
+
+table td:last-child {
+    border-right: none;
+}
+table td:nth-last-child(2) {
+    border-right: none;
+}
+th {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+table {
+   --background-default: #673ab7;
+   --text-default: black;
+   --cursor-style: auto;
+}
+
+.text-header {
+    text-align:left;
+    font-weight: 500;
+} 
+.circled {
+    border-radius: 50%;
+    border: 1px solid white;
+    padding-top: 5px;
+    padding-left: 5px;
+    width: 25px;
+    height: 25px;
+}
+.text-cell {
+    text-align:center;
+}
+::ng-deep .sindu_dragger table{
+    background-color:var(--background-default);
+    color: var(--text-default);
+}
+
+::ng-deep .sindu_handle {
+    cursor: var(--cursor-style);
+  }
+@media(max-width: 600px) {
+    mat-card {
+        margin: 1vh;
+        padding: 2vh;
+    }
+    tr{
+        display:block;
+        margin-bottom:30px;
+    }
+td {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+th {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+    .header {
+        float: center;
+        background-color: #673ab7;
+        color: white;
+        /* bordi arrotondati*/
+        border-radius: 20px;
+        max-width: 90vw;
+        width: 90vw;
+
+    }
+    .table-cell {
+        margin-left: 5vw;
+        margin-top: 2vh;
+        display: flex;
+        flex-flow: row wrap;
+        flex-direction: row;
+    }
+    table td {
+        border: none;
+    }
+    .text-header {
+        text-align:center;
+        
+    }
+    .spacing {
+        margin-left: 20px;
+    }
+
+    .rows { 
+        flex-direction: column wrap;
+    }
+}

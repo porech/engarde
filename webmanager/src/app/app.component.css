@@ -1,0 +1,115 @@
+
+
+.card {
+    margin: 1vw;
+}
+.card-action {
+    float: right;
+}
+.card-active {
+    border: .5px solid #00bfa5;
+}
+.card-container {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.card-excluded {
+    border: .5px solid #F44336;
+
+}
+
+.card-idle {
+    border: .5px solid #FFC107;
+}
+.card-server {
+    border: .5px solid #03A9F4;
+
+}
+
+.datatable-container {
+    margin: 1vh;
+}
+::ng-deep .snackbar {
+    color: white;
+    font-weight: 600;
+}
+
+.secondary-text {
+    font-size: .9em;
+}
+
+
+.main-text {
+    font-weight: 500;
+    margin: 1vh; 
+    margin-top: 3vh;
+}
+.alert {
+    color: red;
+}
+
+.subtitle {
+    font-weight: 300;
+    margin-left: 30px;
+    line-height: 50px;
+    font-style: italic;
+}
+
+.subtitle span {
+    display: inline-block;
+    line-height: 20px;
+}
+
+.version {
+    font-weight: 300;
+    font-size: .7em;
+    margin-left: 30px;
+    line-height: 50px;
+    font-style: italic; 
+}
+
+.text {
+    margin-top: 1vh;
+}
+.title {
+    font-size: 1.5em;
+    font-weight: 300; 
+    margin-bottom: 1vh;
+}
+
+.filler {
+    flex: 1 1 auto;
+}
+
+.port {
+    color: #bbb;
+}
+
+.last-received {
+    margin-bottom: 20px;
+}
+
+.other-infos {
+    display: block;
+    font-weight: 300;
+}
+
+.no-results {
+    margin-left: 30px;
+}
+
+@media(max-width: 600px) {
+    .card {
+        margin: 40px;
+    }
+    body {
+        margin: 5px;
+    }
+}
+
+@media(max-width: 800px) {
+    .version {
+        display: none;
+    }
+}

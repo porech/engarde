@@ -1,10 +1,12 @@
 ---
 # Client configuration
 client:
+  # A custom description for this client instance. It will be displayed on startup and in the management interface to help you identifying it.
+  description: "My engarde-client instance"
   # This is the engarde listen address: WireGuard peer endpoint will need to point here.
   listenAddr: "127.0.0.1:59401"
   # This is the address of the engarde server on the other side
-  dstAddr: "1.2.3.4:59402"
+  dstAddr: "1.2.3.4:59501"
   # By default, engarde sends packets through all the available network interfaces.
   # You will probably need to exclude some interfaces (Bluetooth or virtual ones, for example).
   # Lauch "engarde-client list-interfaces" to show all the detected interfaces, and form your own list based on that.
@@ -20,14 +22,32 @@ client:
   # If you don't need to override anything, you can omit this or just write `dstOverrides: []`
   dstOverrides:
     - ifName: "Local Area Connection 4"
-      dstAddr: "5.6.7.8:59302"
+      dstAddr: "5.6.7.8:59501"
+  # You can control engarde-client by accessing the web management interface. Here you can specify its parameters.
+  # If you don't want a management interface, you can omit this section.
+  webManager:
+    # The address to listen to. Leave it empty to disable the management webserver.
+    listenAddr: "0.0.0.0:9001"
+    # The credentials to access the management interface. Leave them empty or omit them for no authentication.
+    username: "engarde"
+    password: "engarde"
 
 # Server configuration
 server:
+  # A custom description for this server instance. It will be displayed on startup and in the management interface to help you identifying it.
+  description: "My engarde-server instance"
   # This is the engarde listen address: the clients will connect here.
-  listenAddr: "0.0.0.0:59402"
+  listenAddr: "0.0.0.0:59501"
   # The destination address to contact WireGuard on the server
   dstAddr: "127.0.0.1:59301"
   # Client timeout in seconds. If a client doesn't send any packet for n seconds, engarde stops sending it packets.
   # You will need to set it to a slightly higher value than the PersistentKeepalive option in WireGuard clients.
   clientTimeout: 30
+  # You can control engarde-server by accessing the web management interface. Here you can specify its parameters.
+  # If you don't want a management interface, you can omit this section.
+  webManager:
+    # The address to listen to. Leave it empty to disable the management webserver.
+    listenAddr: "0.0.0.0:9001"
+    # The credentials to access the management interface. Leave them empty or omit them for no authentication.
+    username: "engarde"
+    password: "engarde"

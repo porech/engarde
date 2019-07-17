@@ -16,9 +16,15 @@ type config struct {
 }
 
 type serverConfig struct {
+	Description   string `yaml:"description"`
 	ListenAddr    string `yaml:"listenAddr"`
 	DstAddr       string `yaml:"dstAddr"`
 	ClientTimeout int64  `yaml:"clientTimeout"`
+	WebManager    struct {
+		ListenAddr string `yaml:"listenAddr"`
+		Username   string `yaml:"username"`
+		Password   string `yaml:"password"`
+	} `yaml:"webManager"`
 }
 
 // ConnectedClient contains the information about a client
@@ -31,7 +37,7 @@ var clients map[string]*ConnectedClient
 var srConfig serverConfig
 
 // Version is passed by the compiler
-var Version string
+var Version string = "UNOFFICIAL BUILD"
 
 func handleErr(err error, msg string) {
 	if err != nil {
@@ -75,6 +81,9 @@ func main() {
 	err = yaml.Unmarshal(yamlFile, &genconfig)
 	handleErr(err, "Parsing config file failed")
 	srConfig = genconfig.Server
+	if srConfig.Description != "" {
+		log.Info(srConfig.Description)
+	}
 
 	if srConfig.ListenAddr == "" {
 		log.Fatal("No listenAddr specified.")
@@ -102,6 +111,9 @@ func main() {
 	handleErr(err, "Cannot create listen socket")
 	log.Info("Listening on " + srConfig.ListenAddr)
 
+	if srConfig.WebManager.ListenAddr != "" {
+		go webserver(srConfig.WebManager.ListenAddr, srConfig.WebManager.Username, srConfig.WebManager.Password)
+	}
 	go receiveFromWireguard(WireguardSocket, ClientSocket)
 	receiveFromClient(ClientSocket, WireguardSocket, WireguardAddr)
 }

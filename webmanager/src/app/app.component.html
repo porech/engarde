@@ -1,0 +1,121 @@
+<div *ngIf="type && !errorMessage; else errScreen">
+        <app-actionbar [logo]="'../assets/engarde-detail.png'" [title]="'ENGARDE-'+type.toUpperCase()" [color]="'#03A9F4'" [textColor]="'white'">
+            <div class="subtitle"><span>{{ description }}</span></div>
+            <div class="filler"></div>
+            <div *ngIf="version" class="version">ver. {{ version }}</div>
+        </app-actionbar>
+        <div *ngIf="type == 'client'" [@scaleIn]>
+    
+            <!-- ACTIVE INTERFACES -->
+    
+            <p class="subtitle main-text">Active interfaces
+                <button mat-button (mouseenter)="hintAnimationActive = true" (mouseleave)="hintAnimationActive = false">?</button>
+            </p>
+            <p *ngIf="hintAnimationActive" [@slideOut]="hintAnimationActive" class="subtitle secondary-text">Active interfaces are the ones currently transmitting data.</p>
+            <div class="card-container">
+                <mat-card class="card card-active" *ngFor="let iface of ifaces | callback: filterActive |sortBy: 'name'">
+                    <mat-card-title class="title">
+                        {{iface.name}}
+                    </mat-card-title>
+                    <mat-card-content>
+                        <div class="text last-received"><strong>Last received packet: </strong>
+                            <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} second{{ iface.last == 1 ? '' : 's' }} ago</span>
+                        </div>
+                        <span class="other-infos">
+                            <div class="text"><strong>Sender address: </strong>{{iface.senderAddress}}</div>
+                            <div class="text"><strong>Destination address: </strong>{{ iface.dstAddress }}</div>
+                        </span>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-button class="card-action" (click)="toggleExclude(iface.name)">Exclude</button>
+                    </mat-card-actions>
+                </mat-card>
+                <p class="no-results alert" *ngIf="(ifaces | callback: filterActive)?.length == 0">There are no active interfaces.</p>
+            </div>
+    
+            <!-- IDLE INTERFACES -->
+    
+            <p class="subtitle main-text">Idle interfaces
+                <button mat-button (mouseenter)="hintAnimationIdle = true" (mouseleave)="hintAnimationIdle = false">?</button>
+            </p>
+            <p *ngIf="hintAnimationIdle" [@slideOut]="hintAnimationIdle" class="subtitle secondary-text">Idle interfaces are not transmitting data, but they can become active as soon as they receive an IP address.</p>
+    
+            <div class="card-container">
+                <mat-card class="card card-idle" *ngFor="let iface of ifaces | callback: filterIdle |sortBy: 'name'">
+                    <mat-card-title class="title">
+                        {{iface.name}}
+                    </mat-card-title>
+                    <mat-card-content>
+                        <span class="other-infos">
+                            <div class="text"><strong>Sender address: </strong>{{iface.senderAddress}}</div>
+                            <div class="text"><strong>Destination address: </strong>{{ iface.dstAddress }} </div>
+                        </span>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-button class="card-action" (click)="toggleExclude(iface.name)">Exclude</button>
+                    </mat-card-actions>
+                </mat-card>
+                <p class="no-results" *ngIf="(ifaces | callback: filterIdle)?.length == 0">There are no idle interfaces.</p>
+            </div>
+    
+            <!-- EXCLUDED INTERFACES -->
+    
+            <p class="subtitle main-text">Excluded interfaces
+                <button mat-button (mouseenter)="hintAnimationExcluded = true" (mouseleave)="hintAnimationExcluded = false">?</button>
+            </p>
+            <p *ngIf="hintAnimationExcluded" [@slideOut]="hintAnimationExcluded" class="subtitle secondary-text">Excluded interfaces will not be considered.</p>
+            <div class="card-container">
+                <mat-card class="card card-excluded" *ngFor="let iface of ifaces | callback: filterExcluded |sortBy: 'name'">
+                    <mat-card-title class="title">
+                        {{iface.name}}
+                    </mat-card-title>
+                    <mat-card-content>
+                        <span class="other-infos">
+                            <div class="text"><strong>Sender address: </strong>{{iface.senderAddress}}</div>
+                        </span>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-button class="card-action" (click)="toggleExclude(iface.name)">Include</button>
+                    </mat-card-actions>
+                </mat-card>
+                <p class="no-results" *ngIf="(ifaces | callback: filterExcluded)?.length == 0">There are no excluded interfaces.</p>
+            </div>
+            <p>
+                <button mat-button (click)="resetExcludes()">Reset all exclusions</button>
+            </p>
+    
+        </div>
+    
+        <div *ngIf="type == 'server'">
+            <p class="subtitle main-text">Active sockets
+                <button mat-button (mouseenter)="hintAnimationActive = true" (mouseleave)="hintAnimationActive = false">?</button>
+            </p>
+            <p *ngIf="hintAnimationActive" [@slideOut]="hintAnimationActive" class="subtitle secondary-text">Data is being currently transmitted to these addresses.</p>
+            <div class="card-container">
+                <mat-card class="card card-server" *ngFor="let iface of sockets |sortBy: 'address'">
+                    <mat-card-title class="title">
+                        {{ iface.address.split(":").slice(0, -1).join(":") }}<span class="port">:{{ iface.address.split(":").slice(-1) }}</span>
+                    </mat-card-title>
+                    <mat-card-content>
+                        <div class="text last-received"><strong>Last received packet: </strong>
+                            <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} second{{ iface.last == 1 ? '' : 's' }} ago</span>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    
+    <ng-template #errScreen>
+        <app-actionbar [title]="'ENGARDE'" [color]="'#03A9F4'" [textColor]="'white'">
+            <div class="subtitle"> WEBUI</div>
+        </app-actionbar>
+        <div *ngIf="loaded == true" class="main-text">
+            <div class="title">ERROR: {{errorMessage.statusText || errorMessage}}</div>
+            <div class="subtitle">Will check every 10 seconds</div>
+            <button mat-raised-button color="accent" style="margin: 2vh; color: white;" (click)="getList()">Retry</button>
+        </div>
+    
+    </ng-template>
+    
+    <router-outlet></router-outlet>

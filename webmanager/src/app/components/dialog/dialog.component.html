@@ -1,0 +1,36 @@
+<mat-dialog-content class="dialog-content">
+<ng-container #vc></ng-container>
+</mat-dialog-content>
+<div class="dialog">
+
+  <h2 mat-dialog-title class="dialog-title">{{title}}</h2>
+  <div *ngIf="this.userInput && this.userInput.enabled; else noInput;">
+    <mat-dialog-content class="dialog-content">
+      <div *ngFor="let prompt of this.userInput.values; let i = index">
+        <mat-form-field>
+          <input matInput type="{{prompt.type}}" (keyup)="checkAutoComplete(prompt.value)" [matAutocomplete]="auto" [(ngModel)]="this.userInput.values[i].value" placeholder="{{prompt.placeholder}}">
+        </mat-form-field>
+        <mat-autocomplete #auto="matAutocomplete">
+          <div *ngIf="prompt.autocompletion && prompt.autocompletion.enabled && prompt.autocompletion.autocompleteModel.length > 0 && this.canShowAutoComplete">
+            <mat-option (onSelectionChange)="doStuff(this.thingsToBeDone[i].whatToDo(val))" *ngFor="let val of prompt.autocompletion.autocompleteModel | string2objectfilter:prompt.value:prompt.autocompletion.filterModelBy" [value]="val[prompt.autocompletion.filterModelBy]">
+              {{ val[prompt.autocompletion.filterModelBy] }}
+            </mat-option>
+          </div> 
+        
+        </mat-autocomplete>
+      </div>
+    </mat-dialog-content>
+  </div>
+  <ng-template #noInput>
+        <mat-dialog-content class="dialog-content" [innerHTML]="content | nl2br">
+
+        </mat-dialog-content>
+    </ng-template>  
+  <div mat-dialog-actions align="end" class="dialog-actions">
+    <div *ngFor="let action of thingsToBeDone; let i = index">
+      <button mat-button (click)="doStuff(this.thingsToBeDone[i].whatToDo())" tabindex="{{i}}">{{thingsToBeDone[i].label}}</button>
+    </div>
+    <!-- <button mat-button (click)="confirm(this.whatToDo)" tabindex="1">OK</button>
+    <button mat-button (click)="dismiss()" tabindex="2">ANNULLA</button> -->
+  </div>
+</div>
