@@ -4,7 +4,7 @@ import { IfaceModel } from './models/iface.model';
 import { SocketModel } from './models/socket.model';
 import { getScaleInAnimation } from './animations/scalein.animation';
 import { DataTableConfig } from './components/mydatatable/models/mydatatable/datatableconfig.model';
-import { MatSnackBar, MatSnackBarConfig, MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { getSlideOutAnimation } from './animations/slideout.animation';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { RespModel } from './models/resp.model';
@@ -25,7 +25,6 @@ export class AppComponent {
   public sockets: SocketModel[]
   public errorMessage;
   public loaded : boolean = false;
-  public snackBarConfig;
   public hintAnimationActive : boolean = false;
   public hintAnimationIdle : boolean = false;
   public hintAnimationExcluded : boolean = false;
@@ -36,18 +35,7 @@ export class AppComponent {
   }
 
 
-  constructor(public api: APICallerService, public snackBar: MatSnackBar, public dialog: MatDialog) {
-    this.snackBarConfig = new MatSnackBarConfig();
-    this.snackBarConfig.panelClass = ['snackbar']  
-    this.snackBarConfig.duration = 1000;
-  }
-  
-  manualGetList() {
-    if(this.listTimeout) {
-      clearTimeout(this.listTimeout)
-    }
-    this.getList()
-  }
+  constructor(public api: APICallerService, public dialog: MatDialog) { }
 
   getList() {
     this.listTimeout = null;
@@ -76,11 +64,10 @@ export class AppComponent {
         this.type = null;
         this.loaded = true;
         this.errorMessage = err.statusText || err.message ;
-        this.snackBar.open(`ERR: ${this.errorMessage}`, null, this.snackBarConfig);
         if(this.listTimeout) {
           clearTimeout(this.listTimeout)
         }
-        this.listTimeout = window.setTimeout(() => { this.getList() }, 10000);
+        this.listTimeout = window.setTimeout(() => { this.getList() }, 1000);
       } else {
         let callDuration = new Date().getTime() - startTime
         if(this.listTimeout) {
@@ -111,13 +98,13 @@ export class AppComponent {
   trackByAddress(index, iface) {
     return iface.address;
   }
-  
+
   toggleExclude(ifname: string) {
     let activeIfaces = this.ifaces.filter(i => i.status == "active");
     if (activeIfaces.length == 1  && activeIfaces[0].name === ifname) {
         this.dialog.open(DialogComponent, { data:{
           title: "OCIO! WARNING!",
-          content: `Ehi, wait a second. You're going to exclude the only active interface. 
+          content: `Ehi, wait a second. You're going to exclude the only active interface.
           This way, the tunnel will go down FOR SURE! Do you <b>REALLY</b> want to proceed?`,
           thingsToBeDone : [
             {
@@ -138,7 +125,7 @@ export class AppComponent {
   resetExcludes() {
     this.api.clearOverrides()
   }
-  
+
   ngOnInit() {
     this.getList();
   }
