@@ -114,3 +114,13 @@ After doing this, you'll be able to run engarde-client as a normal user.
 
 ## Can I ask for help?
 Of course! Feel free to open an issue for any necessity ;)
+
+## License
+
+### Source code
+The whole source code is released under the terms of the GNU General Public License (GPL) v2. You can find a copy of the license in the LICENSE.txt file.  
+
+### Logo
+The engarde logo is based on the Go gopher. The Go gopher was designed by Renee French. (http://reneefrench.blogspot.com/)
+The design is licensed under the Creative Commons 3.0 Attributions license.
+Read this article for more details: https://blog.golang.org/gopher
