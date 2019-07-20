@@ -5,9 +5,9 @@
             <div *ngIf="version" class="version">ver. {{ version }}</div>
         </app-actionbar>
         <div *ngIf="type == 'client'" [@scaleIn]>
-    
+
             <!-- ACTIVE INTERFACES -->
-    
+
             <p class="subtitle main-text">Active interfaces
                 <button mat-button (mouseenter)="hintAnimationActive = true" (mouseleave)="hintAnimationActive = false">?</button>
             </p>
@@ -32,9 +32,9 @@
                 </mat-card>
                 <p class="no-results alert" *ngIf="(ifaces | callback: filterActive)?.length == 0">There are no active interfaces.</p>
             </div>
-    
+
             <!-- IDLE INTERFACES -->
-    
+
             <p class="subtitle main-text">Idle interfaces
                 <button mat-button (mouseenter)="hintAnimationIdle = true" (mouseleave)="hintAnimationIdle = false">?</button>
             </p>
@@ -56,9 +56,9 @@
                 </mat-card>
                 <p class="no-results" *ngIf="(ifaces | callback: filterIdle)?.length == 0">There are no idle interfaces.</p>
             </div>
-    
+
             <!-- EXCLUDED INTERFACES -->
-    
+
             <p class="subtitle main-text">Excluded interfaces
                 <button mat-button (mouseenter)="hintAnimationExcluded = true" (mouseleave)="hintAnimationExcluded = false">?</button>
             </p>
@@ -82,9 +82,9 @@
             <p>
                 <button mat-button (click)="resetExcludes()">Reset all exclusions</button>
             </p>
-    
+
         </div>
-    
+
         <div *ngIf="type == 'server'">
             <p class="subtitle main-text">Active sockets
                 <button mat-button (mouseenter)="hintAnimationActive = true" (mouseleave)="hintAnimationActive = false">?</button>
@@ -104,17 +104,16 @@
             </div>
         </div>
     </div>
-    
+
     <ng-template #errScreen>
         <app-actionbar [title]="'ENGARDE'" [color]="'#03A9F4'" [textColor]="'white'">
             <div class="subtitle"> WEBUI</div>
         </app-actionbar>
         <div *ngIf="loaded == true" class="main-text">
             <div class="title">ERROR: {{errorMessage.statusText || errorMessage}}</div>
-            <div class="subtitle">Will check every 10 seconds</div>
-            <button mat-raised-button color="accent" style="margin: 2vh; color: white;" (click)="manualGetList()">Retry</button>
+            <div class="subtitle">There's a problem reaching engarde right now. The page will be update as soon as it's solved.</div>
         </div>
-    
+
     </ng-template>
-    
+
     <router-outlet></router-outlet>
