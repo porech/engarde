@@ -12,13 +12,7 @@ before_script:
 - export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 - mkdir -p $HOME/go/src
 - mkdir -p $HOME/go/bin
-- curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 - cd .. && mv engarde $HOME/go/src
-- go get "github.com/sirupsen/logrus"
-- go get "gopkg.in/yaml.v2"
-- go get "github.com/konsorten/go-windows-terminal-sequences"
-- go get "github.com/gobuffalo/packr/v2/..."
-- go get "github.com/gobuffalo/packr/v2/packr2"
 
 script:
 - cd $HOME/go/src/engarde/webmanager && npm install && npm run-script build-prod
