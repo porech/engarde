@@ -16,7 +16,7 @@ In some way, engarde is similar to a failover mechanism, but it doesn't switch t
 Absolutely yes. The used bandwidth is the one you would normally use multiplied by the number of the connections you have. But hey, imagine you are transmitting real time audio to a national radio station: would you really prefer that a connection failure causes some moments of silence to the listeners, or would you happily waste your bandwidth to avoid it?
 
 ## How do I get it?
-You can find the latest builds here: (thanks to linuxzogno.org for hosting them):
+You can find the latest builds here (thanks to linuxzogno.org for hosting them):
 
 ### Server
 |                   | i386     | amd64    | arm    |
