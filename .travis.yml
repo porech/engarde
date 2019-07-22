@@ -12,6 +12,7 @@ before_script:
 - export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 - mkdir -p $HOME/go/src
 - mkdir -p $HOME/go/bin
+- go get "github.com/gobuffalo/packr/v2/packr2"
 - cd .. && mv engarde $HOME/go/src
 
 script:
