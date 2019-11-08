@@ -160,12 +160,86 @@ func webSwapExclusion(w http.ResponseWriter, r *http.Request) {
 	w.Write(rsp)
 }
 
+func webInclude(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+	var req struct {
+		Iface string `json:"interface"`
+	}
+	err = json.Unmarshal(body, &req)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+	var rsp []byte
+	if(isExcluded(req.Iface)) {
+		swapExclusion(req.Iface)
+		rsp, err = json.Marshal(struct {
+			Status string `json:"status"`
+		}{"ok"})
+	} else {
+		rsp, err = json.Marshal(struct {
+			Status string `json:"status"`
+		}{"already-included"})
+	}
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	w.Write(rsp)
+}
+
+func webExclude(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+	var req struct {
+		Iface string `json:"interface"`
+	}
+	err = json.Unmarshal(body, &req)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+	var rsp []byte
+	if(!isExcluded(req.Iface)) {
+		swapExclusion(req.Iface)
+		rsp, err = json.Marshal(struct {
+			Status string `json:"status"`
+		}{"ok"})
+	} else {
+		rsp, err = json.Marshal(struct {
+			Status string `json:"status"`
+		}{"already-excluded"})
+	}
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte("Internal server error"))
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	w.Write(rsp)
+}
+
 func webserver(listenAddr, username, password string) {
 	for {
 		realm := "engarde"
 		box := packr.New("webmanager", "../../webmanager/dist/webmanager")
 		http.HandleFunc("/", webBasicAuth(webHandleFileServer(box, "/"), username, password, realm))
 		http.HandleFunc("/api/v1/get-list", NoCache(webBasicAuth(webGetList, username, password, realm)))
+		http.HandleFunc("/api/v1/include", NoCache(webBasicAuth(webInclude, username, password, realm)))
+		http.HandleFunc("/api/v1/exclude", NoCache(webBasicAuth(webExclude, username, password, realm)))
 		http.HandleFunc("/api/v1/swap-exclusion", NoCache(webBasicAuth(webSwapExclusion, username, password, realm)))
 		http.HandleFunc("/api/v1/reset-exclusions", NoCache(webBasicAuth(webResetExclusions, username, password, realm)))
 		log.Info("Management webserver listening on " + listenAddr)
