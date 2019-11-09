@@ -115,6 +115,9 @@ After doing this, you'll be able to run engarde-client as a normal user.
 ## Can I ask for help?
 Of course! Feel free to open an issue for any necessity ;)
 
+## I love it, can I offer you a coffee?
+Wow, thanks! You can drop some Bitcoin to 35J2dPDFHweeB87LiYcHbhVmtgBsNrP4eH
+
 ## License
 
 ### Source code
