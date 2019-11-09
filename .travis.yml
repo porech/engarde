@@ -15,7 +15,7 @@ before_script:
 - go get "github.com/gobuffalo/packr/v2/packr2"
 
 script:
-- npm install && npm run-script build-prod
+- cd webmanager && npm install && npm run-script build-prod && cd ..
 - make
 
 after_success:
