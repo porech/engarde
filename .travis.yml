@@ -13,11 +13,10 @@ before_script:
 - mkdir -p $HOME/go/src
 - mkdir -p $HOME/go/bin
 - go get "github.com/gobuffalo/packr/v2/packr2"
-- cd .. && mv engarde $HOME/go/src
 
 script:
-- cd $HOME/go/src/engarde/webmanager && npm install && npm run-script build-prod
-- cd $HOME/go/src/engarde && make
+- npm install && npm run-script build-prod
+- make
 
 after_success:
-- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then cd $HOME/go/src/engarde/dist && find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=$TRAVIS_BRANCH/{}" -F "key=$UPLOAD_KEY" "$UPLOAD_URL" \;; fi
+- if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then cd dist && find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=$TRAVIS_BRANCH/{}" -F "key=$UPLOAD_KEY" "$UPLOAD_URL" \;; fi
