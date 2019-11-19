@@ -74,7 +74,7 @@ Done! engarde is now overlying your WireGuard tunnel: try to ping the server fro
 ### Scenario 2: multiple connections between two peers
 Here we have a totally different scenario: we are in a data center, and two servers are connected with two Ethernet cables that follow different paths for redundancy.
 
-![Scenario 2](http://i65.tinypic.com/15dhn5.png)
+![Scenario 2](https://engarde.linuxzogno.org/Scenario2.png)
 
 The procedure to follow is identical to the first scenario, but with a small change in the configuration file:
 ```
