@@ -7,6 +7,8 @@ client:
   listenAddr: "127.0.0.1:59401"
   # This is the address of the engarde server on the other side
   dstAddr: "1.2.3.4:59501"
+  # A timeout in milliseconds for socket writes. You can try to lower it if you're experiencing latency peaks, or raising it if the connection is unstable.
+  writeTimeout: 10
   # By default, engarde sends packets through all the available network interfaces.
   # You will probably need to exclude some interfaces (Bluetooth or virtual ones, for example).
   # Lauch "engarde-client list-interfaces" to show all the detected interfaces, and form your own list based on that.
