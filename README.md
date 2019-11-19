@@ -39,7 +39,7 @@ If you prefer, or if you need another architecture, you can always compile from 
 ### Scenario 1: multiple connections on one peer, single stable connection on the other
 This is the most typical scenario: you have a reliable server on one end, and a client with multiple unstable connections (maybe in mobility).
 
-![Scenario 1](http://i65.tinypic.com/2me4snm.png)
+![Scenario 1](https://engarde.linuxzogno.org/Scenario1.png)
 
 So, we need to establish a reliable connection between our laptop on the truck and the super server, but none of the connections we have on the truck is reliable enough. We can, howerver, assume that at least one of them will work in every moment.
 
