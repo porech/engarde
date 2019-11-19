@@ -45,6 +45,8 @@ server:
   # Client timeout in seconds. If a client doesn't send any packet for n seconds, engarde stops sending it packets.
   # You will need to set it to a slightly higher value than the PersistentKeepalive option in WireGuard clients.
   clientTimeout: 30
+  # A timeout in milliseconds for socket writes. You can try to lower it if you're experiencing latency peaks, or raising it if the connection is unstable.
+  writeTimeout: 10
   # You can control engarde-server by accessing the web management interface. Here you can specify its parameters.
   # If you don't want a management interface, you can omit this section.
   webManager:

@@ -16,10 +16,11 @@ type config struct {
 }
 
 type serverConfig struct {
-	Description   string `yaml:"description"`
-	ListenAddr    string `yaml:"listenAddr"`
-	DstAddr       string `yaml:"dstAddr"`
-	ClientTimeout int64  `yaml:"clientTimeout"`
+	Description   string        `yaml:"description"`
+	ListenAddr    string        `yaml:"listenAddr"`
+	DstAddr       string        `yaml:"dstAddr"`
+	WriteTimeout  time.Duration `yaml:"writeTimeout"`
+	ClientTimeout int64         `yaml:"clientTimeout"`
 	WebManager    struct {
 		ListenAddr string `yaml:"listenAddr"`
 		Username   string `yaml:"username"`
@@ -95,6 +96,9 @@ func main() {
 	if srConfig.ClientTimeout == 0 {
 		srConfig.ClientTimeout = 30
 	}
+	if srConfig.WriteTimeout == 0 {
+		srConfig.WriteTimeout = 10
+	}
 
 	clients = make(map[string]*ConnectedClient)
 
@@ -147,7 +151,7 @@ func receiveFromClient(socket, wgSocket *net.UDPConn, wgAddr *net.UDPAddr) {
 			}
 			clients[srcAddrS] = &newClient
 		}
-
+		wgSocket.SetWriteDeadline(time.Now().Add(srConfig.WriteTimeout * time.Millisecond))
 		_, err = wgSocket.WriteToUDP(buffer[:n], wgAddr)
 		if err != nil {
 			log.Warn("Error writing to WireGuard")
@@ -162,6 +166,7 @@ func receiveFromWireguard(wgSocket, socket *net.UDPConn) {
 	var currentTime int64
 	var clientAddr string
 	var err error
+	var toDelete []string
 	for {
 		n, _, err = wgSocket.ReadFromUDP(buffer)
 		if err != nil {
@@ -171,14 +176,20 @@ func receiveFromWireguard(wgSocket, socket *net.UDPConn) {
 		currentTime = time.Now().Unix()
 		for clientAddr, client = range clients {
 			if client.Last > currentTime-srConfig.ClientTimeout {
+				socket.SetWriteDeadline(time.Now().Add(srConfig.WriteTimeout * time.Millisecond))
 				_, err = socket.WriteToUDP(buffer[:n], client.Addr)
 				if err != nil {
 					log.Warn("Error writing to client '" + clientAddr + "', terminating it")
+					toDelete = append(toDelete, clientAddr)
 				}
 			} else {
 				log.Info("Client '" + clientAddr + "' timed out")
-				delete(clients, clientAddr)
+				toDelete = append(toDelete, clientAddr)
 			}
 		}
+		for _, clientAddr = range toDelete {
+			delete(clients, clientAddr)
+		}
+		toDelete = toDelete[:0]
 	}
 }
