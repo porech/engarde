@@ -41,7 +41,7 @@ This is the most typical scenario: you have a reliable server on one end, and a 
 
 ![Scenario 1](https://engarde.linuxzogno.org/Scenario1.png)
 
-So, we need to establish a reliable connection between our laptop on the truck and the super server, but none of the connections we have on the truck is reliable enough. We can, howerver, assume that at least one of them will work in every moment.
+So, we need to establish a reliable connection between our laptop and the server, but none of the connections we have on the laptop is reliable enough. We can, howerver, assume that at least one of them will work in every moment.
 
 1. First of all, set up a WireGuard tunnel between the two peers, following the [official quick start](https://www.wireguard.com/quickstart/). You need to specify a static listen port on the server (59301 is assumed in this procedure) and set the correct peer endpoint on the client. The opposite is not necessary: WireGuard will use a random listen port on the client, and the server will memorize it along with the source address when it first receives a packet. At the end, both the laptop and the server should have a WireGuard IP: in this procedure we'll assume that the server has IP 192.168.5.1, and the laptop has 192.168.5.2, but it can be whatever you want. Test the two systems can ping each other on the WireGuard IP before proceeding to step 2.
 
