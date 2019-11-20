@@ -8,6 +8,7 @@ client:
   # This is the address of the engarde server on the other side
   dstAddr: "1.2.3.4:59501"
   # A timeout in milliseconds for socket writes. You can try to lower it if you're experiencing latency peaks, or raising it if the connection is unstable.
+  # You can disable write timeout by setting a negative value (like -1), but it's easy to have issues if you need low latency.
   writeTimeout: 10
   # By default, engarde sends packets through all the available network interfaces.
   # You will probably need to exclude some interfaces (Bluetooth or virtual ones, for example).
@@ -46,6 +47,7 @@ server:
   # You will need to set it to a slightly higher value than the PersistentKeepalive option in WireGuard clients.
   clientTimeout: 30
   # A timeout in milliseconds for socket writes. You can try to lower it if you're experiencing latency peaks, or raising it if the connection is unstable.
+  # You can disable write timeout by setting a negative value (like -1), but it's easy to have issues if you need low latency.
   writeTimeout: 10
   # You can control engarde-server by accessing the web management interface. Here you can specify its parameters.
   # If you don't want a management interface, you can omit this section.

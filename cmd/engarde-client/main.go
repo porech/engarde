@@ -248,7 +248,9 @@ func wgWriteBack(ifname string, routine *sendingRoutine, wgSock *net.UDPConn, wg
 			return
 		}
 		routine.LastRec = time.Now().Unix()
-		wgSock.SetWriteDeadline(time.Now().Add(clConfig.WriteTimeout * time.Millisecond))
+		if clConfig.WriteTimeout > 0 {
+			wgSock.SetWriteDeadline(time.Now().Add(clConfig.WriteTimeout * time.Millisecond))
+		}
 		_, err = wgSock.WriteToUDP(buffer[:n], *wgAddr)
 		if err != nil {
 			log.Warn("Error writing to WireGuard")
@@ -273,7 +275,9 @@ func receiveFromWireguard(wgsock *net.UDPConn, sourceAddr **net.UDPAddr) {
 		*sourceAddr = srcAddr
 		sendingChannelsMutex.Lock()
 		for ifname, routine = range sendingChannels {
-			routine.SrcSock.SetWriteDeadline(time.Now().Add(clConfig.WriteTimeout * time.Millisecond))
+			if clConfig.WriteTimeout > 0 {
+				routine.SrcSock.SetWriteDeadline(time.Now().Add(clConfig.WriteTimeout * time.Millisecond))
+			}
 			_, err = routine.SrcSock.WriteToUDP(buffer[:n], routine.DstAddr)
 			if err != nil {
 				log.Warn("Error writing to '" + ifname + "', re-creating socket")

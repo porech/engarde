@@ -156,7 +156,9 @@ func receiveFromClient(socket, wgSocket *net.UDPConn, wgAddr *net.UDPAddr) {
 			}
 			clients[srcAddrS] = &newClient
 		}
-		wgSocket.SetWriteDeadline(time.Now().Add(srConfig.WriteTimeout * time.Millisecond))
+		if srConfig.WriteTimeout > 0 {
+			wgSocket.SetWriteDeadline(time.Now().Add(srConfig.WriteTimeout * time.Millisecond))
+		}
 		_, err = wgSocket.WriteToUDP(buffer[:n], wgAddr)
 		if err != nil {
 			log.Warn("Error writing to WireGuard")
@@ -181,7 +183,9 @@ func receiveFromWireguard(wgSocket, socket *net.UDPConn) {
 		currentTime = time.Now().Unix()
 		for clientAddr, client = range clients {
 			if client.Last > currentTime-srConfig.ClientTimeout {
-				socket.SetWriteDeadline(time.Now().Add(srConfig.WriteTimeout * time.Millisecond))
+				if srConfig.WriteTimeout > 0 {
+					socket.SetWriteDeadline(time.Now().Add(srConfig.WriteTimeout * time.Millisecond))
+				}
 				_, err = socket.WriteToUDP(buffer[:n], client.Addr)
 				if err != nil {
 					log.Warn("Error writing to client '" + clientAddr + "', terminating it")
