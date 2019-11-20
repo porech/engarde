@@ -35,6 +35,7 @@ type ConnectedClient struct {
 }
 
 var clients map[string]*ConnectedClient
+var clientsMutex *sync.Mutex
 var srConfig serverConfig
 
 // Version is passed by the compiler
@@ -101,6 +102,7 @@ func main() {
 	}
 
 	clients = make(map[string]*ConnectedClient)
+	clientsMutex = &sync.Mutex{}
 
 	WireguardAddr, err := net.ResolveUDPAddr("udp4", srConfig.DstAddr)
 	handleErr(err, "Cannot resolve destination address")
@@ -141,7 +143,10 @@ func receiveFromClient(socket, wgSocket *net.UDPConn, wgAddr *net.UDPAddr) {
 		// Check if client exists
 		currentTime = time.Now().Unix()
 		srcAddrS = srcAddr.IP.String() + ":" + strconv.Itoa(srcAddr.Port)
-		if client, exists = clients[srcAddrS]; exists {
+		clientsMutex.Lock()
+		client, exists = clients[srcAddrS]
+		clientsMutex.Unlock()
+		if exists {
 			client.Last = currentTime
 		} else {
 			log.Info("New client connected: '" + srcAddrS + "'")
@@ -187,9 +192,11 @@ func receiveFromWireguard(wgSocket, socket *net.UDPConn) {
 				toDelete = append(toDelete, clientAddr)
 			}
 		}
+		clientsMutex.Lock()
 		for _, clientAddr = range toDelete {
 			delete(clients, clientAddr)
 		}
+		clientsMutex.Unlock()
 		toDelete = toDelete[:0]
 	}
 }
