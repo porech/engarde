@@ -248,9 +248,6 @@ func wgWriteBack(ifname string, routine *sendingRoutine, wgSock *net.UDPConn, wg
 			return
 		}
 		routine.LastRec = time.Now().Unix()
-		if clConfig.WriteTimeout > 0 {
-			wgSock.SetWriteDeadline(time.Now().Add(clConfig.WriteTimeout * time.Millisecond))
-		}
 		_, err = wgSock.WriteToUDP(buffer[:n], *wgAddr)
 		if err != nil {
 			log.Warn("Error writing to WireGuard")
