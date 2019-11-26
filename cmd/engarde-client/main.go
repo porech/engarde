@@ -5,6 +5,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -19,6 +20,7 @@ type clientConfig struct {
 	Description        string        `yaml:"description"`
 	ListenAddr         string        `yaml:"listenAddr"`
 	DstAddr            string        `yaml:"dstAddr"`
+	WriteTimeout       time.Duration `yaml:"writeTimeout"`
 	ExcludedInterfaces []string      `yaml:"excludedInterfaces"`
 	DstOverrides       []dstOverride `yaml:"dstOverrides"`
 	WebManager         struct {
@@ -44,6 +46,7 @@ type sendingRoutine struct {
 var sendingChannels map[string]*sendingRoutine
 var clConfig clientConfig
 var exclusionSwaps map[string]bool
+var sendingChannelsMutex *sync.Mutex
 
 // Version is passed by the compiler
 var Version = "UNOFFICIAL BUILD"
@@ -140,10 +143,14 @@ func listInterfaces() {
 	}
 }
 
-func terminateRoutine(routine *sendingRoutine, ifname string) {
+func terminateRoutine(routine *sendingRoutine, ifname string, deleteFromSlice bool) {
 	routine.IsClosing = true
 	routine.SrcSock.Close()
-	delete(sendingChannels, ifname)
+	if deleteFromSlice {
+		sendingChannelsMutex.Lock()
+		delete(sendingChannels, ifname)
+		sendingChannelsMutex.Unlock()
+	}
 }
 
 func updateAvailableInterfaces(wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
@@ -157,12 +164,12 @@ func updateAvailableInterfaces(wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
 		for ifname, routine := range sendingChannels {
 			if !interfaceExists(interfaces, ifname) {
 				log.Info("Interface '" + ifname + "' no longer exists, deleting it")
-				terminateRoutine(routine, ifname)
+				terminateRoutine(routine, ifname, true)
 				continue
 			}
 			if isExcluded(ifname) {
 				log.Info("Interface '" + ifname + "' is now excluded, deleting it")
-				terminateRoutine(routine, ifname)
+				terminateRoutine(routine, ifname, true)
 				continue
 			}
 			iface, err := net.InterfaceByName(ifname)
@@ -172,7 +179,7 @@ func updateAvailableInterfaces(wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
 			ifaddr := getAddressByInterface(*iface)
 			if ifaddr != routine.SrcAddr {
 				log.Info("Interface '" + ifname + "' changed address, re-creating socket")
-				terminateRoutine(routine, ifname)
+				terminateRoutine(routine, ifname, true)
 				continue
 			}
 		}
@@ -221,7 +228,9 @@ func createSendThread(ifname, sourceAddr string, wgSock *net.UDPConn, wgAddr **n
 	ptrRoutine := &routine
 
 	go wgWriteBack(ifname, ptrRoutine, wgSock, wgAddr)
+	sendingChannelsMutex.Lock()
 	sendingChannels[ifname] = ptrRoutine
+	sendingChannelsMutex.Unlock()
 }
 
 func wgWriteBack(ifname string, routine *sendingRoutine, wgSock *net.UDPConn, wgAddr **net.UDPAddr) {
@@ -235,7 +244,7 @@ func wgWriteBack(ifname string, routine *sendingRoutine, wgSock *net.UDPConn, wg
 		}
 		if err != nil {
 			log.Warn("Error reading from '" + ifname + "', re-creating socket")
-			terminateRoutine(routine, ifname)
+			terminateRoutine(routine, ifname, true)
 			return
 		}
 		routine.LastRec = time.Now().Unix()
@@ -253,6 +262,7 @@ func receiveFromWireguard(wgsock *net.UDPConn, sourceAddr **net.UDPAddr) {
 	var routine *sendingRoutine
 	var err error
 	var ifname string
+	var toDelete []string
 	for {
 		n, srcAddr, err = wgsock.ReadFromUDP(buffer)
 		if err != nil {
@@ -260,14 +270,24 @@ func receiveFromWireguard(wgsock *net.UDPConn, sourceAddr **net.UDPAddr) {
 			continue
 		}
 		*sourceAddr = srcAddr
-
+		sendingChannelsMutex.Lock()
 		for ifname, routine = range sendingChannels {
+			if clConfig.WriteTimeout > 0 {
+				routine.SrcSock.SetWriteDeadline(time.Now().Add(clConfig.WriteTimeout * time.Millisecond))
+			}
 			_, err = routine.SrcSock.WriteToUDP(buffer[:n], routine.DstAddr)
 			if err != nil {
 				log.Warn("Error writing to '" + ifname + "', re-creating socket")
-				terminateRoutine(routine, ifname)
+				terminateRoutine(routine, ifname, false)
+				toDelete = append(toDelete, ifname)
 			}
 		}
+
+		for _, ifname = range toDelete {
+			delete(sendingChannels, ifname)
+		}
+		toDelete = toDelete[:0]
+		sendingChannelsMutex.Unlock()
 	}
 }
 
@@ -297,6 +317,9 @@ func main() {
 		listInterfaces()
 		return
 	}
+
+	sendingChannelsMutex = &sync.Mutex{}
+
 	yamlFile, err := ioutil.ReadFile(configName)
 	handleErr(err, "Reading config file "+configName+" failed")
 	err = yaml.Unmarshal(yamlFile, &genconfig)
@@ -312,6 +335,10 @@ func main() {
 
 	if clConfig.DstAddr == "" {
 		log.Fatal("No dstAddr specified.")
+	}
+
+	if clConfig.WriteTimeout == 0 {
+		clConfig.WriteTimeout = 10
 	}
 	exclusionSwaps = make(map[string]bool)
 

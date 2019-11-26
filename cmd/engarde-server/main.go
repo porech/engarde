@@ -5,6 +5,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -16,10 +17,11 @@ type config struct {
 }
 
 type serverConfig struct {
-	Description   string `yaml:"description"`
-	ListenAddr    string `yaml:"listenAddr"`
-	DstAddr       string `yaml:"dstAddr"`
-	ClientTimeout int64  `yaml:"clientTimeout"`
+	Description   string        `yaml:"description"`
+	ListenAddr    string        `yaml:"listenAddr"`
+	DstAddr       string        `yaml:"dstAddr"`
+	WriteTimeout  time.Duration `yaml:"writeTimeout"`
+	ClientTimeout int64         `yaml:"clientTimeout"`
 	WebManager    struct {
 		ListenAddr string `yaml:"listenAddr"`
 		Username   string `yaml:"username"`
@@ -34,6 +36,7 @@ type ConnectedClient struct {
 }
 
 var clients map[string]*ConnectedClient
+var clientsMutex *sync.Mutex
 var srConfig serverConfig
 
 // Version is passed by the compiler
@@ -95,8 +98,12 @@ func main() {
 	if srConfig.ClientTimeout == 0 {
 		srConfig.ClientTimeout = 30
 	}
+	if srConfig.WriteTimeout == 0 {
+		srConfig.WriteTimeout = 10
+	}
 
 	clients = make(map[string]*ConnectedClient)
+	clientsMutex = &sync.Mutex{}
 
 	WireguardAddr, err := net.ResolveUDPAddr("udp4", srConfig.DstAddr)
 	handleErr(err, "Cannot resolve destination address")
@@ -137,7 +144,10 @@ func receiveFromClient(socket, wgSocket *net.UDPConn, wgAddr *net.UDPAddr) {
 		// Check if client exists
 		currentTime = time.Now().Unix()
 		srcAddrS = srcAddr.IP.String() + ":" + strconv.Itoa(srcAddr.Port)
-		if client, exists = clients[srcAddrS]; exists {
+		clientsMutex.Lock()
+		client, exists = clients[srcAddrS]
+		clientsMutex.Unlock()
+		if exists {
 			client.Last = currentTime
 		} else {
 			log.Info("New client connected: '" + srcAddrS + "'")
@@ -147,7 +157,6 @@ func receiveFromClient(socket, wgSocket *net.UDPConn, wgAddr *net.UDPAddr) {
 			}
 			clients[srcAddrS] = &newClient
 		}
-
 		_, err = wgSocket.WriteToUDP(buffer[:n], wgAddr)
 		if err != nil {
 			log.Warn("Error writing to WireGuard")
@@ -162,6 +171,7 @@ func receiveFromWireguard(wgSocket, socket *net.UDPConn) {
 	var currentTime int64
 	var clientAddr string
 	var err error
+	var toDelete []string
 	for {
 		n, _, err = wgSocket.ReadFromUDP(buffer)
 		if err != nil {
@@ -171,14 +181,24 @@ func receiveFromWireguard(wgSocket, socket *net.UDPConn) {
 		currentTime = time.Now().Unix()
 		for clientAddr, client = range clients {
 			if client.Last > currentTime-srConfig.ClientTimeout {
+				if srConfig.WriteTimeout > 0 {
+					socket.SetWriteDeadline(time.Now().Add(srConfig.WriteTimeout * time.Millisecond))
+				}
 				_, err = socket.WriteToUDP(buffer[:n], client.Addr)
 				if err != nil {
 					log.Warn("Error writing to client '" + clientAddr + "', terminating it")
+					toDelete = append(toDelete, clientAddr)
 				}
 			} else {
 				log.Info("Client '" + clientAddr + "' timed out")
-				delete(clients, clientAddr)
+				toDelete = append(toDelete, clientAddr)
 			}
 		}
+		clientsMutex.Lock()
+		for _, clientAddr = range toDelete {
+			delete(clients, clientAddr)
+		}
+		clientsMutex.Unlock()
+		toDelete = toDelete[:0]
 	}
 }
