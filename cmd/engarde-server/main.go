@@ -155,7 +155,9 @@ func receiveFromClient(socket, wgSocket *net.UDPConn, wgAddr *net.UDPAddr) {
 				Addr: srcAddr,
 				Last: currentTime,
 			}
+			clientsMutex.Lock()
 			clients[srcAddrS] = &newClient
+			clientsMutex.Unlock()
 		}
 		_, err = wgSocket.WriteToUDP(buffer[:n], wgAddr)
 		if err != nil {
@@ -179,6 +181,7 @@ func receiveFromWireguard(wgSocket, socket *net.UDPConn) {
 			continue
 		}
 		currentTime = time.Now().Unix()
+		clientsMutex.Lock()
 		for clientAddr, client = range clients {
 			if client.Last > currentTime-srConfig.ClientTimeout {
 				if srConfig.WriteTimeout > 0 {
@@ -194,7 +197,6 @@ func receiveFromWireguard(wgSocket, socket *net.UDPConn) {
 				toDelete = append(toDelete, clientAddr)
 			}
 		}
-		clientsMutex.Lock()
 		for _, clientAddr = range toDelete {
 			delete(clients, clientAddr)
 		}
