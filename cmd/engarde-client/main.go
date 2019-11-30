@@ -46,7 +46,7 @@ type sendingRoutine struct {
 var sendingChannels map[string]*sendingRoutine
 var clConfig clientConfig
 var exclusionSwaps map[string]bool
-var sendingChannelsMutex *sync.Mutex
+var sendingChannelsMutex *sync.RWMutex
 
 // Version is passed by the compiler
 var Version = "UNOFFICIAL BUILD"
@@ -270,7 +270,7 @@ func receiveFromWireguard(wgsock *net.UDPConn, sourceAddr **net.UDPAddr) {
 			continue
 		}
 		*sourceAddr = srcAddr
-		sendingChannelsMutex.Lock()
+		sendingChannelsMutex.RLock()
 		for ifname, routine = range sendingChannels {
 			if clConfig.WriteTimeout > 0 {
 				routine.SrcSock.SetWriteDeadline(time.Now().Add(clConfig.WriteTimeout * time.Millisecond))
@@ -282,7 +282,8 @@ func receiveFromWireguard(wgsock *net.UDPConn, sourceAddr **net.UDPAddr) {
 				toDelete = append(toDelete, ifname)
 			}
 		}
-
+		sendingChannelsMutex.RUnlock()
+		sendingChannelsMutex.Lock()
 		for _, ifname = range toDelete {
 			delete(sendingChannels, ifname)
 		}
@@ -318,7 +319,7 @@ func main() {
 		return
 	}
 
-	sendingChannelsMutex = &sync.Mutex{}
+	sendingChannelsMutex = &sync.RWMutex{}
 
 	yamlFile, err := ioutil.ReadFile(configName)
 	handleErr(err, "Reading config file "+configName+" failed")
