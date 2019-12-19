@@ -36,8 +36,8 @@ export class MydatatableComponent implements OnInit, AfterViewInit {
       
   }
 
-  @ViewChild('customElements') customElem: ElementRef;
-  @ViewChild('customElementsMobile') customElemMob: ElementRef;
+  @ViewChild('customElements', { static: false }) customElem: ElementRef;
+  @ViewChild('customElementsMobile', { static: false }) customElemMob: ElementRef;
 
   ngAfterViewInit() {    
     if (this.dataSource && this.dataSource.content) {

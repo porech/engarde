@@ -12,7 +12,7 @@ export class ActionbarComponent implements OnInit {
   @Input() textColor: string;
   @Input() logo: string;
   public mButtons = [];
-  @ViewChild("titlecontainer") backgroundRef : ElementRef;
+  @ViewChild("titlecontainer", { static: true }) backgroundRef : ElementRef;
   constructor(public actionBarService : ActionbarService ) { 
   }
 

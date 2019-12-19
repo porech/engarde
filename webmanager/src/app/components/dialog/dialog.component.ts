@@ -42,7 +42,7 @@ export class DialogComponent implements AfterContentInit{
       whatToDo : (res?) => void
     }];
   canShowAutoComplete = false;
-  @ViewChild('vc', { read: ViewContainerRef }) contentComp: ViewContainerRef;
+  @ViewChild('vc', { read: ViewContainerRef, static: true }) contentComp: ViewContainerRef;
   componentContentData;
   constructor(public dialogRef: MatDialogRef<DialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private componentFactoryResolver: ComponentFactoryResolver,
