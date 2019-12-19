@@ -1,7 +1,7 @@
 language: node_js
 sudo: true
 node_js:
-- "9"
+- "12.13.0"
 
 before_script:
 - wget -q https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz
