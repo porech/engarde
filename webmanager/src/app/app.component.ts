@@ -3,7 +3,6 @@ import { APICallerService } from './services/apicaller.service';
 import { IfaceModel } from './models/iface.model';
 import { SocketModel } from './models/socket.model';
 import { getScaleInAnimation } from './animations/scalein.animation';
-import { DataTableConfig } from './components/mydatatable/models/mydatatable/datatableconfig.model';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { getSlideOutAnimation } from './animations/slideout.animation';
 import { DialogComponent } from './components/dialog/dialog.component';
@@ -30,9 +29,7 @@ export class AppComponent {
   public hintAnimationExcluded : boolean = false;
   private getListErrors: number = 0;
   private listTimeout: number = null;
-  dataconfig: DataTableConfig = {
-    mobileHeaderColor: "#FFC107"
-  }
+
 
 
   constructor(public api: APICallerService, public dialog: MatDialog) { }
