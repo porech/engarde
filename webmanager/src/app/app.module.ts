@@ -10,7 +10,6 @@ import { CallbackPipe } from './pipes/callback.pipe';
 import { ActionbarService } from './services/actionbar.service';
 import { ActionbarComponent } from './components/actionbar/actionbar.component';
 import { MaterialModule } from './modules/material/material.module';
-import { MydatatableComponent } from './components/mydatatable/component/mydatatable.component';
 import { SortByPipe } from './pipes/sortby.pipe';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { StringToObjectFilterPipe } from './pipes/string2objectfilter.pipe';
@@ -24,7 +23,6 @@ import {Nl2BrPipeModule} from 'nl2br-pipe';
     CallbackPipe,
     SortByPipe,
     ActionbarComponent,
-    MydatatableComponent,
     DialogComponent, 
     StringToObjectFilterPipe
     ],
