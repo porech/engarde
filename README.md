@@ -102,7 +102,7 @@ There is an Angular web interface embedded in both the client and the server. Pl
 In the client, it shows the interfaces that are currently sending data and, for each of them, the last time a packet was received from the server on it. If an interface isn't receiving data from the server, while the other are, it's probably faulty. If all of them are not receiving data, it's probably because there's no traffic on the tunnel.  
 You can also exclude an interface on-the-go, but keep in mind that those changes are temporary and they're lost when the client is restarted. To make them permanent, you need to edit the configuration file.
 
-The server interface is pretty much the same, but instead of the interfaces it shows the addresses it's currently sending data on.
+The server interface is pretty much the same, but instead of the interfaces it shows the addresses it's currently receiving (and sending) data on.
 
 ## It's useless! It's a bad copy of {some-other-software}
 Honestly, we are quite lazy people, and before coding something we always look for an existing solution that would suit our needings. This time, we really couldn't find one. If you know something similar, please, PLEASE open an issue with title "engarde is a bad copy of ...", we'd love to know that!
