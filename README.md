@@ -63,7 +63,7 @@ Have a particular look at excludedInterfaces, its usage is well documented in th
 
 Take the file and copy it to the client and to the server. You can omit the client portion on the server and vice-versa, or leave both: the unuseful portion will just be ignored.
 
-3. Download engarde-server (see the *How do I get it?* section). Launch it passing the config file path as the first argument: if nothing is passed, engarde will look for an `engarde.yml` file in the current directory.
+3. Download engarde-server (see the *How do I get it?* section). Launch it passing the config file path as the first and only parameter: if nothing is passed, engarde will look for an `engarde.yml` file in the current directory.
 
 4. Follow the same procedure of step 3 for the client, using engarde-client instead of engarde-server.
 
