@@ -1,0 +1,7 @@
+client:
+  # A custom description for this client instance. It will be displayed on startup and in the management interface to help you identifying it.
+  description: "My engarde-client instance"
+  # This is the engarde listen address: WireGuard peer endpoint will need to point here.
+  listenAddr: "127.0.0.1:9001"
+  # This is the address of the engarde server on the other side
+  dstAddr: "aleflo.it:42489"
