@@ -1,5 +1,9 @@
 # engarde - Don't lose that packet!
 
+[![Build Status](https://travis-ci.org/porech/engarde.svg?branch=master)](https://travis-ci.org/porech/engarde)
+
+[Official Facebook page](https://www.facebook.com/engarde-Dont-lose-that-packet-110039227317920)
+
 ## What is engarde?
 engarde is a network utility specifically designed to create a point-to-point tunnel over multiple network (tipically Internet) connections, ensuring that the tunnel stays up and healty without a single delay or package loss, as long as at least one of the connections is working.
 
