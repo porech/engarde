@@ -1,6 +1,10 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+	log "github.com/sirupsen/logrus"
+	"sync"
+)
 
 type Interface struct {
 	Name        string `json:"name"`
@@ -14,10 +18,15 @@ type InterfaceUpdate struct {
 	NewInterface *Interface `json:"newInterface"`
 }
 
-type Interfaces []*Interface
+type Interfaces struct {
+	Interfaces []*Interface
+	Mutex      sync.RWMutex
+}
 
-func (is Interfaces) GetByName(name string) *Interface {
-	for _, i := range is {
+func (is Interfaces) Get(name string) *Interface {
+	is.Mutex.RLock()
+	defer is.Mutex.RUnlock()
+	for _, i := range is.Interfaces {
 		if i.Name == name {
 			return i
 		}
@@ -25,65 +34,40 @@ func (is Interfaces) GetByName(name string) *Interface {
 	return nil
 }
 
-func (is Interfaces) GetIndexByName(name string) int {
-	for n, i := range is {
-		if i.Name == name {
-			return n
-		}
-	}
-	return -1
-}
-
-func (is *Interfaces) Add(i *Interface) (int, error) {
-	if is == nil {
-		return 0, fmt.Errorf("nil interface reference")
-	}
-	for _, ei := range *is {
+func (is Interfaces) Add(i *Interface) error {
+	is.Mutex.RLock()
+	for _, ei := range is.Interfaces {
 		if ei.Name == i.Name {
-			return 0, fmt.Errorf("interface already exists")
+			is.Mutex.RUnlock()
+			return fmt.Errorf("interface already exists")
 		}
 	}
-	newIdx := len(*is)
-	*is = append(*is, i)
-	return newIdx, nil
-}
-
-func (is *Interfaces) RemoveByIndex(i int) error {
-	if is == nil {
-		return fmt.Errorf("nil interface reference")
-	}
-	removed := false
-	var newInterfaces Interfaces
-	for n, int := range *is {
-		if n != i {
-			newInterfaces = append(newInterfaces, int)
-		} else {
-			removed = true
-		}
-	}
-	if !removed {
-		return fmt.Errorf("interface not found")
-	}
-	*is = newInterfaces
+	is.Mutex.RUnlock()
+	is.Mutex.Lock()
+	is.Interfaces = append(is.Interfaces, i)
+	is.Mutex.Unlock()
+	log.Debugf("Interfaces.Add: added interface %s", i.Name)
 	return nil
 }
 
-func (is *Interfaces) RemoveByName(name string) error {
-	if is == nil {
-		return fmt.Errorf("nil interface reference")
-	}
+func (is Interfaces) Remove(name string) error {
 	removed := false
-	var newInterfaces Interfaces
-	for _, int := range *is {
+	var newInterfaces []*Interface
+	is.Mutex.RLock()
+	for _, int := range is.Interfaces {
 		if int.Name != name {
 			newInterfaces = append(newInterfaces, int)
 		} else {
 			removed = true
 		}
 	}
+	is.Mutex.RUnlock()
 	if !removed {
 		return fmt.Errorf("interface not found")
 	}
-	*is = newInterfaces
+	is.Mutex.Lock()
+	is.Interfaces = newInterfaces
+	is.Mutex.Unlock()
+	log.Debugf("Interfaces.Remove: removed interface %s", name)
 	return nil
 }
