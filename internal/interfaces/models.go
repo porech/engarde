@@ -1,4 +1,4 @@
-package models
+package interfaces
 
 import (
 	"fmt"
@@ -32,6 +32,14 @@ func (is Interfaces) Get(name string) *Interface {
 		}
 	}
 	return nil
+}
+
+func (is Interfaces) GetAll() []*Interface {
+	is.Mutex.RLock()
+	ifaces := make([]*Interface, len(is.Interfaces))
+	copy(is.Interfaces, ifaces)
+	is.Mutex.RUnlock()
+	return ifaces
 }
 
 func (is Interfaces) Add(i *Interface) error {
