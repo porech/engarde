@@ -23,7 +23,7 @@ type Interfaces struct {
 	Mutex      sync.RWMutex
 }
 
-func (is Interfaces) Get(name string) *Interface {
+func (is *Interfaces) Get(name string) *Interface {
 	is.Mutex.RLock()
 	defer is.Mutex.RUnlock()
 	for _, i := range is.Interfaces {
@@ -34,20 +34,20 @@ func (is Interfaces) Get(name string) *Interface {
 	return nil
 }
 
-func (is Interfaces) GetAll() []*Interface {
+func (is *Interfaces) GetAll() []*Interface {
 	is.Mutex.RLock()
 	ifaces := make([]*Interface, len(is.Interfaces))
-	copy(is.Interfaces, ifaces)
+	copy(ifaces, is.Interfaces)
 	is.Mutex.RUnlock()
 	return ifaces
 }
 
-func (is Interfaces) Add(i *Interface) error {
+func (is *Interfaces) Add(i *Interface) error {
 	is.Mutex.RLock()
 	for _, ei := range is.Interfaces {
 		if ei.Name == i.Name {
 			is.Mutex.RUnlock()
-			return fmt.Errorf("interface already exists")
+			return fmt.Errorf("interfaces.Add: interface already exists")
 		}
 	}
 	is.Mutex.RUnlock()
@@ -58,7 +58,7 @@ func (is Interfaces) Add(i *Interface) error {
 	return nil
 }
 
-func (is Interfaces) Remove(name string) error {
+func (is *Interfaces) Remove(name string) error {
 	removed := false
 	var newInterfaces []*Interface
 	is.Mutex.RLock()

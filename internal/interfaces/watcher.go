@@ -10,19 +10,46 @@ import (
 type Watcher struct {
 	Ifaces        *Interfaces
 	UpdateChannel chan *InterfaceUpdate
+	QuitChannel   chan bool
+}
+
+func NewWatcher() *Watcher {
+	updateChannel := make(chan *InterfaceUpdate)
+	quitChannel := make(chan bool)
+	var interfaces Interfaces
+	watcher := Watcher{
+		Ifaces:        &interfaces,
+		UpdateChannel: updateChannel,
+		QuitChannel:   quitChannel,
+	}
+	go watcher.Watch()
+	return &watcher
 }
 
 func (w *Watcher) Watch() {
-	// Constantly look for the list of interface, once every second
-	for {
-		interfaces, err := net.Interfaces()
-		if err != nil {
-			log.Errorf("Cannot get interfaces list: %v", err)
-			continue
+	ticker := time.NewTicker(1 * time.Second)
+	quit := make(chan struct{})
+	go func() {
+		w.refreshInterfaces()
+		for {
+			select {
+			case <-ticker.C:
+				w.refreshInterfaces()
+			case <-quit:
+				ticker.Stop()
+				return
+			}
 		}
-		w.handleIfacesList(interfaces)
-		time.Sleep(time.Second)
+	}()
+}
+
+func (w *Watcher) refreshInterfaces() {
+	interfaces, err := net.Interfaces()
+	if err != nil {
+		log.Errorf("watcher.refreshInterfaces: annot get interfaces list: %v", err)
+		return
 	}
+	w.handleIfacesList(interfaces)
 }
 
 func interfaceInlist(list *[]net.Interface, name string) bool {
@@ -92,7 +119,7 @@ func (w *Watcher) handleIfacesList(list []net.Interface) {
 
 func (w *Watcher) createIface(iface net.Interface) {
 	address := getAddressByInterface(iface)
-	log.Debugf("New interface %s detected", iface.Name)
+	log.Debugf("Watcher.createIface: new interface %s detected", iface.Name)
 	newIface := Interface{
 		Name:        iface.Name,
 		Address:     address,
@@ -101,7 +128,7 @@ func (w *Watcher) createIface(iface net.Interface) {
 	}
 	err := w.Ifaces.Add(&newIface)
 	if err != nil {
-		log.Errorf("Cannot create interface %s: %v", iface.Name, err)
+		log.Errorf("Watcher.createIface: cannot create interface %s: %v", iface.Name, err)
 		return
 	}
 	w.UpdateChannel <- &InterfaceUpdate{
@@ -113,7 +140,7 @@ func (w *Watcher) createIface(iface net.Interface) {
 func (w *Watcher) updateIface(iface net.Interface, existingIface *Interface) {
 	address := getAddressByInterface(iface)
 	if address != existingIface.Address {
-		log.Debugf("Interface %s changed", iface.Name)
+		log.Debugf("Watcher.updateIface: interface %s changed", iface.Name)
 		newIface := Interface{
 			Name:        iface.Name,
 			Address:     address,
@@ -122,12 +149,12 @@ func (w *Watcher) updateIface(iface net.Interface, existingIface *Interface) {
 		}
 		err := w.Ifaces.Remove(iface.Name)
 		if err != nil {
-			log.Errorf("Cannot remove updated interface %s: %v", iface.Name, err)
+			log.Errorf("Watcher.updateIface: cannot remove updated interface %s: %v", iface.Name, err)
 			return
 		}
 		err = w.Ifaces.Add(&newIface)
 		if err != nil {
-			log.Errorf("Cannot create updated interface %s: %v", iface.Name, err)
+			log.Errorf("Watcher.updateIface: cannot create updated interface %s: %v", iface.Name, err)
 			return
 		}
 		w.UpdateChannel <- &InterfaceUpdate{
@@ -138,10 +165,10 @@ func (w *Watcher) updateIface(iface net.Interface, existingIface *Interface) {
 }
 
 func (w *Watcher) removeIface(ifname string) {
-	log.Debugf("Interface %s doesn't exist anymore", ifname)
+	log.Debugf("Watcher.removeIface: interface %s doesn't exist anymore", ifname)
 	err := w.Ifaces.Remove(ifname)
 	if err != nil {
-		log.Errorf("Cannot remove interface %s: %v", ifname, err)
+		log.Errorf("Watcher.removeIface: cannot remove interface %s: %v", ifname, err)
 		return
 	}
 	w.UpdateChannel <- &InterfaceUpdate{
