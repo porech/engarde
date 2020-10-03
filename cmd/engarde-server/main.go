@@ -185,7 +185,10 @@ func receiveFromWireguard(wgSocket, socket *net.UDPConn) {
 		for clientAddr, client = range clients {
 			if client.Last > currentTime-srConfig.ClientTimeout {
 				if srConfig.WriteTimeout > 0 {
-					socket.SetWriteDeadline(time.Now().Add(srConfig.WriteTimeout * time.Millisecond))
+					err = socket.SetWriteDeadline(time.Now().Add(srConfig.WriteTimeout * time.Millisecond))
+					if err != nil {
+						log.WithError(err).Warn("Error setting write deadline to " + srConfig.WriteTimeout.String())
+					}
 				}
 				_, err = socket.WriteToUDP(buffer[:n], client.Addr)
 				if err != nil {

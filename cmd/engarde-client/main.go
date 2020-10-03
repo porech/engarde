@@ -273,7 +273,10 @@ func receiveFromWireguard(wgsock *net.UDPConn, sourceAddr **net.UDPAddr) {
 		sendingChannelsMutex.RLock()
 		for ifname, routine = range sendingChannels {
 			if clConfig.WriteTimeout > 0 {
-				routine.SrcSock.SetWriteDeadline(time.Now().Add(clConfig.WriteTimeout * time.Millisecond))
+				err = routine.SrcSock.SetWriteDeadline(time.Now().Add(clConfig.WriteTimeout * time.Millisecond))
+				if err != nil {
+					log.WithError(err).Warn("Error setting source socket write deadline to " + clConfig.WriteTimeout.String())
+				}
 			}
 			_, err = routine.SrcSock.WriteToUDP(buffer[:n], routine.DstAddr)
 			if err != nil {
