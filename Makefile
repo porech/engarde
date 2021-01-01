@@ -16,6 +16,8 @@ client-darwin-i386:
 	GOOS=darwin GOARCH=386 ./build-scripts/build.sh client
 client-darwin-amd64:
 	GOOS=darwin GOARCH=amd64 ./build-scripts/build.sh client
+client-darwin-arm64:
+	GOOS=darwin GOARCH=arm64 ./build-scripts/build.sh client
 
 # Server build commands
 server-linux-i386:
@@ -32,6 +34,8 @@ server-darwin-i386:
 	GOOS=darwin GOARCH=386 ./build-scripts/build.sh server
 server-darwin-amd64:
 	GOOS=darwin GOARCH=amd64 ./build-scripts/build.sh server
+server-darwin-arm64:
+	GOOS=darwin GOARCH=arm64 ./build-scripts/build.sh server
 
 # Packr
 packr-client:
