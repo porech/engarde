@@ -23,7 +23,7 @@
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
     "core-js": "^2.5.4",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.21",
     "nl2br-pipe": "^1.2.3",
     "roboto-fontface": "^0.10.0",
     "rxjs": "~6.5.3",
