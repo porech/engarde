@@ -20,7 +20,7 @@ client-darwin-amd64:
 client-mips-i386:
 	GOOS=linux GOARCH=mips GOMIPS=softfloat ./build-scripts/build.sh client
 client-mips-le-i386:
-	GOOS=linux GOARCH=mips GOMIPS=softfloat ./build-scripts/build.sh client
+	GOOS=linux GOARCH=mipsle GOMIPS=softfloat ./build-scripts/build.sh client
 
 # Server build commands
 server-linux-i386:
