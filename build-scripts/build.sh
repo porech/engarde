@@ -29,5 +29,12 @@ if [ "$GOOS" = "windows" ]; then
     dstName="$dstName.exe"
 fi
 
-echo "Building $type for $GOOS $dstArch - ver. $version"
-go build -ldflags "-s -w -X 'main.Version=$version'" -o dist/$GOOS/$dstArch/$dstName ./cmd/engarde-$type
+dstMips=""
+dstMipsDescr=""
+if [ "$GOMIPS" != "" ]; then
+    dstMips="/$dstMips"
+    dstMipsDescr=" ($GOMIPS)"
+fi
+
+echo "Building $type for $GOOS $dstArch$dstMipsDescr - ver. $version"
+go build -ldflags "-s -w -X 'main.Version=$version'" -o dist/$GOOS/$dstArch$dstMips/$dstName ./cmd/engarde-$type
