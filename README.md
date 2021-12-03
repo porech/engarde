@@ -5,7 +5,7 @@
 [Official Facebook page](https://www.facebook.com/engarde-Dont-lose-that-packet-110039227317920)
 
 ## What is engarde?
-engarde is a network utility specifically designed to create a point-to-point tunnel over multiple network (tipically Internet) connections, ensuring that the tunnel stays up and healty without a single delay or package loss, as long as at least one of the connections is working.
+engarde is a network utility specifically designed to create a point-to-point tunnel over multiple network (typically Internet) connections, ensuring that the tunnel stays up and healty without a single delay or package loss, as long as at least one of the connections is working.
 
 ## How is it possible?
 engarde relies on the encryption and the de-duplication technology of the underlying WireGuard connection. It takes every UDP packet that is emitted by WireGuard and sends it through every avaliable connection. So, the first package that reaches its destination wins, and the others are silently discarded by WireGuard itself. In the same way, every response packet is sent to all the connected sockets, reaching the origin through all the connections.
