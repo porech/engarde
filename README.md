@@ -138,6 +138,9 @@ I think engarde has a lot of potential in other fields, and those are the things
 
 I'll probably never make all of this, but if you think engarde deserves some care and are willing to contribute, this is what I think is useful to do. I'd love it!
 
+## It would be better in Rust!
+There is [a porting](https://github.com/hanleym/rengarde) in progress! Thank you [hanleym](https://github.com/hanleym).
+
 ## License
 
 ### Source code
