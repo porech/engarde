@@ -20,6 +20,8 @@
                     <mat-card-content>
                         <div class="text last-received"><strong>Last received packet: </strong>
                             <span [ngClass]="{alert: iface.last >= 10}" *ngIf="iface.last !== null">{{ iface.last }} second{{ iface.last == 1 ? '' : 's' }} ago</span>
+                            <span class="alert" *ngIf="iface.last == null">no activity yet.</span><button *ngIf="iface.last == null" mat-button matTooltipClass="noactivity-tooltip"
+                             matTooltip="Possible causes:&#13; - No traffic is passed since Engarde WebUI is keeping track of it&#13;- Wireguard not working or stopped&#13;- Issues with your network configuration&#13;- Engarde not configured correctly&#13;(remember: Wireguard should point to the 'listenAddr' host set in engarde.yml, on the client)">?</button>
                         </div>
                         <span class="other-infos">
                             <div class="text"><strong>Sender address: </strong>{{iface.senderAddress}}</div>

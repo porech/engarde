@@ -45,6 +45,9 @@
     margin: 1vh; 
     margin-top: 3vh;
 }
+::ng-deep .noactivity-tooltip {
+        white-space: pre-line;
+}
 .alert {
     color: red;
 }
