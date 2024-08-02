@@ -1,0 +1,30 @@
+name: Build
+run-name: Build all
+on:  
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v4
+      - run: wget -q https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz
+      - run: sudo tar -xf go1.13.4.linux-amd64.tar.gz
+      - run: sudo mv go /usr/local
+      - run: export GOPATH=$HOME/go
+      - run: export GOROOT=/usr/local/go
+      - run: export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+      - run: mkdir -p $HOME/go/src
+      - run: mkdir -p $HOME/go/bin
+      - run: go get "github.com/gobuffalo/packr/v2/packr2"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '16.x'
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: cd webmanager && npm install && npm run-script build-prod && cd ..
+      - run: make
+      - name: The job has succeeded
+        if: ${{ success() }}
+        run: cd dist && find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=${{ github.ref }}/{}" -F "key=${{ secrets.UPLOAD_KEY }}" "${{ secrets.UPLOAD_URL }}" \;; fi
+
