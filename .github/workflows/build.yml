@@ -19,10 +19,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '16.x'
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: cd webmanager && npm install && npm run-script build-prod && cd ..
       - run: make
       - name: The job has succeeded
         if: ${{ success() }}
-        run: cd dist && find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=${{ github.ref }}/{}" -F "key=${{ secrets.UPLOAD_KEY }}" "${{ secrets.UPLOAD_URL }}" \;; fi
+        run: cd dist && find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=${{ github.ref }}/{}" -F "key=${{ secrets.UPLOAD_KEY }}" "${{ secrets.UPLOAD_URL }}" \;; 
 
