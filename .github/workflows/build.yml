@@ -6,6 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v4
+      - run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
       - run: wget -q https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz
       - run: sudo tar -xf go1.13.4.linux-amd64.tar.gz
       - run: sudo mv go /usr/local
@@ -23,5 +24,5 @@ jobs:
       - run: make
       - name: The job has succeeded
         if: ${{ success() }}
-        run: cd dist && find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=${{ github.ref }}/{}" -F "key=${{ secrets.UPLOAD_KEY }}" "${{ secrets.UPLOAD_URL }}" \;; 
+        run: cd dist && find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=${{ branch }}/{}" -F "key=${{ secrets.UPLOAD_KEY }}" "${{ secrets.UPLOAD_URL }}" \;; 
 
