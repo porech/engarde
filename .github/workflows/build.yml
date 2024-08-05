@@ -9,6 +9,6 @@ jobs:
     steps: 
      - name: Test GitHub Action if statement (true)
        env: 
-        WHO_TO_TRUST: ${{ secrets.SECRET_TOKEN }}
+        WHO_TO_TRUST: ${{ secrets.UPLOAD_KEY }}
        if:  env.WHO_TO_TRUST == 'TrustNo1'
        run: echo "I know what the secret token is!"
