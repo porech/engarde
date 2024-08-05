@@ -6,9 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       UPLOAD_KEY: ${{ secrets.UPLOAD_KEY }}
-    steps: 
-     - name: Test GitHub Action if statement (true)
-       env: 
-        WHO_TO_TRUST: ${{ secrets.UPLOAD_KEY }}
-       if:  env.WHO_TO_TRUST == 'TrustNo1'
-       run: echo "I know what the secret token is!"
+    steps:
+      - name: Settalo
+        run: echo $UPLOAD_KEY > test.txt
+      - name: Gettalo
+        run: cat test.txt
