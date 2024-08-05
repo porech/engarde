@@ -6,12 +6,29 @@ jobs:
     runs-on: ubuntu-latest
     environment: build
     steps: 
-      - name: test1
+      - uses: actions/checkout@v4
+      - run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV && \
+              wget -q https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz && \
+              sudo tar -xf go1.13.4.linux-amd64.tar.gz && \
+              sudo mv go /usr/local && \
+              echo "GOPATH=$HOME/go" >> $GITHUB_ENV && \
+              echo "GOROOT=/usr/local/go" >> $GITHUB_ENV && \
+              echo "PATH=$GOPATH/bin:$GOROOT/bin:$PATH" >> $GITHUB_ENV && \
+              mkdir -p $HOME/go/src && \
+              mkdir -p $HOME/go/bin && \
+              go get "github.com/gobuffalo/packr/v2/packr2"
+        id: prepare_backend
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '16.x'
+      - run: cd webmanager && npm install && npm run-script build-prod && cd ..
+        id: build_frontend
+      - run: make
+        id: build_backend
+        if: ${{ success() }}
+      - name: Upload artifacts
+        id: upload
         env:
           UPLOAD_KEY: ${{ secrets.UPLOAD_KEY }}
         if: ${{ success() }}
-        run: echo $UPLOAD_KEY; #cd dist && find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=$branch/{}" -F "key=$UPLOAD_KEY" "${{ vars.UPLOAD_URL }}" \;; 
-      - name: test2
-        env:
-          UPLOAD_KEY: ${{ secrets.UPLOAD_KEY }}
-        run: echo ${{ env.UPLOAD_KEY }}
+        run: cd dist && find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=$branch/{}" -F "key=$UPLOAD_KEY" "${{ vars.UPLOAD_URL }}" \;; 
