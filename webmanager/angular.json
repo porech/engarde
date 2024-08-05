@@ -56,19 +56,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "webmanager:build",
-            "proxyConfig": "src/proxy.conf.json"
+            "proxyConfig": "src/proxy.conf.json",
+            "buildTarget": "webmanager:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "webmanager:build:production"
+              "buildTarget": "webmanager:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "webmanager:build"
+            "buildTarget": "webmanager:build"
           }
         },
         "test": {
