@@ -15,17 +15,17 @@
             <mat-option (onSelectionChange)="doStuff(this.thingsToBeDone[i].whatToDo(val))" *ngFor="let val of prompt.autocompletion.autocompleteModel | string2objectfilter:prompt.value:prompt.autocompletion.filterModelBy" [value]="val[prompt.autocompletion.filterModelBy]">
               {{ val[prompt.autocompletion.filterModelBy] }}
             </mat-option>
-          </div> 
-        
+          </div>
+
         </mat-autocomplete>
       </div>
     </mat-dialog-content>
   </div>
   <ng-template #noInput>
-        <mat-dialog-content class="dialog-content" [innerHTML]="content | nl2br">
+        <mat-dialog-content class="dialog-content" [innerHTML]="content">
 
         </mat-dialog-content>
-    </ng-template>  
+    </ng-template>
   <div mat-dialog-actions align="end" class="dialog-actions">
     <div *ngFor="let action of thingsToBeDone; let i = index">
       <button mat-button (click)="doStuff(this.thingsToBeDone[i].whatToDo())" tabindex="{{i}}">{{thingsToBeDone[i].label}}</button>

@@ -2,6 +2,7 @@
 
 .card {
     margin: 1vw;
+    padding: max(1vw, 20px);
 }
 .card-action {
     float: right;
@@ -42,7 +43,7 @@
 
 .main-text {
     font-weight: 500;
-    margin: 1vh; 
+    margin: 1vh;
     margin-top: 3vh;
 }
 .alert {
@@ -66,7 +67,7 @@
     font-size: .7em;
     margin-left: 30px;
     line-height: 50px;
-    font-style: italic; 
+    font-style: italic;
 }
 
 .text {
@@ -74,7 +75,7 @@
 }
 .title {
     font-size: 1.5em;
-    font-weight: 300; 
+    font-weight: 300;
     margin-bottom: 1vh;
 }
 

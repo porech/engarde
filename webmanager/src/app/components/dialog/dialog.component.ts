@@ -1,9 +1,15 @@
-import { Component, Inject, ComponentFactoryResolver, ViewChild, ViewContainerRef, AfterViewInit, AfterContentInit, Output, EventEmitter } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import {
+  AfterContentInit,
+  Component,
+  ComponentFactoryResolver,
+  Inject,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 // occhio a non rimuovere questa riga, sembra inutilizzato ma è utilizzato nell'html
-import { Nl2BrPipeModule } from 'nl2br-pipe';
-import { StringToObjectFilterPipe } from '../../pipes/string2objectfilter.pipe';
-import { APICallerService } from 'src/app/services/apicaller.service';
+import {APICallerService} from 'src/app/services/apicaller.service';
+
 @Component({
   selector: 'custom-dialog',
   templateUrl: './dialog.component.html',
@@ -26,7 +32,7 @@ export class DialogComponent implements AfterContentInit{
         autocompleteModel: any,
         filterModelBy: string
     }
-    }] 
+    }]
   } = {
       enabled: false,
       values: [{
@@ -64,9 +70,9 @@ export class DialogComponent implements AfterContentInit{
         this.userInput = data.userInput;
       }
 
-   
-      
-      
+
+
+
   }
   checkAutoComplete(val) {
     setTimeout(() => {
@@ -95,7 +101,7 @@ export class DialogComponent implements AfterContentInit{
         whatToDo();
       }
    }
-    this.dialogRef.close();    
+    this.dialogRef.close();
   }
 
 
@@ -106,4 +112,4 @@ export class DialogComponent implements AfterContentInit{
 
 export const DialogConfig = {
   CLOSE_ACTION: { label: "CHIUDI", whatToDo: () => { } }
-} 
+}
