@@ -18,25 +18,24 @@ import {Nl2BrPipeModule} from 'nl2br-pipe';
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    CallbackPipe,
-    SortByPipe,
-    ActionbarComponent,
-    DialogComponent, 
-    StringToObjectFilterPipe
+    declarations: [
+        AppComponent,
+        CallbackPipe,
+        SortByPipe,
+        ActionbarComponent,
+        DialogComponent,
+        StringToObjectFilterPipe
     ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    MaterialModule,
-    FormsModule,
-    Nl2BrPipeModule
-  ],
-  providers: [APICallerService, HttpClient, ActionbarService],
-  bootstrap: [AppComponent],
-  entryComponents: [DialogComponent]
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        HttpClientModule,
+        MaterialModule,
+        FormsModule,
+        Nl2BrPipeModule
+    ],
+    providers: [APICallerService, HttpClient, ActionbarService],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
