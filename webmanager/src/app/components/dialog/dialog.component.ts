@@ -1,5 +1,5 @@
 import { Component, Inject, ComponentFactoryResolver, ViewChild, ViewContainerRef, AfterViewInit, AfterContentInit, Output, EventEmitter } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 // occhio a non rimuovere questa riga, sembra inutilizzato ma è utilizzato nell'html
 import { Nl2BrPipeModule } from 'nl2br-pipe';
 import { StringToObjectFilterPipe } from '../../pipes/string2objectfilter.pipe';
@@ -26,7 +26,7 @@ export class DialogComponent implements AfterContentInit{
         autocompleteModel: any,
         filterModelBy: string
     }
-    }] 
+    }]
   } = {
       enabled: false,
       values: [{
@@ -64,9 +64,9 @@ export class DialogComponent implements AfterContentInit{
         this.userInput = data.userInput;
       }
 
-   
-      
-      
+
+
+
   }
   checkAutoComplete(val) {
     setTimeout(() => {
@@ -95,7 +95,7 @@ export class DialogComponent implements AfterContentInit{
         whatToDo();
       }
    }
-    this.dialogRef.close();    
+    this.dialogRef.close();
   }
 
 
@@ -106,4 +106,4 @@ export class DialogComponent implements AfterContentInit{
 
 export const DialogConfig = {
   CLOSE_ACTION: { label: "CHIUDI", whatToDo: () => { } }
-} 
+}
