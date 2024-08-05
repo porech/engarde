@@ -10,4 +10,4 @@ jobs:
       - name: Settalo
         run: echo $UPLOAD_KEY > test.txt
       - name: Gettalo
-        run: cat test.txt
+        run: cat test.txt | sed 's/./& /g'
