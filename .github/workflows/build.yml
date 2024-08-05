@@ -4,7 +4,6 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: build
     steps: 
       - uses: actions/checkout@v4
       - run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
@@ -28,5 +27,7 @@ jobs:
         if: ${{ success() }}
       - name: Upload artifacts
         id: upload
+        env:
+          UPLOAD_KEY: ${{ secrets.UPLOAD_KEY }}
         if: ${{ success() }}
-        run: cd dist && find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=$branch/{}" -F "key=${{ secrets.UPLOAD_KEY }}" "${{ vars.UPLOAD_URL }}" \;; 
+        run: cd dist && find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=$branch/{}" -F "key=$UPLOAD_KEY" "${{ vars.UPLOAD_URL }}" \;; 
