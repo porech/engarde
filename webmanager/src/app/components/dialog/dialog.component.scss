@@ -4,6 +4,7 @@
 .dialog-content {
     text-align: left;
     font-family: roboto;
+    white-space: pre-wrap;
     font-size: .8em;
 }
 
@@ -11,5 +12,5 @@
 .dialog-actions {
     margin-top: 2vh;
     text-align: right;
-    
+
 }
