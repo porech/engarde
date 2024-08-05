@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { APICallerService } from './services/apicaller.service';
 import { CallbackPipe } from './pipes/callback.pipe';
 import { ActionbarService } from './services/actionbar.service';
@@ -16,8 +16,7 @@ import { StringToObjectFilterPipe } from './pipes/string2objectfilter.pipe';
 import { FormsModule } from '@angular/forms';
 
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         CallbackPipe,
         SortByPipe,
@@ -25,15 +24,9 @@ import { FormsModule } from '@angular/forms';
         DialogComponent,
         StringToObjectFilterPipe
     ],
-    imports: [
-        BrowserModule,
+    bootstrap: [AppComponent], imports: [BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,
-        HttpClientModule,
         MaterialModule,
-        FormsModule,
-    ],
-    providers: [APICallerService, HttpClient, ActionbarService],
-    bootstrap: [AppComponent]
-})
+        FormsModule], providers: [APICallerService, HttpClient, ActionbarService, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
