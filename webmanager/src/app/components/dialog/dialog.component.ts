@@ -1,9 +1,15 @@
-import { Component, Inject, ComponentFactoryResolver, ViewChild, ViewContainerRef, AfterViewInit, AfterContentInit, Output, EventEmitter } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  AfterContentInit,
+  Component,
+  ComponentFactoryResolver,
+  Inject,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 // occhio a non rimuovere questa riga, sembra inutilizzato ma è utilizzato nell'html
-import { Nl2BrPipeModule } from 'nl2br-pipe';
-import { StringToObjectFilterPipe } from '../../pipes/string2objectfilter.pipe';
-import { APICallerService } from 'src/app/services/apicaller.service';
+import {APICallerService} from 'src/app/services/apicaller.service';
+
 @Component({
   selector: 'custom-dialog',
   templateUrl: './dialog.component.html',
