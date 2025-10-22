@@ -3,7 +3,7 @@ import { APICallerService } from './services/apicaller.service';
 import { IfaceModel } from './models/iface.model';
 import { SocketModel } from './models/socket.model';
 import { getScaleInAnimation } from './animations/scalein.animation';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { getSlideOutAnimation } from './animations/slideout.animation';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { RespModel } from './models/resp.model';

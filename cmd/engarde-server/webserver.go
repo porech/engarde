@@ -83,7 +83,7 @@ func webGetList(w http.ResponseWriter, r *http.Request) {
 func webserver(listenAddr, username, password string) {
 	for {
 		realm := "engarde"
-		box := packr.New("webmanager", "../../webmanager/dist/webmanager")
+		box := packr.New("webmanager", "../../webmanager/dist/webmanager/browser")
 		http.HandleFunc("/", webBasicAuth(webHandleFileServer(box, "/"), username, password, realm))
 		http.HandleFunc("/api/v1/get-list", NoCache(webBasicAuth(webGetList, username, password, realm)))
 		log.Info("Management webserver listening on " + listenAddr)
