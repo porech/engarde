@@ -3,12 +3,13 @@ package main
 import (
 	"crypto/subtle"
 	"encoding/json"
-	"io/ioutil"
+	"io"
+	"io/fs"
 	"net"
 	"net/http"
 	"time"
 
-	"github.com/gobuffalo/packr/v2"
+	"github.com/porech/engarde/v2/internal/assets"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -36,21 +37,26 @@ func webBasicAuth(handler http.HandlerFunc, username, password, realm string) ht
 	}
 }
 
-func webHandleFileServer(box *packr.Box, prefix string) http.HandlerFunc {
-	fs := http.FileServer(box)
-	realHandler := fs.ServeHTTP
+func webHandleFileServer(webFS fs.FS) http.HandlerFunc {
+	fs := http.FileServer(http.FS(webFS))
 	return func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Path == "/" {
-			index, err := box.Find("index.html")
+			index, err := webFS.Open("index.html")
+			if err != nil {
+				http.NotFound(w, req)
+				return
+			}
+			defer index.Close()
+			content, err := io.ReadAll(index)
 			if err != nil {
 				http.NotFound(w, req)
 				return
 			}
 			w.WriteHeader(200)
-			w.Write(index)
+			w.Write(content)
 			return
 		}
-		realHandler(w, req)
+		fs.ServeHTTP(w, req)
 	}
 }
 
@@ -132,7 +138,7 @@ func webResetExclusions(w http.ResponseWriter, r *http.Request) {
 }
 
 func webSwapExclusion(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte("Internal server error"))
@@ -161,7 +167,7 @@ func webSwapExclusion(w http.ResponseWriter, r *http.Request) {
 }
 
 func webInclude(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte("Internal server error"))
@@ -197,7 +203,7 @@ func webInclude(w http.ResponseWriter, r *http.Request) {
 }
 
 func webExclude(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte("Internal server error"))
@@ -235,8 +241,8 @@ func webExclude(w http.ResponseWriter, r *http.Request) {
 func webserver(listenAddr, username, password string) {
 	for {
 		realm := "engarde"
-		box := packr.New("webmanager", "../../webmanager/dist/webmanager/browser")
-		http.HandleFunc("/", webBasicAuth(webHandleFileServer(box, "/"), username, password, realm))
+		webFS := assets.GetWebFS()
+		http.HandleFunc("/", webBasicAuth(webHandleFileServer(webFS), username, password, realm))
 		http.HandleFunc("/api/v1/get-list", NoCache(webBasicAuth(webGetList, username, password, realm)))
 		http.HandleFunc("/api/v1/include", NoCache(webBasicAuth(webInclude, username, password, realm)))
 		http.HandleFunc("/api/v1/exclude", NoCache(webBasicAuth(webExclude, username, password, realm)))

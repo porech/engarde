@@ -1,5 +1,11 @@
 # All
-all: packr client server packr-clean
+all: copy-assets client server cleanup-assets
+
+copy-assets:
+	cp -r webmanager/dist/webmanager/browser internal/assets/
+
+cleanup-assets:
+	rm -rf internal/assets/browser
 
 # Client build commands
 client-linux-i386:
@@ -32,19 +38,6 @@ server-windows-amd64:
 	GOOS=windows GOARCH=amd64 ./build-scripts/build.sh server
 server-darwin-amd64:
 	GOOS=darwin GOARCH=amd64 ./build-scripts/build.sh server
-
-# Packr
-packr-client:
-	cd cmd/engarde-client && packr2
-packr-server:
-	cd cmd/engarde-server && packr2
-packr-clean-client:
-	cd cmd/engarde-client && packr2 clean
-packr-clean-server:
-	cd cmd/engarde-server && packr2 clean
-
-packr: packr-client packr-server
-packr-clean: packr-clean-client packr-clean-server
 
 # Platform-specific builds
 linux-i386: client-linux-i386 server-linux-i386

@@ -21,9 +21,6 @@ jobs:
       with:
         go-version: '1.25.3'
 
-    - name: Install packr2
-      run: go get github.com/gobuffalo/packr/v2/packr2@latest
-    
     - name: Build frontend
       run: |
         cd webmanager
