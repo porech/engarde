@@ -7,14 +7,23 @@ if [ "$type" != "client" ] && [ "$type" != "server" ]; then
     exit 1
 fi
 
-if [ "$TRAVIS_COMMIT" != "" ]; then
-    commit=$(echo "$TRAVIS_COMMIT" | head -c 7);
-    branch="$TRAVIS_BRANCH";
-    version="$commit ($branch)"
+if [ "$GITHUB_REF" != "" ]; then
+    commit=$(echo "$GITHUB_SHA" | head -c 7);
+    branch=${GITHUB_REF#refs/heads/};
+    if [ "$branch" = "master" ]; then
+        version="$commit"
+    else
+        version="$commit ($branch)"
+    fi
 elif [ $(which git) != "" ]; then
     commit=$(git rev-parse HEAD | head -c 7);
     branch=$(git rev-parse --abbrev-ref HEAD);
-    version="$commit ($branch) - UNOFFICIAL BUILD"
+    if [ "$branch" = "master" ]; then
+        version="$commit"
+    else
+        version="$commit ($branch)"
+    fi
+    version="$version - UNOFFICIAL BUILD"
 else
    version="UNOFFICIAL BUILD"
 fi

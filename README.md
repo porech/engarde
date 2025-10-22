@@ -1,7 +1,5 @@
 # engarde - Don't lose that packet!
 
-[![Build Status](https://travis-ci.org/porech/engarde.svg?branch=master)](https://travis-ci.org/porech/engarde)
-
 [Official Facebook page](https://www.facebook.com/engarde-Dont-lose-that-packet-110039227317920)
 
 ## What is engarde?
@@ -121,6 +119,27 @@ Of course! Feel free to open an issue for any necessity ;)
 
 ## I love it, can I offer you a coffee?
 Wow, thanks! You can drop some Bitcoin to 39fBEZvKvxf2aZUBWWV1PuoKwCUvk6VWLg
+
+## Are you still developing it? (aka: project status)
+To answer this question, I will rapidly start with why I wrote engarde.
+
+I cooperate with a radio station, and sometimes we need to transmit from out-of-the-world locations with a reasonable latency. We use little bandwidth (a 64kbps OPUS stream is enough in a difficult situation), but of course we need the connection not to drop or listeners are not happy. We mainly rely on 4G connections, that work like a charm most of the time but sometimes they get down. So, we have a bunch of them from different carriers and we use engarde to reach our central server. Sometimes, additional connections pop up, even in the middle of a live session: a wifi offered by a gentleman who lives there, or something like that.
+
+That's an easy setup: one client, one server and many connections. As it is now, engarde perfectly fits this use case.
+
+So, I'm still ensuring that engarde compiles and works correctly, as I use it myself, but I'm not really motivated into further improving it because I don't need anything more from it. Not a good way of thinking as an open source project mantainer, I know, but I started new projects such as having a baby and some social life, and they're quite time-consuming.
+
+I think engarde has a lot of potential in other fields, and those are the things I would do if I had time (from the simpler to the harder):
+1. Re-organize all code that I wrote years ago when I didn't know how to do that, it's quite a mess
+2. Have a single executable for both client and server, and let the configuration decide what to start as
+3. Allow to have a single instance host multiple configurations, instead of having to start a process for each client on the server
+4. Avoid overlaying Wireguard but use an userspace implementation of Wireguard that directly creates the VPN. This would probably allow to differentiate the connecting clients and avoid using a separate port for each client
+5. Make it a software and not a hack: something that can be installed with a package and configured easily. I look at the Tailscale setup and usage experience and I see what I'd love engarde to be
+
+I'll probably never make all of this, but if you think engarde deserves some care and are willing to contribute, this is what I think is useful to do. I'd love it!
+
+## It would be better in Rust!
+There is [a porting](https://github.com/hanleym/rengarde) in progress! Thank you [hanleym](https://github.com/hanleym).
 
 ## License
 

@@ -177,7 +177,7 @@ func webInclude(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var rsp []byte
-	if(isExcluded(req.Iface)) {
+	if isExcluded(req.Iface) {
 		swapExclusion(req.Iface)
 		rsp, err = json.Marshal(struct {
 			Status string `json:"status"`
@@ -213,7 +213,7 @@ func webExclude(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var rsp []byte
-	if(!isExcluded(req.Iface)) {
+	if !isExcluded(req.Iface) {
 		swapExclusion(req.Iface)
 		rsp, err = json.Marshal(struct {
 			Status string `json:"status"`
@@ -235,7 +235,7 @@ func webExclude(w http.ResponseWriter, r *http.Request) {
 func webserver(listenAddr, username, password string) {
 	for {
 		realm := "engarde"
-		box := packr.New("webmanager", "../../webmanager/dist/webmanager")
+		box := packr.New("webmanager", "../../webmanager/dist/webmanager/browser")
 		http.HandleFunc("/", webBasicAuth(webHandleFileServer(box, "/"), username, password, realm))
 		http.HandleFunc("/api/v1/get-list", NoCache(webBasicAuth(webGetList, username, password, realm)))
 		http.HandleFunc("/api/v1/include", NoCache(webBasicAuth(webInclude, username, password, realm)))

@@ -1,0 +1,43 @@
+name: Build and Deploy
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22.21.0'
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.13.4'
+    
+    - name: Install packr2
+      run: go get github.com/gobuffalo/packr/v2/packr2@latest
+    
+    - name: Build frontend
+      run: |
+        cd webmanager
+        npm install
+        npm run-script build-prod
+        cd ..
+    
+    - name: Build Go application
+      run: make
+    
+    - name: Upload artifacts
+      env:
+        UPLOAD_KEY: ${{ secrets.UPLOAD_KEY }}
+        UPLOAD_URL: ${{ vars.UPLOAD_URL }}
+      run: |
+        cd dist
+        find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=${{ github.ref_name }}/{}" -F "key=$UPLOAD_KEY" "$UPLOAD_URL" \;
