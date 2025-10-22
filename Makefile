@@ -3,11 +3,11 @@ all: packr client server packr-clean
 
 # Client build commands
 client-linux-i386:
-	GOOS=linux GOARCH=386 ./build-scripts/build.sh client
+	CGO_ENABLED=0 GOOS=linux GOARCH=386 ./build-scripts/build.sh client
 client-linux-amd64:
-	GOOS=linux GOARCH=amd64 ./build-scripts/build.sh client
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 ./build-scripts/build.sh client
 client-linux-arm:
-	GOOS=linux GOARCH=arm ./build-scripts/build.sh client
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm ./build-scripts/build.sh client
 client-windows-i386:
 	GOOS=windows GOARCH=386 ./build-scripts/build.sh client
 client-windows-amd64:
@@ -17,11 +17,11 @@ client-darwin-amd64:
 
 # Server build commands
 server-linux-i386:
-	GOOS=linux GOARCH=386 ./build-scripts/build.sh server
+	CGO_ENABLED=0 GOOS=linux GOARCH=386 ./build-scripts/build.sh server
 server-linux-amd64:
-	GOOS=linux GOARCH=amd64 ./build-scripts/build.sh server
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 ./build-scripts/build.sh server
 server-linux-arm:
-	GOOS=linux GOARCH=arm ./build-scripts/build.sh server
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm ./build-scripts/build.sh server
 server-windows-i386:
 	GOOS=windows GOARCH=386 ./build-scripts/build.sh server
 server-windows-amd64:

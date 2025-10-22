@@ -341,9 +341,6 @@ func main() {
 		log.Fatal("No dstAddr specified.")
 	}
 
-	if clConfig.WriteTimeout == 0 {
-		clConfig.WriteTimeout = 10
-	}
 	exclusionSwaps = make(map[string]bool)
 
 	var wireguardAddr *net.UDPAddr
