@@ -7,9 +7,9 @@ if [ "$type" != "client" ] && [ "$type" != "server" ]; then
     exit 1
 fi
 
-if [ "$TRAVIS_COMMIT" != "" ]; then
-    commit=$(echo "$TRAVIS_COMMIT" | head -c 7);
-    branch="$TRAVIS_BRANCH";
+if [ "$GITHUB_REF" != "" ]; then
+    commit=$(echo "$GITHUB_SHA" | head -c 7);
+    branch=${GITHUB_REF#refs/heads/};
     version="$commit ($branch)"
 elif [ $(which git) != "" ]; then
     commit=$(git rev-parse HEAD | head -c 7);
