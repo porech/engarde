@@ -1,7 +1,11 @@
 name: Build and Deploy
 
 on:
-  push
+  push:
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   build:
