@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
     name: 'string2objectfilter',
-    pure: false
+    pure: false,
+    standalone: false
 })
 export class StringToObjectFilterPipe implements PipeTransform {
     transform(items: any[], filter: string, itemField: string): any {

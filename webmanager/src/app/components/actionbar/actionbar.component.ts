@@ -2,9 +2,10 @@ import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { ActionbarService } from 'src/app/services/actionbar.service';
 
 @Component({
-  selector: 'app-actionbar',
-  templateUrl: './actionbar.component.html',
-  styleUrls: ['./actionbar.component.css']
+    selector: 'app-actionbar',
+    templateUrl: './actionbar.component.html',
+    styleUrls: ['./actionbar.component.css'],
+    standalone: false
 })
 export class ActionbarComponent implements OnInit {
   @Input() title : string = "";
