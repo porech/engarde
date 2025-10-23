@@ -1,11 +1,14 @@
 # All
-all: copy-assets client server cleanup-assets
+all: frontend client server
 
-copy-assets:
+frontend:
+	cd webmanager && \
+	npm install && \
+	npm run-script \
+	build-prod && \
+	cd .. && \
+	rm -rf internal/assets/browser && \
 	cp -r webmanager/dist/webmanager/browser internal/assets/
-
-cleanup-assets:
-	rm -rf internal/assets/browser
 
 # Client build commands
 client-linux-i386:
