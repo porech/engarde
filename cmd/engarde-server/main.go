@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"net"
 	"os"
 	"strconv"
@@ -79,7 +78,7 @@ func main() {
 		return
 	}
 
-	yamlFile, err := ioutil.ReadFile(configName)
+	yamlFile, err := os.ReadFile(configName)
 	handleErr(err, "Reading config file "+configName+" failed")
 	err = yaml.Unmarshal(yamlFile, &genconfig)
 	handleErr(err, "Parsing config file failed")

@@ -9,10 +9,11 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { RespModel } from './models/resp.model';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  animations: [getScaleInAnimation(), getSlideOutAnimation()]
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    animations: [getScaleInAnimation(), getSlideOutAnimation()],
+    standalone: false
 })
 export class AppComponent {
 

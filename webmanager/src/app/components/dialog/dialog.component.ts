@@ -11,9 +11,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {APICallerService} from 'src/app/services/apicaller.service';
 
 @Component({
-  selector: 'custom-dialog',
-  templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.scss'],
+    selector: 'custom-dialog',
+    templateUrl: './dialog.component.html',
+    styleUrls: ['./dialog.component.scss'],
+    standalone: false
 })
 
 export class DialogComponent implements AfterContentInit{
