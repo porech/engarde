@@ -106,6 +106,36 @@ You can also exclude an interface on-the-go, but keep in mind that those changes
 
 The server interface is pretty much the same, but instead of the interfaces it shows the addresses it's currently receiving (and sending) data on.
 
+## OpenWrt / LuCI
+
+engarde is available as OpenWrt packages with full LuCI integration:
+
+- **engarde-client** / **engarde-server** — procd service management and UCI configuration
+- **luci-app-engarde** — configure and monitor engarde instances from the LuCI web interface
+
+### Install on a running OpenWrt 23.05 router
+
+SSH into your router and add the package repository for your architecture:
+
+**x86_64:** `echo "src/gz engarde https://engarde.linuxzogno.org/builds/openwrt/23.05/x86_64" >> /etc/opkg/customfeeds.conf`
+
+**aarch64_generic:** `echo "src/gz engarde https://engarde.linuxzogno.org/builds/openwrt/23.05/aarch64_generic" >> /etc/opkg/customfeeds.conf`
+
+**arm_cortex-a7_neon-vfpv4:** `echo "src/gz engarde https://engarde.linuxzogno.org/builds/openwrt/23.05/arm_cortex-a7_neon-vfpv4" >> /etc/opkg/customfeeds.conf`
+
+Then install:
+
+```sh
+opkg update
+opkg install engarde-client luci-app-engarde
+```
+
+Open LuCI and navigate to **Services → Engarde** to configure your instances.
+
+### Build from source
+
+See the [openwrt-engarde](https://github.com/porech/openwrt-engarde) repository for instructions on building from source with the OpenWrt SDK.
+
 ## It's useless! It's a bad copy of {some-other-software}
 Honestly, we are quite lazy people, and before coding something we always look for an existing solution that would suit our needings. This time, we really couldn't find one. If you know something similar, please, PLEASE open an issue with title "engarde is a bad copy of ...", we'd love to know that!
 
