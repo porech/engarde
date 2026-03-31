@@ -43,6 +43,9 @@ jobs:
 
         git checkout gh-pages
 
+        # Clean untracked files left over from the build step
+        git clean -fd
+
         # Remove old builds for this branch, keep others
         rm -rf "$BRANCH"
         mkdir -p "$BRANCH"
