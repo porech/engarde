@@ -87,6 +87,13 @@
     color: #bbb;
 }
 
+.iface-name {
+    font-size: 0.6em;
+    color: #999;
+    font-weight: 300;
+    margin-left: 4px;
+}
+
 .last-received {
     margin-bottom: 20px;
 }

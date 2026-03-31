@@ -20,7 +20,7 @@
           @for (iface of ifaces | callback: filterActive |sortBy: 'name'; track trackByName($index, iface)) {
             <mat-card class="card card-active">
               <mat-card-title class="title">
-                {{iface.name}}
+                {{iface.label || iface.name}}@if (iface.label) { <span class="iface-name">({{iface.name}})</span>}
               </mat-card-title>
               <mat-card-content>
                 <div class="text last-received"><strong>Last received packet: </strong>
@@ -53,7 +53,7 @@
         @for (iface of ifaces | callback: filterIdle |sortBy: 'name'; track trackByName($index, iface)) {
           <mat-card class="card card-idle">
             <mat-card-title class="title">
-              {{iface.name}}
+              {{iface.label || iface.name}}@if (iface.label) { <span class="iface-name">({{iface.name}})</span>}
             </mat-card-title>
             <mat-card-content>
               <span class="other-infos">
@@ -81,7 +81,7 @@
         @for (iface of ifaces | callback: filterExcluded |sortBy: 'name'; track trackByName($index, iface)) {
           <mat-card class="card card-excluded">
             <mat-card-title class="title">
-              {{iface.name}}
+              {{iface.label || iface.name}}@if (iface.label) { <span class="iface-name">({{iface.name}})</span>}
             </mat-card-title>
             <mat-card-content>
               <span class="other-infos">

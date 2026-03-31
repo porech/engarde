@@ -15,10 +15,20 @@ import (
 
 type webInterface struct {
 	Name          string `json:"name"`
+	Label         string `json:"label,omitempty"`
 	Status        string `json:"status"`
 	SenderAddress string `json:"senderAddress"`
 	DstAddress    string `json:"dstAddress"`
 	Last          *int64 `json:"last"`
+}
+
+func getLabelByIfname(ifname string) string {
+	if clConfig.InterfaceLabels != nil {
+		if label, ok := clConfig.InterfaceLabels[ifname]; ok {
+			return label
+		}
+	}
+	return ""
 }
 
 func webBasicAuth(handler http.HandlerFunc, username, password, realm string) http.HandlerFunc {
@@ -71,9 +81,12 @@ func webGetList(w http.ResponseWriter, r *http.Request) {
 	for _, iface := range interfaces {
 		ifname := iface.Name
 		address := getAddressByInterface(iface)
+		label := getLabelByIfname(ifname)
+
 		if isExcluded(ifname) {
 			rspIface := webInterface{
 				Name:          ifname,
+				Label:         label,
 				Status:        "excluded",
 				SenderAddress: address,
 			}
@@ -85,6 +98,7 @@ func webGetList(w http.ResponseWriter, r *http.Request) {
 			respLast := time.Now().Unix() - routine.LastRec
 			rspIface := webInterface{
 				Name:          ifname,
+				Label:         label,
 				Status:        "active",
 				SenderAddress: address,
 				DstAddress:    getDstByIfname(ifname),
@@ -97,6 +111,7 @@ func webGetList(w http.ResponseWriter, r *http.Request) {
 		} else {
 			rspIface := webInterface{
 				Name:          ifname,
+				Label:         label,
 				Status:        "idle",
 				SenderAddress: address,
 				DstAddress:    getDstByIfname(ifname),

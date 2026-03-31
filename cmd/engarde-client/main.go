@@ -17,12 +17,13 @@ type config struct {
 }
 
 type clientConfig struct {
-	Description        string        `yaml:"description"`
-	ListenAddr         string        `yaml:"listenAddr"`
-	DstAddr            string        `yaml:"dstAddr"`
-	WriteTimeout       time.Duration `yaml:"writeTimeout"`
-	ExcludedInterfaces []string      `yaml:"excludedInterfaces"`
-	DstOverrides       []dstOverride `yaml:"dstOverrides"`
+	Description        string            `yaml:"description"`
+	ListenAddr         string            `yaml:"listenAddr"`
+	DstAddr            string            `yaml:"dstAddr"`
+	WriteTimeout       time.Duration     `yaml:"writeTimeout"`
+	ExcludedInterfaces []string          `yaml:"excludedInterfaces"`
+	InterfaceLabels    map[string]string `yaml:"interfaceLabels"`
+	DstOverrides       []dstOverride     `yaml:"dstOverrides"`
 	WebManager         struct {
 		ListenAddr string `yaml:"listenAddr"`
 		Username   string `yaml:"username"`

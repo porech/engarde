@@ -19,6 +19,11 @@ client:
     - "VirtualBox Host-Only Network"
     - "Bluetooth Network Connection"
     - "Loopback Pseudo-Interface 1"
+  # You can assign human-readable labels to network interfaces, to help identify them in the management interface.
+  # If you don't need labels, you can omit this or just write `interfaceLabels: {}`
+  interfaceLabels:
+    eth0: "Main ISP"
+    eth1: "Backup ISP"
   # Sometimes, over specific network interfaces, it's useful to reach the server through another IP address.
   # This is the case if there are two totally separated networks between the client and the server, with different IP addresses.
   # You can specify an array of maps where you specify the network interface name and the destination address to use for this interface.
