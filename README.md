@@ -18,21 +18,21 @@ In some way, engarde is similar to a failover mechanism, but it doesn't switch t
 Absolutely yes. The used bandwidth is the one you would normally use multiplied by the number of the connections you have. But hey, imagine you are transmitting real time audio to a national radio station: would you really prefer that a connection failure causes some moments of silence to the listeners, or would you happily waste your bandwidth to avoid it?
 
 ## How do I get it?
-You can find the latest builds here (thanks to linuxzogno.org for hosting them):
+You can find the latest builds here:
 
 ### Server
 |                   | i386     | amd64    | arm    |
 | ----------------- | -------- | -------- | -------- |
-| *Linux*           | [Download](https://engarde.linuxzogno.org/builds/master/linux/i386/engarde-server) | [Download](https://engarde.linuxzogno.org/builds/master/linux/amd64/engarde-server) | [Download](https://engarde.linuxzogno.org/builds/master/linux/arm/engarde-server) |
-| *Windows*         | [Download](https://engarde.linuxzogno.org/builds/master/windows/i386/engarde-server.exe) | [Download](https://engarde.linuxzogno.org/builds/master/windows/amd64/engarde-server.exe) |  |
-| *Darwin (Mac OS)* | [Download](https://engarde.linuxzogno.org/builds/master/darwin/i386/engarde-server) | [Download](https://engarde.linuxzogno.org/builds/master/darwin/amd64/engarde-server) |  |
+| *Linux*           | [Download](https://porech.github.io/engarde/master/linux/i386/engarde-server) | [Download](https://porech.github.io/engarde/master/linux/amd64/engarde-server) | [Download](https://porech.github.io/engarde/master/linux/arm/engarde-server) |
+| *Windows*         | [Download](https://porech.github.io/engarde/master/windows/i386/engarde-server.exe) | [Download](https://porech.github.io/engarde/master/windows/amd64/engarde-server.exe) |  |
+| *Darwin (Mac OS)* | [Download](https://porech.github.io/engarde/master/darwin/i386/engarde-server) | [Download](https://porech.github.io/engarde/master/darwin/amd64/engarde-server) |  |
 
 ### Client
 |                   | i386     | amd64    | arm    |
 | ----------------- | -------- | -------- | -------- |
-| *Linux*           | [Download](https://engarde.linuxzogno.org/builds/master/linux/i386/engarde-client) | [Download](https://engarde.linuxzogno.org/builds/master/linux/amd64/engarde-client) | [Download](https://engarde.linuxzogno.org/builds/master/linux/arm/engarde-client) |
-| *Windows*         | [Download](https://engarde.linuxzogno.org/builds/master/windows/i386/engarde-client.exe) | [Download](https://engarde.linuxzogno.org/builds/master/windows/amd64/engarde-client.exe) |  |
-| *Darwin (Mac OS)* | [Download](https://engarde.linuxzogno.org/builds/master/darwin/i386/engarde-client) | [Download](https://engarde.linuxzogno.org/builds/master/darwin/amd64/engarde-client) |  |
+| *Linux*           | [Download](https://porech.github.io/engarde/master/linux/i386/engarde-client) | [Download](https://porech.github.io/engarde/master/linux/amd64/engarde-client) | [Download](https://porech.github.io/engarde/master/linux/arm/engarde-client) |
+| *Windows*         | [Download](https://porech.github.io/engarde/master/windows/i386/engarde-client.exe) | [Download](https://porech.github.io/engarde/master/windows/amd64/engarde-client.exe) |  |
+| *Darwin (Mac OS)* | [Download](https://porech.github.io/engarde/master/darwin/i386/engarde-client) | [Download](https://porech.github.io/engarde/master/darwin/amd64/engarde-client) |  |
 
 If you prefer, or if you need another architecture, you can always compile from source. Some more documentation about this will be available soon, but it shouldn't be too hard if you know a little about Golang.
 
@@ -41,7 +41,7 @@ If you prefer, or if you need another architecture, you can always compile from 
 ### Scenario 1: multiple connections on one peer, single stable connection on the other
 This is the most typical scenario: you have a reliable server on one end, and a client with multiple unstable connections (maybe in mobility).
 
-![Scenario 1](https://engarde.linuxzogno.org/Scenario1.png)
+![Scenario 1](https://porech.github.io/engarde/Scenario1.png)
 
 So, we need to establish a reliable connection between our laptop and the server, but none of the connections we have on the laptop is reliable enough. We can, howerver, assume that at least one of them will work in every moment.
 
@@ -76,7 +76,7 @@ Done! engarde is now overlying your WireGuard tunnel: try to ping the server fro
 ### Scenario 2: multiple connections between two peers
 Here we have a totally different scenario: we are in a data center, and two servers are connected with two Ethernet cables that follow different paths for redundancy.
 
-![Scenario 2](https://engarde.linuxzogno.org/Scenario2.png)
+![Scenario 2](https://porech.github.io/engarde/Scenario2.png)
 
 The procedure to follow is identical to the first scenario, but with a small change in the configuration file:
 ```
