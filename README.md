@@ -34,7 +34,7 @@ You can find the latest builds here:
 | *Windows*         | [Download](https://porech.github.io/engarde/master/windows/i386/engarde-client.exe) | [Download](https://porech.github.io/engarde/master/windows/amd64/engarde-client.exe) | [Download](https://porech.github.io/engarde/master/windows/arm/engarde-client.exe) | [Download](https://porech.github.io/engarde/master/windows/arm64/engarde-client.exe) |
 | *Darwin (macOS)*  |  | [Download](https://porech.github.io/engarde/master/darwin/amd64/engarde-client) |  | [Download](https://porech.github.io/engarde/master/darwin/arm64/engarde-client) |
 
-If you prefer, or if you need another architecture, you can always compile from source. Some more documentation about this will be available soon, but it shouldn't be too hard if you know a little about Golang.
+You can also [build from source](BUILDING.md) if you prefer, or if you need a different architecture.
 
 ## How do I use it?
 
