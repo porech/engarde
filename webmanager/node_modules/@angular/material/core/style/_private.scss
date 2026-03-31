@@ -1,0 +1,27 @@
+@use './elevation';
+@use '../tokens/m2-utils';
+@use 'sass:map';
+
+@mixin private-theme-elevation($zValue, $theme) {
+  $system: m2-utils.get-system($theme);
+  @include elevation.elevation($zValue, map.get($system, shadow));
+}
+
+@mixin private-theme-overridable-elevation($zValue, $theme) {
+  $system: m2-utils.get-system($theme);
+  @include elevation.overridable-elevation($zValue, map.get($system, shadow));
+}
+
+// If the mat-animation-noop class is present on the components root element,
+// prevent non css animations from running.
+// NOTE: Currently this mixin should only be used with components that do not
+// have any projected content.
+@mixin private-animation-noop() {
+  &._mat-animation-noopable {
+    // Use !important here since we don't know what context this mixin will
+    // be included in and MDC can have some really specific selectors.
+    transition: none !important;
+    animation: none !important;
+    @content;
+  }
+}

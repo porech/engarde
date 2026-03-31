@@ -1,0 +1,25 @@
+@use '../core/tokens/m3-utils';
+@use 'sass:map';
+@use '../core/tokens/m3';
+
+/// Generates the tokens for MDC plain-tooltip
+@function get-tokens($theme: m3.$sys-theme) {
+  $system: m3-utils.get-system($theme);
+
+  @return (
+    base: (),
+    color: (
+      tooltip-container-color: map.get($system, inverse-surface),
+      tooltip-container-shape: map.get($system, corner-extra-small),
+      tooltip-supporting-text-color: map.get($system, inverse-on-surface),
+    ),
+    typography: (
+      tooltip-supporting-text-font: map.get($system, body-small-font),
+      tooltip-supporting-text-line-height: map.get($system, body-small-line-height),
+      tooltip-supporting-text-size: map.get($system, body-small-size),
+      tooltip-supporting-text-tracking: map.get($system, body-small-tracking),
+      tooltip-supporting-text-weight: map.get($system, body-small-weight)
+    ),
+    density: (),
+  );
+}

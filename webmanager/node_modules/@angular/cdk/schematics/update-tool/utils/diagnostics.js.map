@@ -1,0 +1,1 @@
+{"version":3,"file":"diagnostics.js","sourceRoot":"","sources":["diagnostics.ts"],"names":[],"mappings":";AAAA;;;;;;GAMG;;AAOH,8CAGC;AARD,iCAAiC;AAEjC,iDAA0D;AAE1D,+EAA+E;AAC/E,SAAgB,iBAAiB,CAAC,WAA4B,EAAE,UAAsB;IACpF,MAAM,UAAU,GAAG,IAAA,yCAA0B,EAAC,UAAU,CAAC,CAAC;IAC1D,OAAO,EAAE,CAAC,oCAAoC,CAAC,WAAW,EAAE,UAAU,CAAC,CAAC;AAC1E,CAAC"}

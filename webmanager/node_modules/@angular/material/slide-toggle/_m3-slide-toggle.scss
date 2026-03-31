@@ -1,0 +1,133 @@
+@use 'sass:map';
+@use 'sass:list';
+@use '../core/tokens/m3-utils';
+@use '../core/theming/theming';
+@use '../core/tokens/m3';
+
+/// Generates custom tokens for the mat-slide-toggle.
+/// @param {String} $color-variant The color variant to use for the component
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
+
+  // visible/hidden-track-opacity:
+  // The hidden and visible track represent whichever track is visible or
+  // hidden in the ui. This could be the .mdc-switch__track :before or
+  // :after depending on whether the switch is selected or unselected.
+  //
+  // The m2 slide-toggle uses transforms to hide & show the tracks while
+  // the m3 slide-toggle uses opacity.
+
+  // These tokens have always been empty for M3, but these token values should be used
+  // (with the same technique of calling `elevation.get-box-shadow`)
+  // Currently, internal users have M2 tokens being applied by accident
+  // handle-elevation-shadow: map.get($system, level0),
+  // disabled-handle-elevation-shadow: map.get($system, level0),
+
+  @return (
+    base: (
+      slide-toggle-disabled-selected-handle-opacity: 1,
+      slide-toggle-disabled-selected-icon-opacity: 0.38,
+      slide-toggle-disabled-track-opacity: 0.12,
+      slide-toggle-disabled-unselected-handle-opacity: 0.38,
+      slide-toggle-disabled-unselected-icon-opacity: 0.38,
+      slide-toggle-disabled-unselected-track-outline-width: 2px,
+      slide-toggle-handle-shape: map.get($system, corner-full),
+      slide-toggle-hidden-track-opacity: 0,
+      slide-toggle-hidden-track-transition: opacity 75ms,
+      slide-toggle-pressed-handle-size: 28px,
+      slide-toggle-selected-handle-horizontal-margin: 0 24px,
+      slide-toggle-selected-handle-size: 24px,
+      slide-toggle-selected-icon-size: 16px,
+      slide-toggle-selected-pressed-handle-horizontal-margin: 0 22px,
+      slide-toggle-selected-track-outline-color: transparent,
+      slide-toggle-selected-track-outline-width: 2px,
+      slide-toggle-selected-with-icon-handle-horizontal-margin: 0 24px,
+      slide-toggle-state-layer-size: 40px,
+      slide-toggle-track-height: 32px,
+      slide-toggle-track-outline-width: 2px,
+      slide-toggle-track-shape: map.get($system, corner-full),
+      slide-toggle-track-width: 52px,
+      slide-toggle-unselected-handle-horizontal-margin: 0 8px,
+      slide-toggle-unselected-handle-size: 16px,
+      slide-toggle-unselected-icon-size: 16px,
+      slide-toggle-unselected-pressed-handle-horizontal-margin: 0 2px,
+      slide-toggle-unselected-with-icon-handle-horizontal-margin: 0 4px,
+      slide-toggle-visible-track-opacity: 1,
+      slide-toggle-visible-track-transition: opacity 75ms,
+      slide-toggle-with-icon-handle-size: 24px,
+      slide-toggle-handle-width: null,
+      slide-toggle-handle-height: null,
+      slide-toggle-touch-target-size: 48px,
+    ),
+    color: (
+      slide-toggle-disabled-label-text-color: map.get($system, on-surface),
+      slide-toggle-disabled-selected-handle-color: map.get($system, surface),
+      slide-toggle-disabled-selected-icon-color: map.get($system, on-surface),
+      slide-toggle-disabled-selected-track-color: map.get($system, on-surface),
+      slide-toggle-disabled-unselected-handle-color: map.get($system, on-surface),
+      slide-toggle-disabled-unselected-icon-color: map.get($system, surface-variant),
+      slide-toggle-disabled-unselected-track-color: map.get($system, surface-variant),
+      slide-toggle-disabled-unselected-track-outline-color: map.get($system, on-surface),
+      slide-toggle-label-text-color: map.get($system, on-surface),
+      slide-toggle-selected-focus-handle-color: map.get($system, primary-container),
+      slide-toggle-selected-focus-state-layer-color: map.get($system, primary),
+      slide-toggle-selected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      slide-toggle-selected-focus-track-color: map.get($system, primary),
+      slide-toggle-selected-handle-color: map.get($system, on-primary),
+      slide-toggle-selected-hover-handle-color: map.get($system, primary-container),
+      slide-toggle-selected-hover-state-layer-color: map.get($system, primary),
+      slide-toggle-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      slide-toggle-selected-hover-track-color: map.get($system, primary),
+      slide-toggle-selected-icon-color: map.get($system, on-primary-container),
+      slide-toggle-selected-pressed-handle-color: map.get($system, primary-container),
+      slide-toggle-selected-pressed-state-layer-color: map.get($system, primary),
+      slide-toggle-selected-pressed-state-layer-opacity:
+          map.get($system, pressed-state-layer-opacity),
+      slide-toggle-selected-pressed-track-color: map.get($system, primary),
+      slide-toggle-selected-track-color: map.get($system, primary),
+      slide-toggle-track-outline-color: map.get($system, outline),
+      slide-toggle-unselected-focus-handle-color: map.get($system, on-surface-variant),
+      slide-toggle-unselected-focus-state-layer-color: map.get($system, on-surface),
+      slide-toggle-unselected-focus-state-layer-opacity:
+          map.get($system, focus-state-layer-opacity),
+      slide-toggle-unselected-focus-track-color: map.get($system, surface-variant),
+      slide-toggle-unselected-handle-color: map.get($system, outline),
+      slide-toggle-unselected-hover-handle-color: map.get($system, on-surface-variant),
+      slide-toggle-unselected-hover-state-layer-color: map.get($system, on-surface),
+      slide-toggle-unselected-hover-state-layer-opacity:
+          map.get($system, hover-state-layer-opacity),
+      slide-toggle-unselected-hover-track-color: map.get($system, surface-variant),
+      slide-toggle-unselected-icon-color: map.get($system, surface-variant),
+      slide-toggle-unselected-pressed-handle-color: map.get($system, on-surface-variant),
+      slide-toggle-unselected-pressed-state-layer-color: map.get($system, on-surface),
+      slide-toggle-unselected-pressed-state-layer-opacity:
+          map.get($system, pressed-state-layer-opacity),
+      slide-toggle-unselected-pressed-track-color: map.get($system, surface-variant),
+      slide-toggle-unselected-track-color: map.get($system, surface-variant),
+      slide-toggle-handle-surface-color: null,
+      slide-toggle-handle-elevation-shadow: null,
+      slide-toggle-disabled-handle-elevation-shadow: null,
+    ),
+    typography: (
+      slide-toggle-label-text-font: map.get($system, body-medium-font),
+      slide-toggle-label-text-line-height: map.get($system, body-medium-line-height),
+      slide-toggle-label-text-size: map.get($system, body-medium-size),
+      slide-toggle-label-text-tracking: map.get($system, body-medium-tracking),
+      slide-toggle-label-text-weight: map.get($system, body-medium-weight),
+    ),
+     density: get-density-tokens(map.get($system, density-scale)),
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -3);
+  $index: ($scale * -1) + 1;
+
+  @return (
+    slide-toggle-touch-target-display: list.nth((block, block, none, none), $index),
+  );
+}

@@ -1,0 +1,168 @@
+// Import all the theming functionality.
+@use '../core-theme';
+@use '../../autocomplete/autocomplete-theme';
+@use '../../badge/badge-theme';
+@use '../../bottom-sheet/bottom-sheet-theme';
+@use '../../button/button-theme';
+@use '../../button/icon-button-theme';
+@use '../../button/fab-theme';
+@use '../../button-toggle/button-toggle-theme';
+@use '../../card/card-theme';
+@use '../../checkbox/checkbox-theme';
+@use '../../chips/chips-theme';
+@use '../../table/table-theme';
+@use '../../datepicker/datepicker-theme';
+@use '../../dialog/dialog-theme';
+@use '../../divider/divider-theme';
+@use '../../expansion/expansion-theme';
+@use '../../grid-list/grid-list-theme';
+@use '../../icon/icon-theme';
+@use '../../input/input-theme';
+@use '../../list/list-theme';
+@use '../../menu/menu-theme';
+@use '../../paginator/paginator-theme';
+@use '../../progress-bar/progress-bar-theme';
+@use '../../progress-spinner/progress-spinner-theme';
+@use '../../radio/radio-theme';
+@use '../../select/select-theme';
+@use '../../sidenav/sidenav-theme';
+@use '../../slide-toggle/slide-toggle-theme';
+@use '../../slider/slider-theme';
+@use '../../stepper/stepper-theme';
+@use '../../sort/sort-theme';
+@use '../../tabs/tabs-theme';
+@use '../../toolbar/toolbar-theme';
+@use '../../tooltip/tooltip-theme';
+@use '../../tree/tree-theme';
+@use '../../snack-bar/snack-bar-theme';
+@use '../../form-field/form-field-theme';
+@use '../../timepicker/timepicker-theme';
+
+// Create a theme.
+@mixin all-component-themes($theme) {
+  @include core-theme.theme($theme);
+  @include card-theme.theme($theme);
+  @include progress-bar-theme.theme($theme);
+  @include tooltip-theme.theme($theme);
+  @include form-field-theme.theme($theme);
+  @include input-theme.theme($theme);
+  @include select-theme.theme($theme);
+  @include autocomplete-theme.theme($theme);
+  @include dialog-theme.theme($theme);
+  @include chips-theme.theme($theme);
+  @include slide-toggle-theme.theme($theme);
+  @include radio-theme.theme($theme);
+  @include slider-theme.theme($theme);
+  @include menu-theme.theme($theme);
+  @include list-theme.theme($theme);
+  @include paginator-theme.theme($theme);
+  @include tabs-theme.theme($theme);
+  @include checkbox-theme.theme($theme);
+  @include button-theme.theme($theme);
+  @include icon-button-theme.theme($theme);
+  @include fab-theme.theme($theme);
+  @include snack-bar-theme.theme($theme);
+  @include table-theme.theme($theme);
+  @include progress-spinner-theme.theme($theme);
+  @include badge-theme.theme($theme);
+  @include bottom-sheet-theme.theme($theme);
+  @include button-toggle-theme.theme($theme);
+  @include datepicker-theme.theme($theme);
+  @include divider-theme.theme($theme);
+  @include expansion-theme.theme($theme);
+  @include grid-list-theme.theme($theme);
+  @include icon-theme.theme($theme);
+  @include sidenav-theme.theme($theme);
+  @include stepper-theme.theme($theme);
+  @include sort-theme.theme($theme);
+  @include toolbar-theme.theme($theme);
+  @include tree-theme.theme($theme);
+  @include timepicker-theme.theme($theme);
+}
+
+@mixin all-component-bases($theme) {
+  @include core-theme.base($theme);
+  @include card-theme.base($theme);
+  @include progress-bar-theme.base($theme);
+  @include tooltip-theme.base($theme);
+  @include form-field-theme.base($theme);
+  @include input-theme.base($theme);
+  @include select-theme.base($theme);
+  @include autocomplete-theme.base($theme);
+  @include dialog-theme.base($theme);
+  @include chips-theme.base($theme);
+  @include slide-toggle-theme.base($theme);
+  @include radio-theme.base($theme);
+  @include slider-theme.base($theme);
+  @include menu-theme.base($theme);
+  @include list-theme.base($theme);
+  @include paginator-theme.base($theme);
+  @include tabs-theme.base($theme);
+  @include checkbox-theme.base($theme);
+  @include button-theme.base($theme);
+  @include icon-button-theme.base($theme);
+  @include fab-theme.base($theme);
+  @include snack-bar-theme.base($theme);
+  @include table-theme.base($theme);
+  @include progress-spinner-theme.base($theme);
+  @include badge-theme.base($theme);
+  @include bottom-sheet-theme.base($theme);
+  @include button-toggle-theme.base($theme);
+  @include datepicker-theme.base($theme);
+  @include divider-theme.base($theme);
+  @include expansion-theme.base($theme);
+  @include grid-list-theme.base($theme);
+  @include icon-theme.base($theme);
+  @include sidenav-theme.base($theme);
+  @include stepper-theme.base($theme);
+  @include sort-theme.base($theme);
+  @include toolbar-theme.base($theme);
+  @include tree-theme.base($theme);
+  @include timepicker-theme.base($theme);
+}
+
+@mixin all-component-colors($theme) {
+  @include core-theme.color($theme);
+  @include card-theme.color($theme);
+  @include progress-bar-theme.color($theme);
+  @include tooltip-theme.color($theme);
+  @include form-field-theme.color($theme);
+  @include input-theme.color($theme);
+  @include select-theme.color($theme);
+  @include autocomplete-theme.color($theme);
+  @include dialog-theme.color($theme);
+  @include chips-theme.color($theme);
+  @include slide-toggle-theme.color($theme);
+  @include radio-theme.color($theme);
+  @include slider-theme.color($theme);
+  @include menu-theme.color($theme);
+  @include list-theme.color($theme);
+  @include paginator-theme.color($theme);
+  @include tabs-theme.color($theme);
+  @include checkbox-theme.color($theme);
+  @include button-theme.color($theme);
+  @include icon-button-theme.color($theme);
+  @include fab-theme.color($theme);
+  @include snack-bar-theme.color($theme);
+  @include table-theme.color($theme);
+  @include progress-spinner-theme.color($theme);
+  @include badge-theme.color($theme);
+  @include bottom-sheet-theme.color($theme);
+  @include button-toggle-theme.color($theme);
+  @include datepicker-theme.color($theme);
+  @include divider-theme.color($theme);
+  @include expansion-theme.color($theme);
+  @include grid-list-theme.color($theme);
+  @include icon-theme.color($theme);
+  @include sidenav-theme.color($theme);
+  @include stepper-theme.color($theme);
+  @include sort-theme.color($theme);
+  @include toolbar-theme.color($theme);
+  @include tree-theme.color($theme);
+  @include timepicker-theme.color($theme);
+}
+
+// @deprecated Use `all-component-themes`.
+@mixin angular-material-theme($theme) {
+  @include all-component-themes($theme);
+}

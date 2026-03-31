@@ -1,0 +1,61 @@
+@use 'sass:map';
+@use 'sass:list';
+@use '../core/tokens/m3-utils';
+@use '../core/theming/theming';
+@use '../core/tokens/m3';
+@use '../core/style/elevation';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, expansion);
+
+/// Generates custom tokens for the mat-expansion.
+@function get-tokens($theme: m3.$sys-theme) {
+  $system: m3-utils.get-system($theme);
+
+  @return (
+    base: (
+      expansion-container-shape: 12px,
+      expansion-header-indicator-display: inline-block,
+      expansion-legacy-header-indicator-display: none,
+      expansion-container-elevation-shadow: elevation.get-box-shadow(2),
+    ),
+    color: (
+      expansion-actions-divider-color: map.get($system, outline),
+      expansion-container-background-color: map.get($system, surface),
+      expansion-container-text-color: map.get($system, on-surface),
+      expansion-header-description-color: map.get($system, on-surface-variant),
+      expansion-header-disabled-state-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      expansion-header-focus-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
+      expansion-header-hover-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+      expansion-header-indicator-color: map.get($system, on-surface-variant),
+      expansion-header-text-color: map.get($system, on-surface),
+    ),
+    typography: (
+      expansion-container-text-font: map.get($system, body-large-font),
+      expansion-container-text-line-height: map.get($system, body-large-line-height),
+      expansion-container-text-size: map.get($system, body-large-size),
+      expansion-container-text-tracking: map.get($system, body-large-tracking),
+      expansion-container-text-weight: map.get($system, body-large-weight),
+      expansion-header-text-font: map.get($system, title-medium-font),
+      expansion-header-text-line-height: map.get($system, title-medium-line-height),
+      expansion-header-text-size: map.get($system, title-medium-size),
+      expansion-header-text-tracking: map.get($system, title-medium-tracking),
+      expansion-header-text-weight: map.get($system, title-medium-weight),
+    ),
+    density: get-density-tokens(map.get($system, density-scale)),
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -3);
+  $index: ($scale * -1) + 1;
+
+  @return (
+    expansion-header-collapsed-state-height: list.nth((48px, 44px, 40px, 36px), $index),
+    expansion-header-expanded-state-height: list.nth((64px, 60px, 56px, 48px), $index),
+  );
+}

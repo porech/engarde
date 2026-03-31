@@ -1,0 +1,81 @@
+@use 'sass:color';
+@use '../core/style/elevation';
+@use '../core/tokens/m3-utils';
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
+
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
+  @return (
+    base: (
+      datepicker-calendar-container-shape: 4px,
+      datepicker-calendar-container-touch-shape: 4px,
+      datepicker-calendar-container-elevation-shadow: elevation.get-box-shadow(4),
+      datepicker-calendar-container-touch-elevation-shadow: elevation.get-box-shadow(24),
+    ),
+    color: private-get-color-palette-color-tokens($theme, primary),
+    typography: (
+      // TODO(crisbeto): the typography tokens for other components set every typography dimension
+      // of an element (e.g. size, weight, line height, letter spacing). These tokens only set the
+      // values that were set in the previous theming API to reduce the amount of subtle screenshot
+      // differences. We should look into introducing the other tokens in a follow-up.
+      datepicker-calendar-text-font: map.get($system, body-large-font),
+      datepicker-calendar-text-size: 13px,
+      datepicker-calendar-body-label-text-size: map.get($system, label-small-size),
+      datepicker-calendar-body-label-text-weight: map.get($system, label-small-weight),
+      datepicker-calendar-period-button-text-size: map.get($system, label-small-size),
+      datepicker-calendar-period-button-text-weight: map.get($system, label-small-weight),
+      datepicker-calendar-header-text-size: 11px,
+      datepicker-calendar-header-text-weight: map.get($system, body-large-weight),
+    ),
+    density: (),
+  );
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
+
+  @return (
+    datepicker-calendar-date-in-range-state-background-color:
+        m3-utils.color-with-opacity(map.get($system, primary), 20%),
+    datepicker-calendar-date-in-comparison-range-state-background-color:
+        m3-utils.color-with-opacity(map.get($system, secondary), 20%),
+    datepicker-calendar-date-in-overlap-range-state-background-color: #a8dab5,
+    datepicker-calendar-date-in-overlap-range-selected-state-background-color:
+        color.adjust(#a8dab5, $lightness: -30%),
+    datepicker-calendar-date-selected-state-text-color: map.get($system, on-primary),
+    datepicker-calendar-date-selected-state-background-color: map.get($system, primary),
+    datepicker-calendar-date-selected-disabled-state-background-color:
+        m3-utils.color-with-opacity(map.get($system, primary), 38%),
+    datepicker-calendar-date-today-selected-state-outline-color: map.get($system, on-primary),
+    datepicker-calendar-date-focus-state-background-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, focus-state-layer-opacity)),
+    datepicker-calendar-date-hover-state-background-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, hover-state-layer-opacity)),
+
+    datepicker-toggle-active-state-icon-color: map.get($system, primary),
+    datepicker-toggle-icon-color: map.get($system, on-surface-variant),
+    datepicker-calendar-body-label-text-color: map.get($system, on-surface-variant),
+    datepicker-calendar-period-button-text-color: map.get($system, on-surface),
+    datepicker-calendar-period-button-icon-color: map.get($system, on-surface-variant),
+    datepicker-calendar-navigation-button-icon-color: map.get($system, on-surface-variant),
+    datepicker-calendar-header-divider-color: map.get($system, outline),
+    datepicker-calendar-header-text-color: map.get($system, on-surface-variant),
+
+    datepicker-calendar-date-today-outline-color: map.get($system, on-surface-variant),
+    datepicker-calendar-date-today-disabled-state-outline-color: $disabled,
+    datepicker-calendar-date-text-color: map.get($system, on-surface),
+    datepicker-calendar-date-outline-color: transparent,
+    datepicker-calendar-date-disabled-state-text-color: $disabled,
+    datepicker-calendar-date-preview-state-outline-color: map.get($system, on-surface-variant),
+    datepicker-range-input-separator-color: map.get($system, on-surface),
+    datepicker-range-input-disabled-state-separator-color: $disabled,
+    datepicker-range-input-disabled-state-text-color: $disabled,
+    datepicker-calendar-container-background-color: map.get($system, surface),
+    datepicker-calendar-container-text-color: map.get($system, on-surface),
+  );
+}

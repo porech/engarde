@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "SchematicsAngularAIConfig",
+  "title": "Angular AI Config File Options Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "description": "Generates AI configuration files for Angular projects. This schematic creates configuration files that help AI tools follow Angular best practices, improving the quality of AI-generated code and suggestions.",
+  "properties": {
+    "tool": {
+      "type": "array",
+      "uniqueItems": true,
+      "default": ["none"],
+      "x-prompt": {
+        "message": "Which AI tools do you want to configure with Angular best practices? https://angular.dev/ai/develop-with-ai",
+        "type": "list",
+        "items": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "claude",
+            "label": "Claude         [ https://docs.anthropic.com/en/docs/claude-code/memory            ]"
+          },
+          {
+            "value": "cursor",
+            "label": "Cursor         [ https://docs.cursor.com/en/context/rules                         ]"
+          },
+          {
+            "value": "gemini",
+            "label": "Gemini         [ https://ai.google.dev/gemini-api/docs                            ]"
+          },
+          {
+            "value": "copilot",
+            "label": "GitHub Copilot [ https://code.visualstudio.com/docs/copilot/copilot-customization ]"
+          },
+          {
+            "value": "jetbrains",
+            "label": "JetBrains AI   [ https://www.jetbrains.com/help/junie/customize-guidelines.html   ]"
+          },
+          {
+            "value": "windsurf",
+            "label": "Windsurf       [ https://docs.windsurf.com/windsurf/cascade/memories#rules        ]"
+          }
+        ]
+      },
+      "description": "Specifies which AI tools to generate configuration files for. These file are used to improve the outputs of AI tools by following the best practices.",
+      "items": {
+        "type": "string",
+        "enum": ["none", "gemini", "copilot", "claude", "cursor", "jetbrains", "windsurf"]
+      }
+    }
+  }
+}

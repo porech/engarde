@@ -1,0 +1,107 @@
+"use strict";
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.normalizeOptions = normalizeOptions;
+const architect_1 = require("@angular-devkit/architect");
+const node_path_1 = __importDefault(require("node:path"));
+const normalize_cache_1 = require("../../utils/normalize-cache");
+const normalize_optimization_1 = require("../../utils/normalize-optimization");
+const builder_1 = require("./builder");
+/**
+ * Normalize the user provided options by creating full paths for all path based options
+ * and converting multi-form options into a single form that can be directly used
+ * by the build process.
+ *
+ * @param context The context for current builder execution.
+ * @param projectName The name of the project for the current execution.
+ * @param options An object containing the options to use for the build.
+ * @returns An object containing normalized options required to perform the build.
+ */
+async function normalizeOptions(context, projectName, options) {
+    const { workspaceRoot, logger } = context;
+    const projectMetadata = await context.getProjectMetadata(projectName);
+    const projectRoot = node_path_1.default.join(workspaceRoot, projectMetadata.root ?? '');
+    const cacheOptions = (0, normalize_cache_1.normalizeCacheOptions)(projectMetadata, workspaceRoot);
+    // Target specifier defaults to the current project's build target using a development configuration
+    const buildTargetSpecifier = options.buildTarget ?? `::development`;
+    const buildTarget = (0, architect_1.targetFromTargetString)(buildTargetSpecifier, projectName, 'build');
+    // Get the application builder options.
+    const browserBuilderName = await context.getBuilderNameForTarget(buildTarget);
+    const rawBuildOptions = await context.getTargetOptions(buildTarget);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const buildOptions = (await context.validateOptions(rawBuildOptions, browserBuilderName));
+    const optimization = (0, normalize_optimization_1.normalizeOptimization)(buildOptions.optimization);
+    if (options.prebundle !== false && (0, builder_1.isEsbuildBased)(browserBuilderName)) {
+        if (!cacheOptions.enabled) {
+            // Warn if the initial options provided by the user enable prebundling but caching is disabled
+            logger.warn('Prebundling has been configured but will not be used because caching has been disabled.');
+        }
+        else if (optimization.scripts) {
+            // Warn if the initial options provided by the user enable prebundling but script optimization is enabled.
+            logger.warn('Prebundling has been configured but will not be used because scripts optimization is enabled.');
+        }
+    }
+    let inspect = false;
+    const inspectRaw = options.inspect;
+    if (inspectRaw === true || inspectRaw === '' || inspectRaw === 'true') {
+        inspect = {
+            host: undefined,
+            port: undefined,
+        };
+    }
+    else if (typeof inspectRaw === 'string' && inspectRaw !== 'false') {
+        const port = +inspectRaw;
+        if (isFinite(port)) {
+            inspect = {
+                host: undefined,
+                port,
+            };
+        }
+        else {
+            const [host, port] = inspectRaw.split(':');
+            inspect = {
+                host,
+                port: isNaN(+port) ? undefined : +port,
+            };
+        }
+    }
+    // Initial options to keep
+    const { host, port, poll, open, verbose, watch, allowedHosts, disableHostCheck, liveReload, hmr, headers, proxyConfig, servePath, publicHost, ssl, sslCert, sslKey, forceEsbuild, prebundle, } = options;
+    // Return all the normalized options
+    return {
+        buildTarget,
+        host: host ?? 'localhost',
+        port: port ?? 4200,
+        poll,
+        open,
+        verbose,
+        watch,
+        liveReload: !!liveReload,
+        hmr,
+        headers,
+        workspaceRoot,
+        projectRoot,
+        cacheOptions,
+        allowedHosts,
+        disableHostCheck,
+        proxyConfig,
+        servePath,
+        publicHost,
+        ssl,
+        sslCert,
+        sslKey,
+        forceEsbuild,
+        // Prebundling defaults to true but requires caching to function
+        prebundle: cacheOptions.enabled && !optimization.scripts && (prebundle ?? true),
+        inspect,
+    };
+}

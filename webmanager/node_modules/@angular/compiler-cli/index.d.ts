@@ -1,0 +1,16 @@
+export { VERSION } from './src/version';
+export * from './src/ngtsc/transform/jit';
+export * from './src/transformers/api';
+export * from './src/transformers/entry_points';
+export * from './src/perform_compile';
+export { CompilerOptions as AngularCompilerOptions } from './src/transformers/api';
+export * from './private/tooling';
+export * from './src/ngtsc/logging';
+export * from './src/ngtsc/file_system';
+export { NgTscPlugin, PluginCompilerHost } from './src/ngtsc/tsc_plugin';
+export { NgtscProgram } from './src/ngtsc/program';
+export { OptimizeFor } from './src/ngtsc/typecheck/api';
+export { ConsoleLogger, Logger, LogLevel } from './src/ngtsc/logging';
+export { NodeJSFileSystem, absoluteFrom, FileSystem, AbsoluteFsPath } from './src/ngtsc/file_system';
+export * from './src/ngtsc/docs';
+export { isLocalCompilationDiagnostics, ErrorCode, ngErrorCode } from './src/ngtsc/diagnostics';

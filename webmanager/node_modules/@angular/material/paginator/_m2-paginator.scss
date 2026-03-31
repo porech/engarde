@@ -1,0 +1,59 @@
+@use 'sass:math';
+@use 'sass:map';
+@use '../core/theming/theming';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
+
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -5);
+
+  $form-field-height: map.get((
+    0: 56px,
+    -1: 52px,
+    -2: 48px,
+    -3: 44px,
+    -4: 40px,
+    -5: 36px,
+  ), if($density-scale > -4, -4, $density-scale));
+
+  @return (
+    base: (
+      paginator-page-size-select-width: 84px,
+      paginator-page-size-select-touch-target-height: 48px,
+    ),
+    color: (
+      paginator-container-text-color: map.get($system, on-surface),
+      paginator-container-background-color: map.get($system, surface),
+      paginator-enabled-icon-color: map.get($system, on-surface-variant),
+      paginator-disabled-icon-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+    ),
+    typography: (
+      paginator-container-text-font: map.get($system, body-small-font),
+      paginator-container-text-line-height: map.get($system, body-small-line-height),
+      paginator-container-text-size: map.get($system, body-small-size),
+      paginator-container-text-tracking: map.get($system, body-small-tracking),
+      paginator-container-text-weight: map.get($system, body-small-weight),
+      paginator-select-trigger-text-size: map.get($system, body-small-size),
+    ),
+    density: (
+      paginator-container-size: map.get((
+        0: 56px,
+        -1: 52px,
+        -2: 48px,
+        -3: 40px,
+        -4: 40px,
+        -5: 40px,
+      ), $density-scale),
+      paginator-form-field-container-height: $form-field-height,
+      // We computed the desired height of the form-field using the density configuration. The
+      // spec only describes vertical spacing/alignment in non-dense mode. This means that we
+      // cannot update the spacing to explicit numbers based on the density scale. Instead, we
+      // determine the height reduction and equally subtract it from the default `top` and `bottom`
+      // padding that is provided by the Material Design specification.
+      paginator-form-field-container-vertical-padding:
+          16px - math.div(56px - $form-field-height, 2),
+      paginator-touch-target-display: if($density-scale < -2, none, block),
+    ),
+  );
+}

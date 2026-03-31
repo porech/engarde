@@ -1,0 +1,9 @@
+<% if(!!viewEncapsulation) { %>import { ViewEncapsulation } from '@angular/core';
+<% }%>import { platformBrowser } from '@angular/platform-browser';
+import { AppModule } from './app/app-module';
+
+platformBrowser().bootstrapModule(AppModule, {
+  <% if(!zoneless) { %>ngZoneEventCoalescing: true,<% } %><% if(!!viewEncapsulation) { %>
+  defaultEncapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } %>
+})
+  .catch(err => console.error(err));

@@ -1,0 +1,19 @@
+@use '../core/style/elevation';
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
+
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
+  @return (
+    base: (
+      autocomplete-container-shape: 4px,
+      autocomplete-container-elevation-shadow: elevation.get-box-shadow(8),
+    ),
+    color: (
+      autocomplete-background-color: map.get($system, surface)
+    ),
+    typography: (),
+    density: (),
+  );
+}

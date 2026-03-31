@@ -1,0 +1,54 @@
+@use 'sass:map';
+@use 'sass:list';
+@use '../core/style/elevation';
+@use '../core/tokens/m3-utils';
+@use '../core/theming/theming';
+@use '../core/tokens/m3';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, select);
+
+/// Generates custom tokens for the mat-select.
+/// @param {String} $color-variant The color variant to use for the component
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
+
+  @return (
+    base: (
+      select-container-elevation-shadow: elevation.get-box-shadow(2),
+    ),
+    color: (
+      select-panel-background-color: map.get($system, surface-container),
+      select-enabled-trigger-text-color: map.get($system, on-surface),
+      select-disabled-trigger-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      select-placeholder-text-color: map.get($system, on-surface-variant),
+      select-enabled-arrow-color: map.get($system, on-surface-variant),
+      select-disabled-arrow-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      select-focused-arrow-color: map.get($system, primary),
+      select-invalid-arrow-color: map.get($system, error),
+    ),
+    typography: (
+      select-trigger-text-font: map.get($system, body-large-font),
+      select-trigger-text-line-height: map.get($system, body-large-line-height),
+      select-trigger-text-size: map.get($system, body-large-size),
+      select-trigger-text-tracking: map.get($system, body-large-tracking),
+      select-trigger-text-weight: map.get($system, body-large-weight),
+    ),
+    density: get-density-tokens(map.get($system, density-scale)),
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -2);
+  $index: ($scale * -1) + 1;
+
+  @return (
+    select-arrow-transform: list.nth((translateY(-8px), translateY(-8px), none), $index),
+  );
+}

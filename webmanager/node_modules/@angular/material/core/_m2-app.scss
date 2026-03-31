@@ -1,0 +1,24 @@
+@use 'sass:map';
+@use './style/elevation';
+@use '../core/tokens/m2-utils';
+
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
+  $color-tokens: (
+    app-background-color: map.get($system, background),
+    app-text-color: map.get($system, on-surface)
+  );
+  @for $zValue from 0 through 24 {
+    $color-tokens: map.set($color-tokens, 'app-elevation-shadow-level-#{$zValue}',
+        elevation.get-box-shadow($zValue, map.get($system, shadow)));
+  }
+
+  @return (
+    base: (),
+    color: $color-tokens,
+    typography: (),
+    density: (),
+  );
+}
+

@@ -1,0 +1,37 @@
+@use 'sass:map';
+@use '../tokens/m3-utils';
+@use '../tokens/m3';
+
+/// Generates custom tokens for the mat-option.
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
+  }
+
+  // According to the spec the options have to be `label-large` in all typography
+  // dimensions, however this is inconsistent with the designs and with MDC's
+  // own implementation. This appears to be a bug in the spec, because MDC overrides
+  // the font size and weight to be `body-large` (see b/261838263). We make the same
+  // override here so the label looks correct.
+  @return (
+    base: (),
+    color: (
+      option-focus-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
+      option-hover-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+      option-label-text-color: map.get($system, on-surface),
+      option-selected-state-label-text-color: map.get($system, on-secondary-container),
+      option-selected-state-layer-color: map.get($system, secondary-container),
+    ),
+    typography: (
+      option-label-text-size: map.get($system, body-large-size),
+      option-label-text-weight: map.get($system, body-large-weight),
+      option-label-text-font: map.get($system, label-large-font),
+      option-label-text-line-height: map.get($system, label-large-line-height),
+      option-label-text-tracking: map.get($system, label-large-tracking),
+    ),
+    density: (),
+  );
+}

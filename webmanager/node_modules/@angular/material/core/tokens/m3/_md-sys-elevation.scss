@@ -1,0 +1,15 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@function md-sys-elevation-values() {
+  @return (
+    level0: 0,
+    level1: 1,
+    level2: 3,
+    level3: 6,
+    level4: 8,
+    level5: 12
+  );
+}

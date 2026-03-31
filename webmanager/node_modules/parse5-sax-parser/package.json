@@ -1,0 +1,37 @@
+{
+    "name": "parse5-sax-parser",
+    "type": "module",
+    "description": "Streaming SAX-style HTML parser.",
+    "version": "8.0.0",
+    "author": "Ivan Nikulin <ifaaan@gmail.com> (https://github.com/inikulin)",
+    "contributors": "https://github.com/inikulin/parse5/graphs/contributors",
+    "homepage": "https://parse5.js.org",
+    "funding": "https://github.com/inikulin/parse5?sponsor=1",
+    "keywords": [
+        "parse5",
+        "parser",
+        "stream",
+        "streaming",
+        "SAX"
+    ],
+    "license": "MIT",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "default": "./dist/index.js"
+        }
+    },
+    "dependencies": {
+        "parse5": "^8.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/inikulin/parse5.git"
+    },
+    "files": [
+        "dist/**/*.js",
+        "dist/**/*.d.ts"
+    ]
+}

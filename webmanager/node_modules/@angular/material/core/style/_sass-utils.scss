@@ -1,0 +1,57 @@
+@use 'sass:string';
+@use 'sass:map';
+@use 'sass:meta';
+
+/// Whether our theming API is using --sys- variables for color tokens.
+$use-system-color-variables: false;
+
+/// Whether our theming API is using --sys- variables for typography tokens.
+$use-system-typography-variables: false;
+
+/// Include content under the current selector (&) or the document root if there is no current
+/// selector.
+/// @param {String} $root [html] The default root selector to use when there is no current selector.
+/// @output The given content under the current selector, or root selector if there is no current
+///     selector.
+/// @content Content to output under the current selector, or root selector if there is no current
+///     selector.
+@mixin current-selector-or-root($root: html) {
+  @if & {
+    @content;
+  }
+  @else {
+    #{$root} {
+      @content;
+    }
+  }
+}
+
+/// A version of the standard `map.merge` function that takes a variable number of arguments.
+/// Each argument is merged into the final result from left to right.
+/// @param {List} $maps The maps to combine with map.merge
+/// @return {Map} The combined result of successively calling map.merge with each parameter.
+@function merge-all($maps...) {
+  $result: ();
+  @each $map in $maps {
+    $result: map.merge($result, $map);
+  }
+  @return $result;
+}
+
+/// A version of the standard `map.deep-merge` function that takes a variable number of arguments.
+/// Each argument is deep-merged into the final result from left to right.
+/// @param {List} $maps The maps to combine with map.deep-merge
+/// @return {Map} The combined result of successively calling map.deep-merge with each parameter.
+@function deep-merge-all($maps...) {
+  $result: ();
+  @each $map in $maps {
+    $result: map.deep-merge($result, $map);
+  }
+  @return $result;
+}
+
+// Returns whether the $value is a CSS variable name based on whether it's a string prefixed
+// by "--".
+@function is-css-var-name($value) {
+  @return meta.type-of($value) == string and string.index($value, '--') == 1;
+}

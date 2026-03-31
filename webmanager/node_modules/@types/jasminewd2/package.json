@@ -1,0 +1,32 @@
+{
+    "name": "@types/jasminewd2",
+    "version": "2.0.13",
+    "description": "TypeScript definitions for jasminewd2",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jasminewd2",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Sammy Jelin",
+            "githubUsername": "sjelin",
+            "url": "https://github.com/sjelin"
+        },
+        {
+            "name": "George Kalpakas",
+            "githubUsername": "gkalpak",
+            "url": "https://github.com/gkalpak"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/jasminewd2"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/jasmine": "*"
+    },
+    "typesPublisherContentHash": "2be16f829b3d9b5cbc8d9c7f933d47b0f90a951131136f35a6614de69ebc6033",
+    "typeScriptVersion": "4.5"
+}

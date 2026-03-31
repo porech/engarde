@@ -1,0 +1,43 @@
+@use 'sass:map';
+@use '../core/theming/theming';
+@use '../core/tokens/m2-utils';
+
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
+
+  @return (
+    base: (),
+    color: private-get-color-palette-color-tokens(
+        map.get($system, surface), map.get($system, on-surface)),
+    typography: (
+      toolbar-title-text-font: map.get($system, title-small-font),
+      toolbar-title-text-line-height: map.get($system, title-small-line-height),
+      toolbar-title-text-size: map.get($system, title-small-size),
+      toolbar-title-text-tracking: map.get($system, title-small-tracking),
+      toolbar-title-text-weight: map.get($system, title-small-weight),
+    ),
+    density: (
+      toolbar-standard-height: map.get((
+        0: 64px,
+        -1: 60px,
+        -2: 56px,
+        -3: 52px,
+      ), $density-scale),
+      toolbar-mobile-height: map.get((
+        0: 56px,
+        -1: 52px,
+        -2: 48px,
+        -3: 44px,
+      ), $density-scale),
+    ),
+  );
+}
+
+// Generates the tokens used to theme the toolbar based on a palette.
+@function private-get-color-palette-color-tokens($background-color, $text-color) {
+  @return (
+    toolbar-container-background-color: $background-color,
+    toolbar-container-text-color: $text-color,
+  );
+}

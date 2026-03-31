@@ -1,0 +1,19 @@
+@use '../core/style/elevation';
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
+
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
+  @return (
+    base: (
+      timepicker-container-shape: 4px,
+      timepicker-container-elevation-shadow: elevation.get-box-shadow(8),
+    ),
+    color: (
+      timepicker-container-background-color: map.get($system, surface)
+    ),
+    typography: (),
+    density: (),
+  );
+}

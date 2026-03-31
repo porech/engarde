@@ -1,0 +1,42 @@
+@use 'sass:map';
+@use '../core/tokens/m3-utils';
+@use '../core/style/elevation';
+@use '../core/tokens/m3';
+
+/// Generates custom tokens for the mat-menu.
+@function get-tokens($theme: m3.$sys-theme) {
+  $system: m3-utils.get-system($theme);
+
+  @return (
+    base: (
+      menu-divider-bottom-spacing: 8px,
+      menu-divider-top-spacing: 8px,
+      menu-item-icon-size: 24px,
+      menu-item-spacing: 12px,
+      menu-item-leading-spacing: 12px,
+      menu-item-trailing-spacing: 12px,
+      menu-item-with-icon-leading-spacing: 12px,
+      menu-item-with-icon-trailing-spacing: 12px,
+    ),
+    color: (
+      menu-container-shape: map.get($system, corner-extra-small),
+      menu-divider-color: map.get($system, surface-variant),
+      menu-item-label-text-color: map.get($system, on-surface),
+      menu-item-icon-color: map.get($system, on-surface-variant),
+      menu-item-hover-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+      menu-item-focus-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
+      menu-container-color: map.get($system, surface-container),
+      menu-container-elevation-shadow: elevation.get-box-shadow(2),
+    ),
+    typography: (
+      menu-item-label-text-font: map.get($system, label-large-font),
+      menu-item-label-text-line-height: map.get($system, label-large-line-height),
+      menu-item-label-text-size: map.get($system, label-large-size),
+      menu-item-label-text-tracking: map.get($system, label-large-tracking),
+      menu-item-label-text-weight: map.get($system, label-large-weight),
+    ),
+    density: (),
+  );
+}

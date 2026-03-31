@@ -1,0 +1,36 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+import { NodePath, types as t } from '@babel/core';
+import { DeclarationScope } from '../../../linker';
+export type ConstantScopePath = NodePath<t.FunctionDeclaration> | NodePath<t.FunctionExpression> | NodePath<t.Program>;
+/**
+ * This class represents the lexical scope of a partial declaration in Babel source code.
+ *
+ * Its only responsibility is to compute a reference object for the scope of shared constant
+ * statements that will be generated during partial linking.
+ */
+export declare class BabelDeclarationScope implements DeclarationScope<ConstantScopePath, t.Expression> {
+    private declarationScope;
+    /**
+     * Construct a new `BabelDeclarationScope`.
+     *
+     * @param declarationScope the Babel scope containing the declaration call expression.
+     */
+    constructor(declarationScope: NodePath['scope']);
+    /**
+     * Compute the Babel `NodePath` that can be used to reference the lexical scope where any
+     * shared constant statements would be inserted.
+     *
+     * There will only be a shared constant scope if the expression is in an ECMAScript module, or a
+     * UMD module. Otherwise `null` is returned to indicate that constant statements must be emitted
+     * locally to the generated linked definition, to avoid polluting the global scope.
+     *
+     * @param expression the expression that points to the Angular core framework import.
+     */
+    getConstantScopeRef(expression: t.Expression): ConstantScopePath | null;
+}

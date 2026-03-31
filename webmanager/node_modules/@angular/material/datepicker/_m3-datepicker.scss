@@ -1,0 +1,74 @@
+@use 'sass:map';
+@use '../core/style/elevation';
+@use '../core/tokens/m3-utils';
+@use '../core/tokens/m3';
+
+/// Generates custom tokens for the mat-datepicker.
+/// @param {String} $color-variant The color variant to use for the component
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
+
+  @return (
+    base: (
+      datepicker-calendar-container-elevation-shadow:elevation.get-box-shadow(0),
+      datepicker-calendar-container-shape: map.get($system, corner-large),
+      datepicker-calendar-container-touch-elevation-shadow:elevation.get-box-shadow(0),
+      datepicker-calendar-container-touch-shape: map.get($system, corner-extra-large),
+    ),
+    color: (
+      datepicker-calendar-body-label-text-color: map.get($system, on-surface),
+      datepicker-calendar-container-background-color: map.get($system, surface-container-high),
+      datepicker-calendar-container-text-color: map.get($system, on-surface),
+      datepicker-calendar-date-disabled-state-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      datepicker-calendar-date-focus-state-background-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
+      datepicker-calendar-date-hover-state-background-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+      datepicker-calendar-date-in-comparison-range-state-background-color:
+          map.get($system, tertiary-container),
+      datepicker-calendar-date-in-overlap-range-selected-state-background-color:
+          map.get($system, secondary),
+      datepicker-calendar-date-in-overlap-range-state-background-color:
+          map.get($system, secondary-container),
+      datepicker-calendar-date-in-range-state-background-color:map.get($system, primary-container),
+      datepicker-calendar-date-outline-color: transparent,
+      datepicker-calendar-date-preview-state-outline-color: map.get($system, primary),
+      datepicker-calendar-date-selected-disabled-state-background-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      datepicker-calendar-date-selected-state-background-color: map.get($system, primary),
+      datepicker-calendar-date-selected-state-text-color: map.get($system, on-primary),
+      datepicker-calendar-date-text-color: map.get($system, on-surface),
+      datepicker-calendar-date-today-disabled-state-outline-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      datepicker-calendar-date-today-outline-color: map.get($system, primary),
+      datepicker-calendar-date-today-selected-state-outline-color: map.get($system, primary),
+      datepicker-calendar-header-divider-color: transparent,
+      datepicker-calendar-header-text-color: map.get($system, on-surface-variant),
+      datepicker-calendar-navigation-button-icon-color: map.get($system, on-surface-variant),
+      datepicker-calendar-period-button-icon-color: map.get($system, on-surface-variant),
+      datepicker-calendar-period-button-text-color: map.get($system, on-surface-variant),
+      datepicker-range-input-disabled-state-separator-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      datepicker-range-input-disabled-state-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      datepicker-range-input-separator-color: map.get($system, on-surface),
+      datepicker-toggle-active-state-icon-color: map.get($system, primary),
+      datepicker-toggle-icon-color: map.get($system, on-surface-variant),
+    ),
+    typography: (
+      datepicker-calendar-body-label-text-size: map.get($system, title-small-size),
+      datepicker-calendar-body-label-text-weight: map.get($system, title-small-weight),
+      datepicker-calendar-header-text-size: map.get($system, title-small-size),
+      datepicker-calendar-header-text-weight: map.get($system, title-small-weight),
+      datepicker-calendar-period-button-text-size: map.get($system, title-small-size),
+      datepicker-calendar-period-button-text-weight: map.get($system, title-small-weight),
+      datepicker-calendar-text-font: map.get($system, body-medium-font),
+      datepicker-calendar-text-size: map.get($system, body-medium-size),
+    ),
+    density: (),
+  );
+}

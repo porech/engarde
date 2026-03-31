@@ -1,0 +1,21 @@
+import { NgModule, provideBrowserGlobalErrorListeners<% if(zoneless) { %>, provideZonelessChangeDetection<% } %> } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+<% if (routing) { %>
+import { AppRoutingModule } from './app-routing-module';<% } %>
+import { App } from './app';
+
+@NgModule({
+  declarations: [
+    App
+  ],
+  imports: [
+    BrowserModule<% if (routing) { %>,
+    AppRoutingModule<% } %>
+  ],
+  providers: [
+    provideBrowserGlobalErrorListeners()<% if (zoneless) { %>,
+    provideZonelessChangeDetection()<% } %>
+  ],
+  bootstrap: [App]
+})
+export class AppModule { }

@@ -1,0 +1,111 @@
+@use '../core/theming/inspection';
+@use './m2-fab';
+@use './m3-fab';
+@use '../core/tokens/token-utils';
+@use '../core/typography/typography';
+@use 'sass:map';
+
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-fab.
+/// @param {Map} $theme The theme to generate base styles for.
+@mixin base($theme) {
+  $tokens: map.get(m2-fab.get-tokens($theme), base);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-fab.get-tokens($theme), base);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+/// Outputs color theme styles for the mat-fab.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} $color-variant: The color variant to use for the fab: primary, secondary,
+//          or tertiary. (If not specified, default primary color will be used).
+@mixin color($theme, $color-variant: null) {
+  $tokens: map.get(m2-fab.get-tokens($theme), color);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-fab.get-tokens($theme, $color-variant), color);
+  }
+
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
+    .mat-mdc-fab, .mat-mdc-mini-fab {
+      &.mat-primary {
+        $tokens: m2-fab.private-get-color-palette-color-tokens($theme, primary);
+        @include token-utils.values($tokens);
+      }
+
+      &.mat-accent {
+        $tokens: m2-fab.private-get-color-palette-color-tokens($theme, secondary);
+        @include token-utils.values($tokens);
+      }
+
+      &.mat-warn {
+        $tokens: m2-fab.private-get-color-palette-color-tokens($theme, error);
+        @include token-utils.values($tokens);
+      }
+    }
+  }
+}
+
+/// Outputs typography theme styles for the mat-fab.
+/// @param {Map} $theme The theme to generate typography styles for.
+@mixin typography($theme) {
+  $tokens: map.get(m2-fab.get-tokens($theme), typography);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-fab.get-tokens($theme), typography);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+/// Outputs density theme styles for the mat-fab.
+/// @param {Map} $theme The theme to generate density styles for.
+@mixin density($theme) {
+  $tokens: map.get(m2-fab.get-tokens($theme), density);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-fab.get-tokens($theme), density);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: fab,
+      tokens: token-utils.get-overrides(m3-fab.get-tokens(), fab)
+    ),
+  );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
+}
+
+/// Outputs all (base, color, typography, and density) theme styles for the mat-checkbox.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {String} $color-variant: The color variant to use for the fab
+@mixin theme($theme, $color-variant: null) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme, $color-variant);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

@@ -1,0 +1,17 @@
+@use 'sass:map';
+@use '../tokens/m2-utils';
+@use '../tokens/m3-utils';
+
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
+  @return (
+    base: (),
+    color: (
+      ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
+    ),
+    typography: (),
+    density: (),
+  );
+}

@@ -1,0 +1,46 @@
+{
+  "name": "<%= utils.dasherize(name) %>",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development"<% if (!minimal) { %>,
+    "test": "ng test"<% } %>
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "<%= latestVersions.Angular %>",
+    "@angular/compiler": "<%= latestVersions.Angular %>",
+    "@angular/core": "<%= latestVersions.Angular %>",
+    "@angular/forms": "<%= latestVersions.Angular %>",
+    "@angular/platform-browser": "<%= latestVersions.Angular %>",
+    "@angular/router": "<%= latestVersions.Angular %>",
+    "rxjs": "<%= latestVersions['rxjs'] %>",
+    "tslib": "<%= latestVersions['tslib'] %>"
+  },
+  "devDependencies": {
+    "@angular/cli": "<%= '^' + version %>",
+    "@angular/compiler-cli": "<%= latestVersions.Angular %>",<% if (!minimal) { %>
+    "@types/jasmine": "<%= latestVersions['@types/jasmine'] %>",
+    "jasmine-core": "<%= latestVersions['jasmine-core'] %>",
+    "karma": "<%= latestVersions['karma'] %>",
+    "karma-chrome-launcher": "<%= latestVersions['karma-chrome-launcher'] %>",
+    "karma-coverage": "<%= latestVersions['karma-coverage'] %>",
+    "karma-jasmine": "<%= latestVersions['karma-jasmine'] %>",
+    "karma-jasmine-html-reporter": "<%= latestVersions['karma-jasmine-html-reporter'] %>",<% } %>
+    "typescript": "<%= latestVersions['typescript'] %>"
+  }
+}

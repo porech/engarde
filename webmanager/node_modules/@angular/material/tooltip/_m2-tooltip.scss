@@ -1,0 +1,24 @@
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
+
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
+  @return (
+    base: (
+      tooltip-container-shape: 4px,
+      tooltip-supporting-text-line-height: 16px,
+    ),
+    color: (
+      tooltip-container-color: map.get($system, inverse-surface),
+      tooltip-supporting-text-color: map.get($system, inverse-on-surface),
+    ),
+    typography: (
+      tooltip-supporting-text-font: map.get($system, body-small-font),
+      tooltip-supporting-text-size: map.get($system, body-small-size),
+      tooltip-supporting-text-weight: map.get($system, body-small-weight),
+      tooltip-supporting-text-tracking: map.get($system, body-small-tracking),
+    ),
+    density: (),
+  );
+}

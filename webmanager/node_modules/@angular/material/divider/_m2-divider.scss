@@ -1,0 +1,17 @@
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
+
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
+  @return (
+    base: (
+      divider-width: 1px
+    ),
+    color: (
+      divider-color: map.get($system, outline)
+    ),
+    typography: (),
+    density: (),
+  );
+}

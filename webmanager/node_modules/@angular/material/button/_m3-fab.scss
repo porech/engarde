@@ -1,0 +1,92 @@
+@use 'sass:map';
+@use 'sass:list';
+@use '../core/tokens/m3-utils';
+@use '../core/style/elevation';
+@use '../core/theming/theming';
+@use '../core/tokens/m3';
+
+/// Generates custom tokens for the mat-fab.
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  $touch-target-size: 48px;
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
+
+  $tokens: (
+    base: (
+      fab-container-shape: map.get($system, corner-large),
+      fab-extended-container-height: 56px,
+      fab-extended-container-shape: map.get($system, corner-large),
+      fab-small-container-shape: map.get($system, corner-medium),
+      fab-touch-target-display: null,
+      fab-touch-target-size: $touch-target-size,
+      fab-small-touch-target-size: $touch-target-size,
+    ),
+    color: (
+      fab-container-color: map.get($system, primary-container),
+      fab-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      fab-disabled-state-container-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      fab-disabled-state-foreground-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      fab-extended-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      fab-extended-focus-container-elevation-shadow:
+          elevation.get-box-shadow(map.get($system, level3)),
+      fab-extended-hover-container-elevation-shadow:
+          elevation.get-box-shadow(map.get($system, level4)),
+      fab-extended-pressed-container-elevation-shadow: map.get($system, level3),
+      fab-focus-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      fab-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      fab-foreground-color: map.get($system, on-primary-container),
+      fab-hover-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level4)),
+      fab-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      fab-pressed-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      fab-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      fab-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-primary-container), map.get($system, pressed-state-layer-opacity)),
+      fab-small-container-color: map.get($system, primary-container),
+      fab-small-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      fab-small-disabled-state-container-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      fab-small-disabled-state-foreground-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      fab-small-focus-container-elevation-shadow:
+          elevation.get-box-shadow(map.get($system, level3)),
+      fab-small-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      fab-small-foreground-color: map.get($system, on-primary-container),
+      fab-small-hover-container-elevation-shadow:
+          elevation.get-box-shadow(map.get($system, level4)),
+      fab-small-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      fab-small-pressed-container-elevation-shadow:
+          elevation.get-box-shadow(map.get($system, level3)),
+      fab-small-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      fab-small-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-primary-container), map.get($system, pressed-state-layer-opacity)),
+      fab-small-state-layer-color: map.get($system, on-primary-container),
+      fab-state-layer-color: map.get($system, on-primary-container),
+      fab-disabled-state-layer-color: null,
+      fab-small-disabled-state-layer-color: null,
+    ),
+    typography: (
+      fab-extended-label-text-font: map.get($system, label-large-font),
+      fab-extended-label-text-size: map.get($system, label-large-size),
+      fab-extended-label-text-tracking: map.get($system, label-large-tracking),
+      fab-extended-label-text-weight: map.get($system, label-large-weight),
+    ),
+    density: get-density-tokens(map.get($system, density-scale)),
+  );
+
+  @return $tokens;
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -3);
+  $index: ($scale * -1) + 1;
+
+  @return (
+    fab-small-touch-target-display: null,
+    fab-touch-target-display: list.nth((block, block, none, none), $index),
+  );
+}

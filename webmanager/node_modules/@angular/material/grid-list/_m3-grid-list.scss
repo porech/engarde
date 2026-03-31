@@ -1,0 +1,20 @@
+@use 'sass:map';
+@use '../core/tokens/m3-utils';
+@use '../core/tokens/m3';
+
+/// Generates custom tokens for the mat-grid-list.
+@function get-tokens($theme: m3.$sys-theme) {
+  $system: m3-utils.get-system($theme);
+
+  @return (
+    base: (),
+    color: (),
+    typography: (
+      grid-list-tile-header-primary-text-size: map.get($system, body-large),
+      grid-list-tile-header-secondary-text-size: map.get($system, body-medium),
+      grid-list-tile-footer-primary-text-size: map.get($system, body-large),
+      grid-list-tile-footer-secondary-text-size: map.get($system, body-medium),
+    ),
+    density: (),
+  );
+}

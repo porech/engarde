@@ -1,0 +1,113 @@
+@use '../core/theming/inspection';
+@use '../core/tokens/token-utils';
+@use '../core/typography/typography';
+@use './m2-button';
+@use './m3-button';
+@use 'sass:map';
+
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-button.
+/// @param {Map} $theme The theme to generate base styles for.
+@mixin base($theme) {
+  $tokens: map.get(m2-button.get-tokens($theme), base);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-button.get-tokens($theme), base);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+/// Outputs color theme styles for the mat-button.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {String} $color-variant The color variant to use for
+///     the badge: primary, secondary, tertiary, or error (If not specified,
+///     default primary color will be used).
+@mixin color($theme, $color-variant: null) {
+  $tokens: map.get(m2-button.get-tokens($theme), color);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-button.get-tokens($theme, $color-variant), color);
+  }
+
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
+    .mat-mdc-button,
+    .mat-mdc-unelevated-button,
+    .mat-mdc-raised-button,
+    .mat-mdc-outlined-button,
+    .mat-tonal-button {
+      &.mat-primary {
+        $tokens: m2-button.private-get-color-palette-color-tokens($theme, primary);
+        @include token-utils.values($tokens);
+      }
+
+      &.mat-accent {
+        $tokens: m2-button.private-get-color-palette-color-tokens($theme, secondary);
+        @include token-utils.values($tokens);
+      }
+
+      &.mat-warn {
+        $tokens: m2-button.private-get-color-palette-color-tokens($theme, error);
+        @include token-utils.values($tokens);
+      }
+    }
+  }
+}
+
+@mixin typography($theme) {
+  $tokens: map.get(m2-button.get-tokens($theme), typography);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-button.get-tokens($theme), typography);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+@mixin density($theme) {
+  $tokens: map.get(m2-button.get-tokens($theme), density);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-button.get-tokens($theme), density);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: button,
+      tokens: token-utils.get-overrides(m3-button.get-tokens(), button),
+    ),
+  );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
+}
+
+/// Outputs all (base, color, typography, and density) theme styles for the mat-button.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {String} $color-variant: The color variant to use for the button: primary, secondary,
+//         tertiary, or error (If not specified, default primary color will be used).
+@mixin theme($theme, $color-variant: null) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme, $color-variant);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
+      @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
+      @include typography($theme);
+    }
+  }
+}

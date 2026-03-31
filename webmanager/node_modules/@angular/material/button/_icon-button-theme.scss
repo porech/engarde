@@ -1,0 +1,136 @@
+@use 'sass:map';
+@use 'sass:math';
+@use './m2-icon-button';
+@use './m3-icon-button';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2-utils';
+@use '../core/theming/inspection';
+@use '../core/theming/theming';
+
+@mixin base($theme) {
+  $tokens: map.get(m2-icon-button.get-tokens($theme), base);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-icon-button.get-tokens($theme), base);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+/// Outputs color theme styles for the mat-icon-button.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {String} $color-variant: The color variant to use for the
+//         button: primary, secondary, tertiary, or error.
+@mixin color($theme, $color-variant: null) {
+  $tokens: map.get(m2-icon-button.get-tokens($theme), color);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-icon-button.get-tokens($theme, $color-variant), color);
+  }
+
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
+    .mat-mdc-icon-button {
+      &.mat-primary {
+        $tokens: m2-icon-button.private-get-color-palette-color-tokens($theme, primary);
+        @include token-utils.values($tokens);
+      }
+
+      &.mat-accent {
+        $tokens: m2-icon-button.private-get-color-palette-color-tokens($theme, secondary);
+        @include token-utils.values($tokens);
+      }
+
+      &.mat-warn {
+        $tokens: m2-icon-button.private-get-color-palette-color-tokens($theme, error);
+        @include token-utils.values($tokens);
+      }
+    }
+  }
+}
+
+@mixin typography($theme) {
+  $tokens: map.get(m2-icon-button.get-tokens($theme), typography);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-icon-button.get-tokens($theme), typography);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include token-utils.values(map.get(m3-icon-button.get-tokens($theme), density));
+  } @else {
+    $icon-size: 24px;
+    $system: m2-utils.get-system($theme);
+    $density-scale: theming.clamp-density(map.get($system, density-scale), -5);
+    $size-map: (
+      0: 48px,
+      -1: 44px,
+      -2: 40px,
+      -3: 36px,
+      -4: 32px,
+      -5: 28px,
+    );
+    $calculated-size: map.get($size-map, $density-scale);
+
+    $density-tokens: map.get(m2-icon-button.get-tokens($theme), density);
+    $density-tokens: map.remove($density-tokens, icon-button-state-layer-size);
+    @include token-utils.values($density-tokens);
+
+    // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
+    .mat-mdc-icon-button.mat-mdc-button-base {
+      // Match the styles that used to be present. This is necessary for backwards
+      // compat to match the previous implementations selector count (two classes).
+      --mdc-icon-button-state-layer-size: #{$calculated-size};
+      --mat-icon-button-state-layer-size: #{$calculated-size};
+
+      // TODO: Switch calculated-size to "var(--mat-icon-button-state-layer-size)"
+      // Currently fails validation because the variable is "undefined"
+      // in the sass stack.
+      // TODO: Switch icon-size to "var(--mat-icon-button-icon-size)". Currently
+      // fails validation because the variable is "undefined" in the sass stack.
+      width: var(--mat-icon-button-state-layer-size);
+      height: var(--mat-icon-button-state-layer-size);
+      padding: math.div($calculated-size - $icon-size, 2);
+    }
+  }
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: icon-button,
+      tokens: token-utils.get-overrides(m3-icon-button.get-tokens(), icon-button)
+    ),
+  );
+}
+
+@mixin overrides($tokens: ()) {
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
+}
+
+/// Outputs all (base, color, typography, and density) theme styles for the mat-icon-button.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {String} $color-variant: The color variant to use for the button: primary,
+//         secondary, tertiary, or error.
+@mixin theme($theme, $color-variant: null) {
+    @if inspection.get-theme-version($theme) == 1 {
+      @include base($theme);
+      @include color($theme, $color-variant);
+      @include density($theme);
+      @include typography($theme);
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+    }
+  }
+}
