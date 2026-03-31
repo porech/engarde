@@ -1,6 +1,0 @@
-"use strict";
-/**
- * @license Angular v<unknown>
- * (c) 2010-2025 Google LLC. https://angular.io/
- * License: MIT
- */function patchFetch(t){t.__load_patch("fetch",((t,e,o)=>{let n=t.fetch;if("function"!=typeof n)return;const c=t[o.symbol("fetch")];c&&(n=c);const r=t.Promise,a=o.symbol("thenPatched"),s=o.symbol("fetchTaskScheduling"),l=t.Response,i=function(){},h=(t,n,c,l,h,f)=>new Promise(((p,u)=>{const d=e.current.scheduleMacroTask(t,i,n,(()=>{let t,n=e.current;try{n[s]=!0,t=c.apply(l,h)}catch(t){return void u(t)}finally{n[s]=!1}if(!(t instanceof r)){let e=t.constructor;e[a]||o.patchThen(e)}t.then((t=>{"notScheduled"!==d.state&&d.invoke(),p(t)}),(t=>{"notScheduled"!==d.state&&d.invoke(),u(t)}))}),(()=>{f?.abort()}))}));t.fetch=function(){const t=Array.prototype.slice.call(arguments),o=t.length>1?t[1]:{},c=o?.signal,r=new AbortController;let a;if(o.signal=r.signal,t[1]=o,c){const t=c[e.__symbol__("addEventListener")]||c.addEventListener;a=()=>r.abort(),t.call(c,"abort",a,{once:!0})}return h("fetch",{fetchArgs:t},n,this,t,r).finally((()=>{c?.removeEventListener("abort",a)}))},l?.prototype&&["arrayBuffer","blob","formData","json","text"].filter((t=>"function"==typeof l.prototype[t])).forEach((t=>{o.patchMethod(l.prototype,t,(e=>(o,n)=>h(`Response.${t}`,void 0,e,o,n,void 0)))}))}))}patchFetch(Zone);
