@@ -3,31 +3,118 @@ name: Build and Deploy
 on:
   push:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
-    
+      uses: actions/checkout@v4
+
     - name: Set up Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '22.21.0'
-    
+
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: '1.25.3'
-    
+
     - name: Build Go application
       run: make
-    
-    - name: Upload artifacts
-      env:
-        UPLOAD_KEY: ${{ secrets.UPLOAD_KEY }}
-        UPLOAD_URL: ${{ vars.UPLOAD_URL }}
+
+    - name: Deploy to GitHub Pages
       run: |
-        cd dist
-        find * -type f -exec echo 'Uploading @{}' \; -exec curl -4 -F 'file=@{}' -F "path=${{ github.ref_name }}/{}" -F "key=$UPLOAD_KEY" "$UPLOAD_URL" \;
+        BRANCH="${GITHUB_REF_NAME}"
+
+        # Configure git
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        # Save build artifacts
+        cp -r dist /tmp/dist
+
+        # Fetch or create gh-pages branch
+        git fetch origin gh-pages:gh-pages 2>/dev/null || git checkout --orphan gh-pages
+
+        git checkout gh-pages
+
+        # Remove old builds for this branch, keep others
+        rm -rf "$BRANCH"
+        mkdir -p "$BRANCH"
+        cp -r /tmp/dist/* "$BRANCH/"
+
+        # Generate index.html for every directory
+        generate_index() {
+          local dir="$1"
+          local rel="${dir#./}"
+          local title="${rel:-.}"
+
+          {
+            cat <<'HEADER'
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
+          h1 { border-bottom: 1px solid #eee; padding-bottom: 10px; }
+          table { width: 100%; border-collapse: collapse; }
+          th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #eee; }
+          th { font-weight: 600; color: #666; }
+          a { color: #0366d6; text-decoration: none; }
+          a:hover { text-decoration: underline; }
+          .size { color: #666; }
+        </style>
+        HEADER
+            echo "<title>Index of /${title}</title>"
+            echo "</head><body>"
+            echo "<h1>Index of /${title}</h1>"
+            echo "<table><thead><tr><th>Name</th><th>Size</th></tr></thead><tbody>"
+
+            # Parent directory link
+            if [ "$dir" != "." ]; then
+              echo '<tr><td><a href="../">../</a></td><td></td></tr>'
+            fi
+
+            # List directories first, then files
+            for entry in "$dir"/*/; do
+              [ -d "$entry" ] || continue
+              name="$(basename "$entry")"
+              echo "<tr><td><a href=\"${name}/\">${name}/</a></td><td>-</td></tr>"
+            done
+
+            for entry in "$dir"/*; do
+              [ -f "$entry" ] || continue
+              name="$(basename "$entry")"
+              [ "$name" = "index.html" ] && continue
+              size=$(stat --format=%s "$entry" 2>/dev/null || stat -f%z "$entry" 2>/dev/null)
+              if [ "$size" -ge 1048576 ] 2>/dev/null; then
+                hsize="$(awk "BEGIN{printf \"%.1f MB\", $size/1048576}")"
+              elif [ "$size" -ge 1024 ] 2>/dev/null; then
+                hsize="$(awk "BEGIN{printf \"%.1f KB\", $size/1024}")"
+              else
+                hsize="${size} B"
+              fi
+              echo "<tr><td><a href=\"${name}\">${name}</a></td><td class=\"size\">${hsize}</td></tr>"
+            done
+
+            echo "</tbody></table></body></html>"
+          } > "$dir/index.html"
+        }
+
+        export -f generate_index
+        find . -type d \
+          -not -path './.git*' \
+          -exec bash -c 'generate_index "$0"' {} \;
+
+        # Commit and push
+        git add -A
+        git diff --cached --quiet && echo "No changes to deploy" && exit 0
+        git commit -m "Deploy builds for ${BRANCH} (${GITHUB_SHA::7})"
+        git push origin gh-pages
