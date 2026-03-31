@@ -21,18 +21,18 @@ Absolutely yes. The used bandwidth is the one you would normally use multiplied 
 You can find the latest builds here:
 
 ### Server
-|                   | i386     | amd64    | arm    |
-| ----------------- | -------- | -------- | -------- |
-| *Linux*           | [Download](https://porech.github.io/engarde/master/linux/i386/engarde-server) | [Download](https://porech.github.io/engarde/master/linux/amd64/engarde-server) | [Download](https://porech.github.io/engarde/master/linux/arm/engarde-server) |
-| *Windows*         | [Download](https://porech.github.io/engarde/master/windows/i386/engarde-server.exe) | [Download](https://porech.github.io/engarde/master/windows/amd64/engarde-server.exe) |  |
-| *Darwin (Mac OS)* | [Download](https://porech.github.io/engarde/master/darwin/i386/engarde-server) | [Download](https://porech.github.io/engarde/master/darwin/amd64/engarde-server) |  |
+|                   | i386     | amd64    | arm      | arm64    |
+| ----------------- | -------- | -------- | -------- | -------- |
+| *Linux*           | [Download](https://porech.github.io/engarde/master/linux/i386/engarde-server) | [Download](https://porech.github.io/engarde/master/linux/amd64/engarde-server) | [Download](https://porech.github.io/engarde/master/linux/arm/engarde-server) | [Download](https://porech.github.io/engarde/master/linux/arm64/engarde-server) |
+| *Windows*         | [Download](https://porech.github.io/engarde/master/windows/i386/engarde-server.exe) | [Download](https://porech.github.io/engarde/master/windows/amd64/engarde-server.exe) | [Download](https://porech.github.io/engarde/master/windows/arm/engarde-server.exe) | [Download](https://porech.github.io/engarde/master/windows/arm64/engarde-server.exe) |
+| *Darwin (macOS)*  |  | [Download](https://porech.github.io/engarde/master/darwin/amd64/engarde-server) |  | [Download](https://porech.github.io/engarde/master/darwin/arm64/engarde-server) |
 
 ### Client
-|                   | i386     | amd64    | arm    |
-| ----------------- | -------- | -------- | -------- |
-| *Linux*           | [Download](https://porech.github.io/engarde/master/linux/i386/engarde-client) | [Download](https://porech.github.io/engarde/master/linux/amd64/engarde-client) | [Download](https://porech.github.io/engarde/master/linux/arm/engarde-client) |
-| *Windows*         | [Download](https://porech.github.io/engarde/master/windows/i386/engarde-client.exe) | [Download](https://porech.github.io/engarde/master/windows/amd64/engarde-client.exe) |  |
-| *Darwin (Mac OS)* | [Download](https://porech.github.io/engarde/master/darwin/i386/engarde-client) | [Download](https://porech.github.io/engarde/master/darwin/amd64/engarde-client) |  |
+|                   | i386     | amd64    | arm      | arm64    |
+| ----------------- | -------- | -------- | -------- | -------- |
+| *Linux*           | [Download](https://porech.github.io/engarde/master/linux/i386/engarde-client) | [Download](https://porech.github.io/engarde/master/linux/amd64/engarde-client) | [Download](https://porech.github.io/engarde/master/linux/arm/engarde-client) | [Download](https://porech.github.io/engarde/master/linux/arm64/engarde-client) |
+| *Windows*         | [Download](https://porech.github.io/engarde/master/windows/i386/engarde-client.exe) | [Download](https://porech.github.io/engarde/master/windows/amd64/engarde-client.exe) | [Download](https://porech.github.io/engarde/master/windows/arm/engarde-client.exe) | [Download](https://porech.github.io/engarde/master/windows/arm64/engarde-client.exe) |
+| *Darwin (macOS)*  |  | [Download](https://porech.github.io/engarde/master/darwin/amd64/engarde-client) |  | [Download](https://porech.github.io/engarde/master/darwin/arm64/engarde-client) |
 
 If you prefer, or if you need another architecture, you can always compile from source. Some more documentation about this will be available soon, but it shouldn't be too hard if you know a little about Golang.
 
