@@ -115,13 +115,19 @@ engarde is available as OpenWrt packages with full LuCI integration:
 
 ### Install on a running OpenWrt 23.05 router
 
-SSH into your router and add the package repository for your architecture:
+SSH into your router and add the signing key and package repository for your architecture:
 
-**x86_64:** `echo "src/gz engarde https://engarde.linuxzogno.org/builds/openwrt/23.05/x86_64" >> /etc/opkg/customfeeds.conf`
+```sh
+# Add signing key
+wget -qO /etc/opkg/keys/f59c896b325e81c9 \
+  https://porech.github.io/openwrt-engarde/engarde-repo.pub
+```
 
-**aarch64_generic:** `echo "src/gz engarde https://engarde.linuxzogno.org/builds/openwrt/23.05/aarch64_generic" >> /etc/opkg/customfeeds.conf`
+**x86_64:** `echo "src/gz engarde https://porech.github.io/openwrt-engarde/x86_64" >> /etc/opkg/customfeeds.conf`
 
-**arm_cortex-a7_neon-vfpv4:** `echo "src/gz engarde https://engarde.linuxzogno.org/builds/openwrt/23.05/arm_cortex-a7_neon-vfpv4" >> /etc/opkg/customfeeds.conf`
+**aarch64_generic:** `echo "src/gz engarde https://porech.github.io/openwrt-engarde/aarch64_generic" >> /etc/opkg/customfeeds.conf`
+
+**arm_cortex-a7_neon-vfpv4:** `echo "src/gz engarde https://porech.github.io/openwrt-engarde/arm_cortex-a7_neon-vfpv4" >> /etc/opkg/customfeeds.conf`
 
 Then install:
 
